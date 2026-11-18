@@ -2,9 +2,16 @@ import { createHmac, timingSafeEqual } from "crypto";
 
 export type ModerationAction = "approve" | "unapprove" | "delete";
 
+// Supabase–Vercel 연동이 넣어 주는 SUPABASE_SECRET_KEY를 먼저 쓰고, 없으면 직접 넣은 키를 씁니다.
+// 공개용 키(sb_publishable_)는 관리 작업에 쓸 수 없으므로 무시합니다.
+function serverKey() {
+  const candidates = [process.env.SUPABASE_SECRET_KEY, process.env.SUPABASE_SERVICE_ROLE_KEY];
+  return candidates.find(key => key && (key.startsWith("sb_secret_") || key.startsWith("eyJ"))) ?? null;
+}
+
 const getServiceConfig = () => {
   const url = process.env.SUPABASE_URL?.replace(/\/$/, "");
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const key = serverKey();
   if (!url || !key) return null;
   return { url, key };
 };
@@ -13,7 +20,7 @@ export const moderationReady = () => getServiceConfig() !== null;
 
 // 진단용: 키 값은 기록하지 않고 종류만 알려 줍니다.
 export function keyKind() {
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
+  const key = serverKey() ?? process.env.SUPABASE_SECRET_KEY ?? process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
   if (key.startsWith("sb_secret_")) return "secret";
   if (key.startsWith("sb_publishable_")) return "publishable(wrong key)";
   if (key.startsWith("eyJ")) return "legacy-jwt";

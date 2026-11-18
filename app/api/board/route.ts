@@ -50,7 +50,7 @@ async function sendNewPostAlert(id: number | null, author: string, title: string
 
 async function findNewPostId(author: string, title: string) {
   if (!moderationReady()) {
-    console.error("[board-alert] SUPABASE_SERVICE_ROLE_KEY is not available; sending email without buttons");
+    console.error(`[board-alert] server secret key is not available (key=${keyKind()}); sending email without buttons`);
     return null;
   }
   try {
