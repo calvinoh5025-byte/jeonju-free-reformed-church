@@ -5,11 +5,19 @@ const adminBoardUrl = process.env.BOARD_ADMIN_URL;
 const requests = new Map<string, number[]>();
 
 async function sendNewPostAlert(author: string, title: string, content: string) {
-  if (!alertEmail) return;
+  if (!alertEmail) {
+    console.error("[board-alert] BOARD_ALERT_EMAIL is not set; skipping alert");
+    return;
+  }
   try {
-    await fetch(`https://formsubmit.co/ajax/${alertEmail}`, {
+    const response = await fetch(`https://formsubmit.co/ajax/${alertEmail}`, {
       method: "POST",
-      headers: { "content-type": "application/json", accept: "application/json" },
+      headers: {
+        "content-type": "application/json",
+        accept: "application/json",
+        origin: "https://jeonju-free-reformed-church.vercel.app",
+        referer: "https://jeonju-free-reformed-church.vercel.app/board",
+      },
       body: JSON.stringify({
         _subject: "[자유개혁교회] 자유게시판 새 글 승인 요청",
         _template: "table",
@@ -20,8 +28,11 @@ async function sendNewPostAlert(author: string, title: string, content: string) 
         "승인 페이지": adminBoardUrl,
       }),
     });
-  } catch {
+    const result = await response.text();
+    console.log(`[board-alert] formsubmit status=${response.status} body=${result.slice(0, 300)}`);
+  } catch (error) {
     // 알림 전송 실패가 방문자의 글 등록을 막지 않도록 합니다.
+    console.error("[board-alert] formsubmit request failed", error instanceof Error ? error.message : error);
   }
 }
 
