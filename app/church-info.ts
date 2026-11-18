@@ -4,6 +4,7 @@ export const worshipTimes = [
 ];
 
 export const address = "전북특별자치도 전주시 덕진구 동가재미1길 6-4";
+export const postalCode = "55019";
 
 export const contact = {
   phone: "010-2764-1996",

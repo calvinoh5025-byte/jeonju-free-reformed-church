@@ -4,7 +4,7 @@ import { MapPreview } from "./components/map-preview";
 import { InstallApp } from "./components/install-app";
 import { LearningResources } from "./components/learning-resources";
 import { AddressCopy } from "./components/address-copy";
-import { address, contact, worshipTimes } from "./church-info";
+import { address, contact, postalCode, worshipTimes } from "./church-info";
 
 const youtube = "https://www.youtube.com/channel/UCF7kK_6xtj2aFUm3V0P91gA";
 const facebook = "https://www.facebook.com/DongSupSong/";
@@ -12,7 +12,7 @@ const naverMap = "https://map.naver.com/p/search/%EC%A0%84%EB%B6%81%ED%8A%B9%EB%
 
 export default function Home() {
   return (
-    <main id="main" className="home-page">
+    <main id="main" tabIndex={-1} className="home-page">
       <section className="hero" id="home">
         <header className="site-header">
           <a className="brand" href="#home" aria-label="자유개혁교회 홈">
@@ -75,7 +75,7 @@ export default function Home() {
           <p className="section-kicker">DIRECTIONS</p>
           <h2>오시는 길</h2>
           <p className="directions-address">{address}</p>
-          <small className="postal-code">우편번호 55019</small>
+          <small className="postal-code">우편번호 {postalCode}</small>
           <p className="muted">네이버 지도에서 정확한 위치와 이동 경로를 확인할 수 있습니다.</p>
           <div className="address-actions"><AddressCopy address={address} /><a className="naver-map-button" href={naverMap} target="_blank" rel="noreferrer">네이버 지도에서 보기 <span aria-hidden="true">↗</span></a><a className="naver-map-button" href={`https://map.kakao.com/link/search/${encodeURIComponent(address)}`} target="_blank" rel="noreferrer">카카오맵에서 보기 ↗</a></div>
         </div>

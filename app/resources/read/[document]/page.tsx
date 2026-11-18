@@ -23,7 +23,7 @@ export default async function ReadDocumentPage({ params }: { params: Promise<{ d
   const { document } = await params;
   const item = documents[document];
   if (!item) notFound();
-  return <main id="main" className="sub-page"><SiteHeader />
+  return <main id="main" tabIndex={-1} className="sub-page"><SiteHeader />
     <header className="reader-head"><p className="section-kicker">READ ONLINE</p><h1>{item.title}</h1><p>별도 다운로드 없이 홈페이지에서 바로 읽을 수 있습니다.</p><a href="/resources">← 자료실로 돌아가기</a></header>
     <PdfViewer file={item.file} title={item.title} />
     <SiteFooter />

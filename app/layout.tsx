@@ -6,8 +6,8 @@ import "./globals.css";
 import "./facebook-hero.css";
 import "./history.css";
 
-const notoSans = Noto_Sans_KR({ variable: "--font-noto-sans", weight: ["400", "500", "700"], display: "swap" });
-const notoSerif = Noto_Serif_KR({ variable: "--font-noto-serif", weight: ["400", "500", "700"], display: "swap" });
+const notoSans = Noto_Sans_KR({ variable: "--font-noto-sans", weight: ["400", "500", "700"], display: "swap", preload: false });
+const notoSerif = Noto_Serif_KR({ variable: "--font-noto-serif", weight: ["400", "500", "700"], display: "swap", preload: false });
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://jeonju-free-reformed-church.vercel.app"),

@@ -67,6 +67,7 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--gold);outline-offse
 .visitor-card{margin-top:24px;padding:18px;border:1px solid #c6a563;background:#ffffff12;display:grid;gap:7px;max-width:630px}.visitor-card p{margin:0;font-size:14px}.visitor-card .button{display:inline-flex;min-height:40px;padding:0 14px;width:max-content}
 .address-copy button{min-height:44px;padding:0 16px;border:1px solid var(--forest);background:transparent;color:var(--forest);font:inherit;font-weight:700;cursor:pointer}
 .external-resource-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:22px}.external-resource-cards a{border:1px solid #d7cebd;padding:20px;display:grid;gap:8px}.external-resource-cards span{font-size:13px;color:var(--muted)}
+.form-notice{margin:0 0 20px;padding:16px 18px;border-left:3px solid var(--gold);background:#f9f4e9;color:var(--ink);line-height:1.7}
 @media(max-width:620px){.visitor-card .button{width:100%}.external-resource-cards{grid-template-columns:1fr}}
 
 /* Clickable PDF footnote layer. */

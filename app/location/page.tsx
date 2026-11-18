@@ -1,7 +1,7 @@
 import { SiteFooter, SiteHeader, SubHero } from "../components/site-shell";
 import { MapPreview } from "../components/map-preview";
 import { AddressCopy } from "../components/address-copy";
-import { address, contact, worshipTimes } from "../church-info";
+import { address, contact, postalCode, worshipTimes } from "../church-info";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = { title: "오시는 길", description: "자유개혁교회로 오시는 길을 안내합니다." };
@@ -10,7 +10,7 @@ const naverMap = "https://map.naver.com/p/search/%EC%A0%84%EB%B6%81%ED%8A%B9%EB%
 
 export default function LocationPage() {
   return (
-    <main className="sub-page compact-page location-page">
+    <main id="main" tabIndex={-1} className="sub-page compact-page location-page">
       <SiteHeader />
       <SubHero
         kicker="DIRECTIONS"
@@ -22,6 +22,7 @@ export default function LocationPage() {
           <p className="section-kicker">ADDRESS</p>
           <h2>자유개혁교회</h2>
           <p className="directions-address">{address}</p>
+          <small className="postal-code">우편번호 {postalCode}</small>
           <p>{worshipTimes.map(item => <span key={item.label}>{item.label} {item.time}<br /></span>)}</p>
           <p>문의 <a href={contact.phoneHref}>{contact.phone}</a> · <a href={`mailto:${contact.email}`}>{contact.email}</a> · <a href={contact.facebook} target="_blank" rel="noreferrer">교회 공식 페이스북 ↗</a></p>
           <p className="muted">네이버 지도에서 정확한 위치와 이동 경로를 확인할 수 있습니다.</p>
