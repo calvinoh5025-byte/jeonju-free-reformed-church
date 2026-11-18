@@ -11,6 +11,15 @@ const getServiceConfig = () => {
 
 export const moderationReady = () => getServiceConfig() !== null;
 
+// 진단용: 키 값은 기록하지 않고 종류만 알려 줍니다.
+export function keyKind() {
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
+  if (key.startsWith("sb_secret_")) return "secret";
+  if (key.startsWith("sb_publishable_")) return "publishable(잘못된 키)";
+  if (key.startsWith("eyJ")) return "legacy-jwt";
+  return key ? "unknown" : "missing";
+}
+
 // 승인 링크가 위조되지 않도록 서버 비밀값으로 서명합니다.
 export function signModeration(id: number, action: ModerationAction) {
   const config = getServiceConfig();
