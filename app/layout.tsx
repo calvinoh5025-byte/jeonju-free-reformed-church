@@ -1,13 +1,16 @@
 import type { Metadata, Viewport } from "next";
-import { Noto_Sans_KR, Noto_Serif_KR } from "next/font/google";
 import { ChurchChatbot } from "./components/church-chatbot";
 import { PwaRegister } from "./components/pwa-register";
+import "@fontsource/noto-sans-kr/400.css";
+import "@fontsource/noto-sans-kr/500.css";
+import "@fontsource/noto-sans-kr/700.css";
+import "@fontsource/noto-serif-kr/400.css";
+import "@fontsource/noto-serif-kr/500.css";
+import "@fontsource/noto-serif-kr/700.css";
 import "./globals.css";
 import "./facebook-hero.css";
 import "./history.css";
 
-const notoSans = Noto_Sans_KR({ variable: "--font-noto-sans", weight: ["400", "500", "700"], display: "swap", preload: false });
-const notoSerif = Noto_Serif_KR({ variable: "--font-noto-serif", weight: ["400", "500", "700"], display: "swap", preload: false });
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://jeonju-free-reformed-church.vercel.app"),
@@ -46,7 +49,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className={`${notoSans.variable} ${notoSerif.variable}`}>
+      <body>
         <a className="skip-link" href="#main">본문 바로가기</a>
         {children}
         <PwaRegister />

@@ -13,6 +13,8 @@
     "lint": "bash scripts/sites-env.sh -- eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern public/pdf.worker.min.mjs"
   },
   "dependencies": {
+    "@fontsource/noto-sans-kr": "^5.3.1",
+    "@fontsource/noto-serif-kr": "^5.3.1",
     "drizzle-orm": "0.45.2",
     "next": "16.2.6",
     "pdfjs-dist": "^5.4.624",
