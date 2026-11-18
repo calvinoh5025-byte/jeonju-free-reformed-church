@@ -1,9 +1,11 @@
 import { supabaseRest } from "../../../lib/supabase-rest";
 
-const alertEmail = "calvinoh5025@gmail.com";
-const adminBoardUrl = "https://supabase.com/dashboard/project/eipsircytjjzypolrtie/editor";
+const alertEmail = process.env.BOARD_ALERT_EMAIL;
+const adminBoardUrl = process.env.BOARD_ADMIN_URL;
+const requests = new Map<string, number[]>();
 
 async function sendNewPostAlert(author: string, title: string, content: string) {
+  if (!alertEmail) return;
   try {
     await fetch(`https://formsubmit.co/ajax/${alertEmail}`, {
       method: "POST",
@@ -38,6 +40,12 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+    const now = Date.now();
+    // Serverless 인스턴스마다 메모리가 분리되므로 완전한 전역 제한은 아닙니다.
+    const recent = (requests.get(ip) ?? []).filter(time => now - time < 10 * 60 * 1000);
+    if (recent.length >= 3) return Response.json({ error: "잠시 후 다시 시도해 주세요." }, { status: 429 });
+    recent.push(now); requests.set(ip, recent);
     const data = await request.json() as { author?: string; title?: string; content?: string; website?: string };
     if (data.website) return Response.json({ ok: true }, { status: 201 });
     const author = data.author?.trim().slice(0, 30) ?? "";

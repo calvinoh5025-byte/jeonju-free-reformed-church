@@ -1,4 +1,4 @@
-const CACHE = "frck-shell-v5";
+const CACHE = "frck-shell-v6";
 const SHELL = [
   "/",
   "/manifest.webmanifest",
@@ -25,7 +25,9 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin || url.pathname.startsWith("/api/")) return;
 
-  if (event.request.mode === "navigate") {
+  const networkFirst = event.request.mode === "navigate" || url.pathname.startsWith("/guide/") || /\.(?:js|css|mjs)$/.test(url.pathname);
+  if (/\.pdf$/.test(url.pathname) || url.pathname.startsWith("/pdfjs/")) return;
+  if (networkFirst) {
     event.respondWith(
       fetch(event.request)
         .then((response) => {

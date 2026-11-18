@@ -1,0 +1,3 @@
+import type { MetadataRoute } from "next";
+const paths = ["/", "/about", "/church", "/sermons", "/board", "/resources", "/location", "/guide/index.html", ...["psalms","hymns","universal-creeds","belgic","heidelberg","dort","prayers","church-order","subscription","liturgical-forms","three-forms-comparison","worship-order"].map(item => `/resources/read/${item}`)];
+export default function sitemap(): MetadataRoute.Sitemap { const base = process.env.NEXT_PUBLIC_SITE_URL ?? "https://jeonju-free-reformed-church.vercel.app"; return paths.map(path => ({ url: `${base}${path}` })); }

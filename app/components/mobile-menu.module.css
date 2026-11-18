@@ -8,6 +8,8 @@
   border-radius: 4px;
   background: transparent;
   color: inherit;
+  min-width: 44px;
+  min-height: 44px;
   padding: 9px 14px;
   font: inherit;
   cursor: pointer;

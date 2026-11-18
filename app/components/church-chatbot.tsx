@@ -1,21 +1,23 @@
 "use client";
 
 import { FormEvent, useEffect, useRef, useState } from "react";
+import { contact } from "../church-info";
 
 type Message = { role: "bot" | "user"; text: string; href?: string; linkLabel?: string };
 
-const choices = ["예배 안내", "오시는 길", "교회소개", "신앙고백", "설교", "자료실"];
+const choices = ["예배 안내", "문의", "오시는 길", "교회소개", "신앙고백", "설교", "자료실"];
 
 function replyFor(question: string): Message {
   const q = question.replace(/\s/g, "");
-  if (/예배|시간|주일/.test(q)) return { role: "bot", text: "정확한 예배 시간은 교회 공식 문의 창구에서 확인해 주세요.", href: "https://www.facebook.com/DongSupSong/", linkLabel: "예배시간 문의하기 ↗" };
+  if (/예배|시간|주일/.test(q)) return { role: "bot", text: "주일 오전 예배는 오전 10시, 오후 예배는 오후 3시입니다.", href: "/resources/read/worship-order", linkLabel: "예배순서 보기 →" };
+  if (/문의|연락|전화|이메일/.test(q)) return { role: "bot", text: `전화 ${contact.phone}, 이메일 ${contact.email}으로 문의해 주세요.`, href: contact.phoneHref, linkLabel: "전화 걸기" };
   if (/오시는|주소|위치|길|지도/.test(q)) return { role: "bot", text: "교회 주소는 전북특별자치도 전주시 덕진구 동가재미1길 6-4입니다.", href: "https://map.naver.com/p/search/%EC%A0%84%EC%A3%BC%EC%8B%9C%20%EB%8D%95%EC%A7%84%EA%B5%AC%20%EB%8F%99%EA%B0%80%EC%9E%AC%EB%AF%B81%EA%B8%B8%206-4", linkLabel: "지도에서 보기 ↗" };
   if (/소개|역사|연혁|뿌리/.test(q)) return { role: "bot", text: "자유개혁교회의 소개와 우리의 뿌리를 확인할 수 있습니다.", href: "/about", linkLabel: "교회소개 보기 →" };
-  if (/신앙|고백|벨직|하이델|도르트|일치|교리/.test(q)) return { role: "bot", text: "보편 신경과 벨직 신앙고백, 하이델베르크 교리문답, 도르트 신경을 소개하고 원문도 제공합니다.", href: "/church", linkLabel: "우리의 신앙고백 보기 →" };
+  if (/신앙|고백|벨직|하이델|돌트|도르트|일치|교리/.test(q)) return { role: "bot", text: "보편 신경과 벨직 신앙고백, 하이델베르크 교리문답, 돌트 신경을 소개하고 원문도 제공합니다.", href: "/church", linkLabel: "우리의 신앙고백 보기 →" };
   if (/설교|말씀|유튜브|영상/.test(q)) return { role: "bot", text: "주일예배 설교는 설교 게시판과 교회 공식 유튜브에서 확인할 수 있습니다.", href: "/sermons", linkLabel: "설교 보기 →" };
   if (/자료|시편|찬송|문서/.test(q)) return { role: "bot", text: "시편송, 찬송과 각 신앙고백 원문을 홈페이지에서 바로 읽을 수 있습니다.", href: "/resources", linkLabel: "자료실 열기 →" };
   if (/게시판|글쓰기|자유/.test(q)) return { role: "bot", text: "자유게시판에서 글을 남길 수 있으며, 관리자 확인 후 공개됩니다.", href: "/board", linkLabel: "자유게시판 열기 →" };
-  return { role: "bot", text: "제가 안내할 수 있는 항목을 선택해 주세요. 자세한 문의는 교회 공식 문의 창구를 이용해 주세요.", href: "https://www.facebook.com/DongSupSong/", linkLabel: "교회에 문의하기 ↗" };
+  return { role: "bot", text: `제가 안내할 수 있는 항목을 선택해 주세요. 자세한 문의는 전화 ${contact.phone}으로 해 주세요.`, href: contact.phoneHref, linkLabel: "전화 걸기" };
 }
 
 export function ChurchChatbot() {
