@@ -1,4 +1,7 @@
 import { SiteFooter, SiteHeader, SubHero } from "../components/site-shell";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "우리의 신앙고백", description: "자유개혁교회는 성경을 유일하고 충분한 신앙의 규범으로 받으며, 보편 신경과 세 일치 신조를 함께 고백합니다." };
 
 const confessions = [
   { year: "초대교회", title: "보편 신경", href: "/resources/read/universal-creeds", text: "사도신경, 니케아 신경, 아타나시우스 신경을 통해 삼위 하나님과 그리스도에 관한 보편 교회의 믿음을 고백합니다." },
@@ -8,7 +11,7 @@ const confessions = [
 ];
 
 export default function ChurchPage() {
-  return <main className="sub-page confessions-page"><SiteHeader /><SubHero kicker="OUR CONFESSION" title="우리가 함께 고백하는 믿음" description="자유개혁교회는 성경을 유일하고 충분한 신앙의 규범으로 받으며, 보편 신경과 세 일치 신조를 함께 고백합니다." />
+  return <main id="main" tabIndex={-1} className="sub-page confessions-page"><SiteHeader /><SubHero kicker="OUR CONFESSION" title="우리가 함께 고백하는 믿음" description="자유개혁교회는 성경을 유일하고 충분한 신앙의 규범으로 받으며, 보편 신경과 세 일치 신조를 함께 고백합니다." />
     <section className="content-section confession-page compact-confessions">
       <div className="confession-cards">{confessions.map(c => <article key={c.title}><span>{c.year}</span><h3>{c.title}</h3><p>{c.text}</p><a href={c.href}>원문 보기 →</a></article>)}</div>
     </section>

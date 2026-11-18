@@ -3,6 +3,8 @@ import { MobileMenu } from "./components/mobile-menu";
 import { MapPreview } from "./components/map-preview";
 import { InstallApp } from "./components/install-app";
 import { LearningResources } from "./components/learning-resources";
+import { AddressCopy } from "./components/address-copy";
+import { address, contact, postalCode, worshipTimes } from "./church-info";
 
 const youtube = "https://www.youtube.com/channel/UCF7kK_6xtj2aFUm3V0P91gA";
 const facebook = "https://www.facebook.com/DongSupSong/";
@@ -10,7 +12,7 @@ const naverMap = "https://map.naver.com/p/search/%EC%A0%84%EB%B6%81%ED%8A%B9%EB%
 
 export default function Home() {
   return (
-    <main className="home-page">
+    <main id="main" tabIndex={-1} className="home-page">
       <section className="hero" id="home">
         <header className="site-header">
           <a className="brand" href="#home" aria-label="자유개혁교회 홈">
@@ -30,6 +32,7 @@ export default function Home() {
             <h1>말씀 위에 서는 교회,<br />언약 안에서 함께 걷는 공동체</h1>
             <div className="gold-rule" />
             <p className="lead">성경과 세 일치 신조를 따라 그리스도를 고백하며, 세대와 세대를 이어 신실한 교회를 세우시는 그리스도 안에서 살아갑니다.</p>
+            <aside className="visitor-card"><strong>처음 오시는 분</strong>{worshipTimes.map(item => <p key={item.label}>{item.label} {item.time}</p>)}<p>{address}</p><p>문의 <a href={contact.phoneHref}>{contact.phone}</a> · <a href={`mailto:${contact.email}`}>{contact.email}</a></p><a className="button secondary" href="/location">오시는 길</a><a className="button secondary" href="/resources/read/worship-order">예배순서 보기</a></aside>
             <InstallApp />
           </div>
           <div className="hero-media">
@@ -51,7 +54,7 @@ export default function Home() {
         </div>
         <div className="pillars" id="confession">
           <article><span>01</span><h3>오직 성경</h3><p>성경을 신앙과 삶의 유일하고 충분한 규범으로 고백합니다.</p></article>
-          <article><span>02</span><h3>세 일치 신조</h3><p>벨직 신앙고백, 하이델베르크 교리문답, 도르트 신경을 받아 고백합니다.</p></article>
+          <article><span>02</span><h3>세 일치 신조</h3><p>벨직 신앙고백, 하이델베르크 교리문답, 돌트 신경을 받아 고백합니다.</p></article>
           <article><span>03</span><h3>언약 공동체</h3><p>가정과 학교와 교회가 함께 다음 세대에 믿음을 전수하며 자라갑니다.</p></article>
         </div>
       </section>
@@ -62,7 +65,7 @@ export default function Home() {
         <div className="confession-list">
           <article><a href="/resources/read/belgic" aria-label="벨직 신앙고백 원문 보기"><span>1561</span><h3>벨직 신앙고백</h3><p>삼위 하나님과 구원, 교회와 성례에 관한 성경적 신앙을 체계적으로 고백합니다.</p><strong>원문 보기 →</strong></a></article>
           <article><a href="/resources/read/heidelberg" aria-label="하이델베르크 교리문답 원문 보기"><span>1563</span><h3>하이델베르크 교리문답</h3><p>죄와 비참, 구원, 감사의 구조로 그리스도인의 유일한 위로를 가르칩니다.</p><strong>원문 보기 →</strong></a></article>
-          <article><a href="/resources/read/dort" aria-label="도르트 신경 원문 보기"><span>1619</span><h3>도르트 신경</h3><p>하나님의 주권적 은혜와 성도의 견인을 분명하게 증언합니다.</p><strong>원문 보기 →</strong></a></article>
+          <article><a href="/resources/read/dort" aria-label="돌트 신경 원문 보기"><span>1619</span><h3>돌트 신경</h3><p>하나님의 주권적 은혜와 성도의 견인을 분명하게 증언합니다.</p><strong>원문 보기 →</strong></a></article>
         </div>
       </section>
 
@@ -71,15 +74,15 @@ export default function Home() {
         <div className="directions-copy">
           <p className="section-kicker">DIRECTIONS</p>
           <h2>오시는 길</h2>
-          <p className="directions-address">전북특별자치도 전주시 덕진구<br />동가재미1길 6-4</p>
-          <small className="postal-code">우편번호 55019</small>
+          <p className="directions-address">{address}</p>
+          <small className="postal-code">우편번호 {postalCode}</small>
           <p className="muted">네이버 지도에서 정확한 위치와 이동 경로를 확인할 수 있습니다.</p>
-          <a className="naver-map-button" href={naverMap} target="_blank" rel="noreferrer">네이버 지도에서 보기 <span aria-hidden="true">↗</span></a>
+          <div className="address-actions"><AddressCopy address={address} /><a className="naver-map-button" href={naverMap} target="_blank" rel="noreferrer">네이버 지도에서 보기 <span aria-hidden="true">↗</span></a><a className="naver-map-button" href={`https://map.kakao.com/link/search/${encodeURIComponent(address)}`} target="_blank" rel="noreferrer">카카오맵에서 보기 ↗</a></div>
         </div>
         <MapPreview />
       </section>
 
-      <footer><a className="brand footer-brand" href="#home"><span className="brand-mark">FRCK</span><span>자유개혁교회</span></a><p>말씀과 신앙고백 위에 세워지는 언약 공동체</p><div><a href={youtube} target="_blank" rel="noreferrer">YouTube</a><a href={facebook} target="_blank" rel="noreferrer">Facebook</a></div><small>© 2026 Free Reformed Church in Korea</small></footer>
+      <footer><a className="brand footer-brand" href="#home"><span className="brand-mark">FRCK</span><span>자유개혁교회</span></a><p>말씀과 신앙고백 위에 세워지는 언약 공동체</p><p>전주자유개혁교회 · {address}</p><div><a href={youtube} target="_blank" rel="noreferrer">YouTube</a><a href={facebook} target="_blank" rel="noreferrer">Facebook</a><a href={contact.phoneHref}>{contact.phone}</a><a href={`mailto:${contact.email}`}>{contact.email}</a></div><small>© 2026 Free Reformed Church in Korea</small></footer>
     </main>
   );
 }

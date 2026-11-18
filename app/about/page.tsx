@@ -1,7 +1,10 @@
 import { SiteFooter, SiteHeader, SubHero } from "../components/site-shell";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "교회소개", description: "말씀과 신앙고백 위에 서서 언약 안에서 함께 자라가는 개혁교회입니다." };
 
 export default function AboutPage() {
-  return <main className="sub-page compact-page about-page">
+  return <main id="main" tabIndex={-1} className="sub-page compact-page about-page">
     <SiteHeader />
     <SubHero kicker="ABOUT OUR CHURCH" title="자유개혁교회를 소개합니다" description="말씀과 신앙고백 위에 서서 언약 안에서 함께 자라가는 개혁교회입니다." />
     <section className="content-section compact-about" aria-labelledby="about-summary-title">
