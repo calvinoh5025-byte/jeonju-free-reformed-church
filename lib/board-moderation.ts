@@ -1,6 +1,6 @@
 import { createHmac, timingSafeEqual } from "crypto";
 
-export type ModerationAction = "approve" | "delete";
+export type ModerationAction = "approve" | "unapprove" | "delete";
 
 const getServiceConfig = () => {
   const url = process.env.SUPABASE_URL?.replace(/\/$/, "");
@@ -15,7 +15,7 @@ export const moderationReady = () => getServiceConfig() !== null;
 export function keyKind() {
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
   if (key.startsWith("sb_secret_")) return "secret";
-  if (key.startsWith("sb_publishable_")) return "publishable(잘못된 키)";
+  if (key.startsWith("sb_publishable_")) return "publishable(wrong key)";
   if (key.startsWith("eyJ")) return "legacy-jwt";
   return key ? "unknown" : "missing";
 }
