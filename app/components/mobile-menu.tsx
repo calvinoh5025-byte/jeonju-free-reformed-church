@@ -6,6 +6,7 @@ import styles from "./mobile-menu.module.css";
 
 const nav = [
   ["교회소개", "/about"],
+  ["새가족 안내", "/newcomers"],
   ["우리의 신앙고백", "/church"],
   ["설교", "/sermons"],
   ["자유게시판", "/board"],
