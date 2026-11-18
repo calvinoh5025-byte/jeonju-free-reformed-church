@@ -1,0 +1,381 @@
+@import "tailwindcss";
+
+:root{--navy:#0b1b2b;--navy2:#10283e;--ivory:#f6f0e4;--paper:#fffaf1;--gold:#b99a61;--forest:#214c3a;--terracotta:#b9654a;--ink:#202626;--muted:#69716e}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--ivory);color:var(--ink);font-family:"Pretendard","Noto Sans KR",Arial,sans-serif}a{color:inherit;text-decoration:none}h1,h2,h3,p{margin-top:0}.hero{position:relative;min-height:880px;background:var(--navy);color:var(--paper);overflow:hidden}.site-header{height:104px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(24px,5vw,80px);position:relative;z-index:5;border-bottom:1px solid rgba(255,255,255,.13)}.brand{display:flex;align-items:center;gap:14px;font-family:"Noto Serif KR",serif;font-size:25px;font-weight:700;color:#e5c17f}.brand-mark{display:grid;place-items:center;width:42px;height:42px;border:1px solid var(--gold);font-family:Georgia,serif;font-size:13px;letter-spacing:.12em}.desktop-nav{display:flex;gap:42px;font-size:15px;color:#f1eadc}.desktop-nav a{transition:.2s}.desktop-nav a:hover{color:#e5c17f}.mobile-menu{display:none}.hero-grid{display:grid;grid-template-columns:57% 43%;min-height:670px}.hero-copy{padding:clamp(76px,9vw,138px) clamp(32px,6vw,94px);position:relative;z-index:2}.eyebrow,.section-kicker{font-size:12px;letter-spacing:.2em;font-weight:700;color:var(--terracotta)}.hero .eyebrow{color:#d3af6c}.hero h1{font-family:"Noto Serif KR",serif;font-size:clamp(42px,4vw,62px);line-height:1.42;letter-spacing:-.04em;font-weight:500;max-width:850px;margin:20px 0 28px}.gold-rule{width:66px;height:2px;background:var(--gold);margin-bottom:28px}.lead{font-family:"Noto Serif KR",serif;color:#c8c9c5;font-size:19px;line-height:1.8;max-width:650px}.hero-actions,.address-actions{display:flex;gap:16px;margin-top:38px}.button{min-height:56px;padding:0 26px;border-radius:5px;display:inline-flex;align-items:center;justify-content:center;gap:20px;font-weight:700;transition:.2s}.button:hover{transform:translateY(-2px)}.button.primary{background:#d8b573;color:#142330}.button.secondary{border:1px solid #c6a563;color:#f2d89e}.button.secondary.dark{border-color:var(--forest);color:var(--forest)}.hero-image{background:linear-gradient(90deg,var(--navy) 0%,rgba(11,27,43,.35) 18%,rgba(11,27,43,.08) 100%),url('/images/church-community.png') center/cover;filter:saturate(.78);border-top-left-radius:160px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}.visit-card{position:absolute;right:5vw;bottom:42px;width:min(600px,90vw);min-height:170px;background:var(--paper);color:var(--navy);display:grid;grid-template-columns:1fr 1px 1fr;align-items:center;padding:34px 40px;box-shadow:0 18px 55px #0005;border-radius:4px;border:1px solid #d8c59f;z-index:3}.visit-card>div:not(.card-divider){position:relative;padding-left:50px}.card-icon{position:absolute;left:0;font-size:31px;color:var(--gold)}.card-label{font-size:14px;margin-bottom:8px;color:var(--forest);font-weight:700}.visit-card strong{font-family:"Noto Serif KR",serif;font-size:24px}.visit-card a{display:block;font-size:13px;margin-top:12px;color:var(--terracotta)}.card-divider{height:80px;background:#d9cfbd}.section{padding:110px clamp(28px,7vw,110px)}.welcome{background:var(--paper)}.welcome-grid{display:grid;grid-template-columns:1fr 1fr;gap:10vw;margin-top:28px}.welcome h2,.section-heading h2,.location h2{font-family:"Noto Serif KR",serif;font-weight:500;font-size:clamp(34px,4vw,56px);line-height:1.45;letter-spacing:-.04em}.welcome-grid>div p{font-size:17px;line-height:1.9;color:#555e5b}.text-link{display:inline-block;margin-top:12px;color:var(--forest);font-weight:700;border-bottom:1px solid var(--forest);padding-bottom:6px}.identity{background:var(--navy);color:var(--paper);display:grid;grid-template-columns:.8fr 1.4fr;gap:8vw}.section-kicker.light{color:#dab672}.identity-intro h2,.sermons h2{font-family:"Noto Serif KR",serif;font-size:clamp(40px,4vw,58px);line-height:1.45;font-weight:500}.identity-intro>p:last-child,.sermons>div>p:last-child{color:#b9c1c4;line-height:1.8}.pillars{display:grid;gap:0}.pillars article{border-top:1px solid #ffffff33;padding:28px 0;display:grid;grid-template-columns:48px 210px 1fr;gap:20px;align-items:start}.pillars span{color:#d5ae67;font-family:Georgia,serif}.pillars h3{font-family:"Noto Serif KR",serif;font-size:23px;margin:0}.pillars p{color:#b9c1c4;line-height:1.7;margin:0}.confessions{background:var(--ivory)}.section-heading{display:grid;grid-template-columns:1fr 1fr;gap:8vw;align-items:end;margin:26px 0 58px}.section-heading p{line-height:1.8;color:var(--muted);max-width:540px}.confession-list{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid #bdb39e}.confession-list article{padding:40px;border-right:1px solid #cfc6b4}.confession-list article:first-child{padding-left:0}.confession-list article:last-child{border:0}.confession-list span{font:italic 18px Georgia;color:var(--terracotta)}.confession-list h3{font:500 25px "Noto Serif KR",serif;margin:25px 0 15px}.confession-list p{color:var(--muted);line-height:1.8}.sermons{background:var(--forest);color:#fff;display:grid;grid-template-columns:1fr 1fr;gap:9vw;align-items:center}.sermon-card{min-height:260px;background:#f7f1e4;color:var(--navy);padding:44px;display:grid;grid-template-columns:64px 1fr auto;gap:22px;align-items:center;border-radius:5px;transition:.2s}.sermon-card:hover{transform:translateY(-5px);box-shadow:0 16px 40px #10281e66}.play{width:58px;height:58px;background:var(--terracotta);color:white;border-radius:50%;display:grid;place-items:center;padding-left:4px}.sermon-card small{letter-spacing:.14em;color:var(--terracotta)}.sermon-card h3{font:500 30px "Noto Serif KR",serif;margin:12px 0}.sermon-card p{color:var(--muted);margin:0}.location{background:var(--paper);display:grid;grid-template-columns:1fr 1fr;gap:10vw}.address-card{border-left:3px solid var(--gold);padding:18px 0 18px 48px}.address-card>p:first-child{color:var(--forest);font-weight:700}.address-card h3{font:500 clamp(30px,3vw,43px) "Noto Serif KR",serif;margin:16px 0}.muted{color:var(--muted)}footer{background:#071421;color:#acb4b6;padding:70px clamp(28px,7vw,110px);display:grid;grid-template-columns:1fr 1fr auto;gap:28px;align-items:center}footer>div{display:flex;gap:24px}footer small{grid-column:1/-1;border-top:1px solid #ffffff1c;padding-top:24px}.footer-brand{font-size:21px}@media(max-width:900px){.desktop-nav{display:none}.mobile-menu{display:block;position:relative}.mobile-menu summary{list-style:none;border:1px solid #ffffff55;padding:9px 14px;border-radius:4px}.mobile-menu nav{position:absolute;right:0;top:48px;background:var(--paper);color:var(--navy);width:190px;padding:14px;display:grid;gap:0;box-shadow:0 12px 30px #0005}.mobile-menu nav a{padding:12px;border-bottom:1px solid #ddd2bd}.hero{min-height:auto;padding-bottom:130px}.visit-card{animation:none}.hero-grid{grid-template-columns:1fr}.hero-copy{padding-bottom:52px}.hero-image{height:390px;border-radius:80px 0 0 0;margin-left:24px}.visit-card{bottom:25px;right:50%;transform:translateX(50%)}.welcome-grid,.identity,.section-heading,.sermons,.location{grid-template-columns:1fr}.pillars{margin-top:30px}.confession-list{grid-template-columns:1fr}.confession-list article,.confession-list article:first-child{padding:30px 0;border-right:0;border-bottom:1px solid #cfc6b4}.confession-list article:last-child{border-bottom:0}footer{grid-template-columns:1fr}footer small{grid-column:auto}}@media(max-width:620px){.site-header{height:82px;padding:0 20px}.brand{font-size:18px;gap:9px}.brand-mark{width:34px;height:34px;font-size:10px}.hero-copy{padding:58px 24px 38px}.hero h1{font-size:38px}.lead{font-size:16px}.hero-actions,.address-actions{flex-direction:column}.button{width:100%}.hero-image{height:300px}.hero{padding-bottom:260px}.visit-card{grid-template-columns:1fr;gap:22px;padding:28px;width:calc(100% - 32px)}.visit-card>div:not(.card-divider){padding-left:45px}.card-divider{height:1px;width:100%}.section{padding:80px 24px}.welcome-grid{gap:28px}.identity{gap:30px}.pillars article{grid-template-columns:38px 1fr}.pillars article p{grid-column:2}.sermon-card{padding:28px 22px;grid-template-columns:52px 1fr}.sermon-card>span:last-child{display:none}.play{width:48px;height:48px}.address-card{padding-left:24px}footer{padding:56px 24px}}
+@media(prefers-reduced-motion:no-preference){.hero-copy{animation:rise .7s ease-out both}.visit-card{animation:appear .9s .2s ease-out both}.hero-image{animation:soften 1s ease-out both}}@keyframes rise{from{opacity:0;transform:translateY(18px)}}@keyframes appear{from{opacity:0;transform:translateY(12px)}}@keyframes soften{from{opacity:.5;transform:scale(1.015)}}
+
+/* Interior pages */
+.sub-page{min-height:100vh;background:var(--paper)}.sub-header{height:96px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(24px,5vw,80px);background:var(--navy);color:#fff;border-bottom:1px solid #ffffff20}.sub-hero{padding:100px clamp(28px,7vw,110px);background:linear-gradient(120deg,var(--navy),var(--navy2));color:var(--paper);position:relative;overflow:hidden}.sub-hero:after{content:"";position:absolute;width:380px;height:380px;border:1px solid #c8a76644;border-radius:50%;right:-80px;top:-190px}.sub-hero h1{font:500 clamp(40px,5vw,68px)/1.35 "Noto Serif KR",serif;margin:18px 0 20px;letter-spacing:-.045em}.sub-hero>p:last-child{max-width:700px;color:#c7ced0;font-size:18px;line-height:1.8}.content-section{padding:100px clamp(28px,7vw,110px)}.content-intro{display:grid;grid-template-columns:1fr 1.2fr;gap:6vw;align-items:start;margin-bottom:60px}.content-intro h2{font:500 clamp(34px,4vw,54px)/1.45 "Noto Serif KR",serif;grid-row:2}.content-intro>p:last-child{grid-column:2;grid-row:1/3;color:var(--muted);font-size:17px;line-height:1.9;padding-top:22px}.confession-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}.confession-cards article{border:1px solid #d7cebd;background:#fffdf7;padding:38px;min-height:290px}.confession-cards span{color:var(--terracotta);font:italic 17px Georgia}.confession-cards h3{font:500 28px "Noto Serif KR",serif;margin:22px 0 14px}.confession-cards p{color:var(--muted);line-height:1.8}.confession-cards a{color:var(--forest);font-weight:700;border-bottom:1px solid var(--forest);padding-bottom:5px}.pdf-callout{background:var(--forest);color:#fff;padding:70px clamp(28px,7vw,110px);display:flex;align-items:center;justify-content:space-between;gap:40px}.pdf-callout h2{font:500 38px "Noto Serif KR",serif;margin:12px 0}.pdf-callout p{color:#d0dbd5;max-width:650px;line-height:1.8}.sermon-board{min-height:440px}.featured-sermon{background:var(--ivory);border:1px solid #d8cfbd;padding:50px;display:grid;grid-template-columns:72px 1fr auto;gap:30px;align-items:center}.featured-sermon h2{font:500 36px "Noto Serif KR",serif;margin:12px 0}.featured-sermon .button{margin:0}.board-notice{margin-top:24px;padding:28px 32px;border-left:3px solid var(--gold);background:#fff}.board-notice p{margin:8px 0 0;color:var(--muted);line-height:1.7}.resource-grid{display:grid;grid-template-columns:2fr 1fr;gap:24px}.resource-card{border:1px solid #d3c8b5;background:var(--ivory);padding:48px;display:grid;grid-template-columns:84px 1fr;gap:28px}.file-badge{width:72px;height:84px;background:var(--terracotta);color:#fff;display:grid;place-items:center;font-weight:800;letter-spacing:.1em;border-radius:4px}.resource-card h2{font:500 38px "Noto Serif KR",serif;margin:12px 0}.resource-card p{color:var(--muted);line-height:1.8}.resource-card small{color:#8b8e89}.resource-actions{grid-column:2;display:flex;gap:24px;align-items:center}.resource-empty{border:1px dashed #bdb3a1;display:grid;place-content:center;text-align:center;padding:40px;min-height:330px}.resource-empty>span{font-size:42px;color:var(--gold)}.resource-empty h3{font:500 24px "Noto Serif KR",serif;margin:12px}.resource-empty p{color:var(--muted)}.board-wrap{max-width:980px;margin:auto}.board-toolbar{display:flex;justify-content:space-between;align-items:center;padding-bottom:24px;border-bottom:2px solid var(--navy)}.board-toolbar p{margin:0;color:var(--muted)}button.button{border:0;cursor:pointer}.board-form{background:var(--ivory);padding:34px;margin:26px 0;border:1px solid #d5cbb9}.board-form label{display:grid;gap:8px;font-weight:700;color:var(--navy)}.form-row{display:grid;grid-template-columns:1fr 2fr;gap:18px}.board-form input,.board-form textarea{width:100%;border:1px solid #c9c0b0;background:#fff;padding:13px;font:inherit;border-radius:3px}.board-form>label{margin-top:18px}.form-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:18px}.form-bottom p{color:var(--forest);margin:0}.honey{position:absolute!important;left:-9999px!important}.post-list article{padding:32px 10px;border-bottom:1px solid #d9d1c3}.post-meta{display:flex;gap:14px;color:var(--muted);font-size:13px}.post-list h3{font:500 24px "Noto Serif KR",serif;margin:14px 0 10px}.post-list article>p{white-space:pre-wrap;line-height:1.8;color:#4f5754}.empty-state{text-align:center;padding:90px 20px;color:var(--muted)}.empty-state strong{font:500 24px "Noto Serif KR",serif;color:var(--navy)}.admin-link{display:block;text-align:right;margin-top:38px;font-size:12px;color:#999}.admin-auth{text-align:center;padding:70px}.admin-posts{max-width:900px;margin:auto}.admin-posts article{border:1px solid #d5cbb9;padding:28px;margin-bottom:16px;background:#fff}.admin-posts article>div:first-child{display:flex;justify-content:space-between}.admin-posts small{color:var(--muted)}.status{padding:5px 9px;border-radius:20px;background:#eee;font-size:11px}.status.approved{background:#dbeadd;color:var(--forest)}.status.pending{background:#fff0c8;color:#7a5a00}.admin-posts h3{margin:18px 0 8px}.admin-posts p{white-space:pre-wrap;line-height:1.7}.admin-posts button{border:0;padding:9px 16px;margin-right:8px;cursor:pointer;background:var(--forest);color:#fff;border-radius:3px}.admin-posts button.danger{background:#963b36}
+@media(max-width:900px){.sub-header .desktop-nav{display:none}.sub-header .mobile-menu{display:block}.content-intro,.resource-grid{grid-template-columns:1fr}.content-intro>p:last-child{grid-column:1;grid-row:auto;padding:0}.confession-cards{grid-template-columns:1fr}.pdf-callout{align-items:flex-start;flex-direction:column}.featured-sermon{grid-template-columns:60px 1fr}.featured-sermon .button{grid-column:1/-1}.resource-empty{min-height:220px}}
+@media(max-width:620px){.sub-header{height:82px;padding:0 20px}.sub-hero{padding:72px 24px}.sub-hero h1{font-size:40px}.content-section{padding:70px 24px}.confession-cards article{padding:28px}.featured-sermon{padding:28px 22px}.featured-sermon h2{font-size:28px}.resource-card{padding:28px 22px;grid-template-columns:58px 1fr}.file-badge{width:54px;height:64px;font-size:12px}.resource-actions{grid-column:1/-1;flex-direction:column;align-items:stretch}.form-row{grid-template-columns:1fr}.form-bottom{align-items:stretch;flex-direction:column;gap:14px}.board-form{padding:24px 18px}.pdf-callout{padding:60px 24px}}
+.file-badge{font-size:12px}.split-resources{grid-template-columns:repeat(2,minmax(0,1fr))}.split-resources .resource-card{min-width:0}.split-resources .resource-card h2{font-size:31px}@media(max-width:900px){.split-resources{grid-template-columns:1fr}}
+.reader-head{padding:52px clamp(24px,7vw,110px) 38px;background:var(--paper);border-bottom:1px solid #d7cebd;position:relative}.reader-head h1{font:500 clamp(34px,5vw,52px) "Noto Serif KR",serif;margin:12px 0}.reader-head>p:not(.section-kicker){color:var(--muted);margin-bottom:24px}.reader-head>a{color:var(--forest);font-weight:700}.document-reader{background:#e8e4dc;padding:24px clamp(12px,3vw,40px) 50px}.reader-toolbar{position:sticky;top:0;z-index:4;width:min(900px,100%);margin:0 auto 16px;padding:10px;background:var(--navy);color:#fff;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;border-radius:6px;box-shadow:0 5px 18px #0003}.reader-toolbar.bottom{position:static;margin:16px auto 0}.reader-toolbar button{border:1px solid #ffffff55;background:#ffffff12;color:#fff;border-radius:4px;padding:11px 14px;font:inherit;font-weight:700;cursor:pointer}.reader-toolbar button:last-child{justify-self:end}.reader-toolbar button:disabled{opacity:.35;cursor:default}.reader-toolbar strong{font-size:14px;white-space:nowrap}.reader-frame{position:relative;min-height:65vh;width:min(932px,100%);margin:auto;padding:16px;background:#c9c5bd;display:flex;justify-content:center;align-items:flex-start;overflow:auto;scroll-margin-top:70px}.reader-frame canvas{display:block;max-width:100%;height:auto!important;background:white;box-shadow:0 4px 20px #0003}.reader-loading,.reader-error{position:absolute;top:28px;z-index:2;background:#fff;padding:12px 18px;border-radius:4px;box-shadow:0 3px 12px #0002}.reader-error{color:#8c302b}.reader-missing{padding:120px 24px;text-align:center}.reader-missing h1{font-family:"Noto Serif KR",serif}.reader-missing a{color:var(--forest);font-weight:700}@media(max-width:620px){.reader-head{padding:38px 20px 28px}.document-reader{padding:12px 8px 30px}.reader-toolbar{border-radius:4px;margin-bottom:8px}.reader-toolbar.bottom{margin-top:8px}.reader-toolbar button{padding:10px 12px}.reader-frame{padding:6px;min-height:60vh}}
+.confession-list article{padding:0}.confession-list article>a{display:block;height:100%;padding:40px;transition:transform .2s,background .2s,box-shadow .2s}.confession-list article:first-child>a{padding-left:0}.confession-list article>a:hover,.confession-list article>a:focus-visible{background:#fffaf1;transform:translateY(-4px);box-shadow:0 10px 25px #40331b14;outline:2px solid var(--gold);outline-offset:-2px}.confession-list strong{display:inline-block;margin-top:12px;color:var(--forest);border-bottom:1px solid var(--forest);padding-bottom:5px}@media(max-width:900px){.confession-list article,.confession-list article:first-child{padding:0}.confession-list article>a,.confession-list article:first-child>a{padding:30px 0}}
+.about-intro{display:grid;grid-template-columns:1fr 1.25fr;gap:9vw}.about-intro h2{font:500 clamp(34px,4vw,54px)/1.45 "Noto Serif KR",serif;margin-top:16px}.about-intro>div:last-child p{color:var(--muted);font-size:17px;line-height:1.9}.church-history{padding:80px clamp(28px,7vw,110px);background:var(--forest);color:#fff;display:grid;grid-template-columns:1fr 1fr;gap:8vw;align-items:center}.church-history h2{font:500 clamp(36px,4vw,52px) "Noto Serif KR",serif;margin:14px 0}.church-history>div:first-child>p:last-child{color:#d0dbd5;line-height:1.8}.history-ready{padding:42px;border:1px solid #ffffff38;background:#173f30}.history-ready>span{font:italic 16px Georgia;color:#d8b573}.history-ready h3{font:500 28px "Noto Serif KR",serif;margin:18px 0 12px}.history-ready p{color:#d0dbd5;line-height:1.8;margin:0}@media(max-width:900px){.about-intro,.church-history{grid-template-columns:1fr}.desktop-nav{gap:24px}}@media(max-width:620px){.church-history{padding:60px 24px}.history-ready{padding:30px 24px}}
+.church-chat{position:fixed;right:22px;bottom:22px;z-index:100}.chat-toggle{margin-left:auto;border:0;border-radius:999px;background:var(--terracotta);color:#fff;min-height:58px;padding:0 20px;display:flex;align-items:center;gap:9px;font:inherit;box-shadow:0 12px 35px #07142155;cursor:pointer}.chat-toggle>span{font-size:21px}.chat-toggle>strong{font-size:14px}.chat-panel{width:min(390px,calc(100vw - 28px));height:min(610px,calc(100vh - 110px));margin-bottom:12px;background:var(--paper);border:1px solid #cdbf9f;border-radius:12px;box-shadow:0 22px 60px #07142155;display:grid;grid-template-rows:auto 1fr auto auto auto;overflow:hidden}.chat-head{padding:16px 18px;background:var(--navy);color:#fff;display:flex;justify-content:space-between;align-items:center}.chat-head>div{display:flex;align-items:center;gap:10px}.chat-head span{display:grid;place-items:center;width:36px;height:36px;border:1px solid var(--gold);color:#e5c17f;font:11px Georgia;letter-spacing:.08em}.chat-head strong{font-size:15px}.chat-head button{border:0;background:transparent;color:#fff;font-size:27px;cursor:pointer}.chat-log{padding:18px;overflow:auto;background:#f4efe5}.chat-message{max-width:86%;margin-bottom:12px;padding:12px 14px;border-radius:10px;line-height:1.55;font-size:14px}.chat-message p{margin:0}.chat-message.bot{background:#fff;border:1px solid #ded4c2;border-top-left-radius:2px}.chat-message.user{margin-left:auto;background:var(--forest);color:#fff;border-top-right-radius:2px}.chat-message a{display:inline-block;margin-top:9px;color:var(--forest);font-weight:800;border-bottom:1px solid var(--forest)}.chat-choices{padding:10px 12px;display:flex;gap:7px;overflow-x:auto;border-top:1px solid #e0d7c7;background:#fff}.chat-choices button{flex:0 0 auto;border:1px solid #bcae92;background:#fffaf1;color:var(--forest);border-radius:999px;padding:7px 11px;font:inherit;font-size:12px;cursor:pointer}.chat-form{display:grid;grid-template-columns:1fr 44px;padding:10px 12px;border-top:1px solid #e0d7c7;background:#fff}.chat-form input{min-width:0;border:1px solid #cfc4b0;border-right:0;border-radius:5px 0 0 5px;padding:11px;font:inherit}.chat-form button{border:0;border-radius:0 5px 5px 0;background:var(--forest);color:#fff;font-size:20px;cursor:pointer}.chat-panel>small{padding:0 12px 12px;background:#fff;color:#858883;font-size:10px}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}@media(max-width:620px){.church-chat{right:12px;bottom:12px}.chat-panel{width:calc(100vw - 24px);height:min(590px,calc(100vh - 88px));margin-bottom:8px}.chat-toggle{min-height:54px;padding:0 17px}}
+
+.post-list h3{margin-bottom:0}.post-title-button{width:100%;padding:0;border:0;background:transparent;color:var(--navy);display:flex;align-items:center;justify-content:space-between;gap:20px;text-align:left;font:inherit;cursor:pointer}.post-title-button:hover span:first-child,.post-title-button:focus-visible span:first-child{color:var(--terracotta);text-decoration:underline;text-underline-offset:5px}.post-title-button span:last-child{color:var(--gold);font:400 28px Arial,sans-serif}.post-detail{margin-top:18px;padding:22px 24px;background:var(--ivory);border-left:3px solid var(--gold)}.post-detail p{margin:0;white-space:pre-wrap;line-height:1.8;color:#4f5754}
+
+/* Simplified home hero after removing the welcome, visit and sermon panels. */
+.hero{min-height:774px}
+@media(max-width:900px){.hero{padding-bottom:0}}
+@media(max-width:620px){.hero{padding-bottom:0}}
+
+.hero-media{min-width:0;min-height:670px;display:grid;grid-template-rows:1fr auto;background:var(--navy2)}.hero-media .hero-image{min-height:0}.hero-facebook-link{padding:17px 28px;color:#f2d89e;border-top:1px solid #ffffff24;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:14px;transition:background .2s,color .2s}.hero-facebook-link:hover,.hero-facebook-link:focus-visible{background:#ffffff12;color:#fff}.directions{background:var(--paper);display:grid;grid-template-columns:.8fr 1.2fr;gap:8vw;align-items:center}.directions h2{font:500 clamp(38px,4vw,56px)/1.35 "Noto Serif KR",serif;margin:16px 0 28px}.directions-address{font:500 clamp(24px,2.6vw,36px)/1.55 "Noto Serif KR",serif;color:var(--navy);margin-bottom:18px}.directions-copy .muted{line-height:1.8}.naver-map-button{display:inline-flex;align-items:center;gap:14px;margin-top:22px;padding:15px 20px;background:#03c75a;color:#fff;border-radius:4px;font-weight:800}.naver-map-visual{position:relative;min-height:390px;overflow:hidden;border:1px solid #c9d3ca;background:linear-gradient(35deg,transparent 48%,#d7e8f4 49% 53%,transparent 54%),linear-gradient(145deg,#edf1e8 0 35%,#f7f3e7 36% 100%);box-shadow:0 18px 40px #203d2a18}.naver-badge{position:absolute;left:22px;top:22px;width:43px;height:43px;border-radius:8px;background:#03c75a;color:#fff;display:grid;place-items:center;font:900 25px Arial;z-index:3}.map-road{position:absolute;display:block;background:#fff;border:1px solid #d7d7cf;box-shadow:0 0 0 5px #ffffff80}.road-one{width:120%;height:24px;left:-10%;top:48%;transform:rotate(-10deg)}.road-two{width:24px;height:125%;left:66%;top:-12%;transform:rotate(18deg)}.road-three{width:72%;height:16px;left:-8%;top:24%;transform:rotate(25deg)}.map-block{position:absolute;display:block;background:#e1ddd0;border:1px solid #cec8b9}.block-one{width:100px;height:72px;right:12%;top:16%;transform:rotate(8deg)}.block-two{width:120px;height:90px;left:12%;bottom:12%;transform:rotate(-7deg)}.map-pin{position:absolute;left:53%;top:43%;z-index:3;width:42px;height:42px;background:#03c75a;border:5px solid #fff;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 5px 15px #0004}.map-pin span{display:block;color:#fff;transform:rotate(45deg);text-align:center;font-size:13px;margin-top:5px}.naver-map-visual strong{position:absolute;left:calc(53% - 52px);top:calc(43% + 62px);z-index:3;background:#fff;padding:9px 14px;border-radius:4px;box-shadow:0 4px 14px #0002;font-family:"Noto Serif KR",serif;color:var(--navy)}.naver-map-visual small{position:absolute;left:calc(53% - 45px);top:calc(43% + 106px);z-index:3;color:#4e5852;background:#ffffffde;padding:5px 9px}.map-caption{position:absolute;right:18px;bottom:16px;z-index:3;background:#fff;padding:8px 12px;border-radius:3px;color:#03a64d;font-weight:800;font-size:13px}@media(max-width:900px){.hero-media{min-height:auto}.hero-media .hero-image{min-height:390px}.directions{grid-template-columns:1fr}.naver-map-visual{min-height:340px}}@media(max-width:620px){.hero-media .hero-image{min-height:300px;margin-left:24px}.hero-facebook-link{margin-left:24px;padding:15px 20px}.directions{padding:70px 24px}.directions-address br{display:none}.naver-map-visual{min-height:300px}}
+
+/* Compact mobile rhythm: keep every section while shortening the page. */
+@media(max-width:900px){
+  .hero{min-height:0!important;height:auto}
+  .hero-grid{min-height:0!important;height:auto}
+  .hero-media{display:block;min-height:0!important;height:auto}
+  .hero-media .hero-image{display:block}
+  .identity{padding-top:32px}
+}
+@media(max-width:620px){
+  .hero{min-height:0}
+  .hero-grid{min-height:0}
+  .hero-media{display:block;min-height:0}
+  .hero-copy{padding-top:42px;padding-bottom:30px}
+  .hero h1{margin-top:14px;margin-bottom:20px;line-height:1.34}
+  .gold-rule{margin-bottom:20px}
+  .hero-media .hero-image{min-height:240px;height:240px}
+  .section{padding-top:54px;padding-bottom:54px}
+  .identity{gap:18px;padding-top:24px}
+  .pillars{margin-top:18px}
+  .pillars article{padding:20px 0}
+  .confession-list article>a,.confession-list article:first-child>a{padding-top:22px;padding-bottom:22px}
+  .section-heading{margin-bottom:34px}
+  .directions{padding-top:52px;padding-bottom:52px}
+  .directions h2{margin-bottom:18px}
+  .naver-map-visual{min-height:250px}
+  .sub-hero{padding-top:48px;padding-bottom:48px}
+  .sub-hero h1{margin-top:12px;margin-bottom:14px}
+  .content-section{padding-top:52px;padding-bottom:52px}
+  .content-intro{margin-bottom:36px}
+  .church-history{padding-top:48px;padding-bottom:48px}
+  .pdf-callout{padding-top:46px;padding-bottom:46px}
+  footer{padding-top:42px;padding-bottom:42px;gap:20px}
+}
+
+/* Clickable PDF footnote layer. */
+.reader-page{position:relative;flex:0 0 auto}
+.pdf-footnote-link{position:absolute;z-index:2;border:0;border-radius:3px;background:#d8b57322;cursor:pointer;outline:1px solid transparent}
+.pdf-footnote-link:hover,.pdf-footnote-link:focus-visible{background:#d8b57366;outline-color:#8a6a31}
+.pdf-footnote-link.active,.pdf-footnote-target{display:grid;place-items:center;padding:0;background:#fff;color:#075dcc;outline:0;box-shadow:none;font-family:Arial,sans-serif;font-weight:900;line-height:1}
+.pdf-footnote-target{position:absolute;z-index:2;border-radius:2px;pointer-events:none}
+.reader-loading,.reader-error{z-index:3}
+
+/* Mobile-friendly PDF zoom controls and horizontally scrollable enlarged pages. */
+.reader-zoom{width:min(900px,100%);margin:-8px auto 16px;padding:8px;display:flex;align-items:center;justify-content:center;gap:8px;background:#f6f0e4;border:1px solid #c8bda9;border-radius:5px;color:var(--navy)}
+.reader-zoom button{min-width:42px;min-height:40px;border:1px solid #a99c85;border-radius:4px;background:#fff;color:var(--navy);font:inherit;font-weight:800;cursor:pointer}
+.reader-zoom button:disabled{opacity:.35;cursor:default}
+.reader-zoom strong{min-width:58px;text-align:center;font-size:14px}
+.reader-zoom .reader-fit{min-width:88px;padding:0 12px;color:var(--forest)}
+.reader-frame{justify-content:flex-start}
+.reader-frame canvas{max-width:none}
+.reader-page{margin:0 auto}
+@media(max-width:620px){.reader-zoom{margin-bottom:8px;padding:6px;gap:6px}.reader-zoom button{min-height:42px}}
+
+/* Live neighborhood map preview with a direct Naver Map handoff. */
+.map-preview{position:relative;min-height:390px;overflow:hidden;border:1px solid #c9d3ca;background:#e8ece9;box-shadow:0 18px 40px #203d2a18}
+.map-preview iframe{display:block;width:100%;height:390px;border:0}
+.map-preview>a{position:absolute;right:14px;bottom:14px;z-index:2;padding:11px 14px;border-radius:4px;background:#03c75a;color:#fff;font-weight:800;font-size:13px;box-shadow:0 4px 14px #0003}
+@media(max-width:900px){.map-preview,.map-preview iframe{min-height:340px;height:340px}}
+@media(max-width:620px){.map-preview,.map-preview iframe{min-height:270px;height:270px}}
+
+/* Touch devices: place OUR FOUNDATION immediately after the Facebook bar. */
+@media(hover:none),(pointer:coarse){
+  .hero{min-height:0!important;height:auto!important;padding-bottom:0!important}
+  .hero-grid{display:block!important;min-height:0!important;height:auto!important}
+  .hero-media{display:block!important;min-height:0!important;height:auto!important}
+  .hero-media .hero-image{display:block!important;min-height:240px!important;height:240px!important}
+  .identity{padding-top:24px!important}
+}
+
+/* Keep the complete church sign visible at every screen size and orientation. */
+.hero-image{
+  background-image:url('/images/church-sign-square.jpg');
+  background-position:center;
+  background-size:contain;
+  background-repeat:no-repeat;
+  background-color:var(--navy2);
+  border-radius:0;
+  filter:none;
+}
+@media(max-width:900px){
+  .hero-media .hero-image{width:calc(100% - 48px);height:auto!important;min-height:0!important;aspect-ratio:1/1;margin-left:auto!important;margin-right:auto!important}
+}
+@media(max-width:620px){
+  .hero-media .hero-image{width:calc(100% - 40px);height:auto!important;min-height:0!important;aspect-ratio:1/1;margin-left:auto!important;margin-right:auto!important}
+}
+
+/* Compact six-item resource library: visible as one grouped screen. */
+.resources-page .sub-hero{padding-top:46px;padding-bottom:46px}
+.resources-page .sub-hero h1{font-size:clamp(34px,4vw,50px);margin:10px 0 12px}
+.resources-page .sub-hero>p:last-child{font-size:15px;line-height:1.55;margin-bottom:0}
+.compact-resources{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;padding-top:28px;padding-bottom:32px}
+.compact-resources .resource-card{min-width:0;padding:18px;grid-template-columns:48px minmax(0,1fr);gap:12px;align-items:start}
+.compact-resources .file-badge{width:44px;height:52px;font-size:9px}
+.compact-resources .section-kicker{font-size:8px;letter-spacing:.1em;margin-bottom:4px}
+.compact-resources .resource-card h2{font-size:21px;line-height:1.3;margin:4px 0 7px}
+.compact-resources .resource-card p{font-size:13px;line-height:1.45;margin-bottom:6px}
+.compact-resources .resource-card small{font-size:11px}
+.compact-resources .resource-actions{grid-column:1/-1;margin-top:2px}
+.compact-resources .resource-actions .button{width:100%;min-height:40px;padding:0 14px;font-size:13px}
+@media(max-width:900px){
+  .compact-resources{grid-template-columns:repeat(2,minmax(0,1fr));padding:24px 18px 28px}
+}
+@media(max-width:620px){
+  .resources-page .sub-hero{padding:28px 20px}
+  .resources-page .sub-hero h1{font-size:28px;margin:6px 0 8px}
+  .resources-page .sub-hero>p:last-child{font-size:12px;line-height:1.4}
+  .compact-resources{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:12px 10px 18px}
+  .compact-resources .resource-card{display:flex;flex-direction:column;justify-content:space-between;padding:11px;gap:7px;min-height:104px}
+  .compact-resources .file-badge,.compact-resources .section-kicker,.compact-resources .resource-card p,.compact-resources .resource-card small{display:none}
+  .compact-resources .resource-card h2{font-size:16px;line-height:1.35;margin:0;word-break:keep-all}
+  .compact-resources .resource-actions{width:100%;margin-top:auto}
+.compact-resources .resource-actions .button{min-height:36px;font-size:12px;padding:0 8px}
+}
+
+.postal-code{display:block;margin-top:-10px;margin-bottom:18px;color:var(--muted);font-size:12px;letter-spacing:.04em}
+
+/* Installable church app */
+.install-app{position:relative;margin-top:24px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.install-button{min-height:50px;padding:0 20px;border:1px solid #d8b573;border-radius:5px;background:#d8b573;color:#142330;font:inherit;font-weight:800;cursor:pointer;box-shadow:0 8px 24px #0003;transition:transform .2s,box-shadow .2s}
+.install-button:hover{transform:translateY(-2px);box-shadow:0 12px 30px #0004}
+.install-button:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.open-app-button{background:var(--forest);border-color:#7eb095;color:#fff}
+.install-app>p{margin:0;color:#bfc7c9;font-size:13px}
+.install-help{position:absolute;left:0;top:62px;z-index:12;width:min(360px,calc(100vw - 40px));padding:24px;border:1px solid #d8b573;background:#fffaf1;color:#0b1b2b;box-shadow:0 18px 50px #0007;border-radius:6px}
+.install-help strong{display:block;font:700 20px "Noto Serif KR",serif;margin-bottom:15px}
+.install-help p{color:#4d5654;font-size:14px;line-height:1.65;margin:12px 0}
+.install-help-close{position:absolute;right:10px;top:8px;width:36px;height:36px;border:0;background:transparent;color:#0b1b2b;font-size:27px;cursor:pointer}
+@media(max-width:620px){.install-app{margin-top:18px;display:block}.install-button{width:100%;min-height:48px}.install-app>p{text-align:center;margin-top:8px;font-size:11px}.install-help{top:60px}.home-page .hero-copy{padding-bottom:30px}}
+
+/* Compact confession library: all four documents visible together. */
+.confessions-page .sub-hero{padding-top:42px;padding-bottom:42px}
+.confessions-page .sub-hero h1{font-size:clamp(34px,4vw,50px);margin:10px 0 12px}
+.confessions-page .sub-hero>p:last-child{font-size:15px;line-height:1.55;margin-bottom:0}
+.compact-confessions{padding-top:28px;padding-bottom:32px}
+.compact-confessions .confession-cards{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.compact-confessions .confession-cards article{min-height:0;padding:20px;display:flex;flex-direction:column}
+.compact-confessions .confession-cards span{font-size:14px}
+.compact-confessions .confession-cards h3{font-size:21px;line-height:1.35;margin:10px 0 8px}
+.compact-confessions .confession-cards p{font-size:13px;line-height:1.55;margin-bottom:14px}
+.compact-confessions .confession-cards a{margin-top:auto;font-size:13px}
+@media(max-width:900px){
+  .compact-confessions .confession-cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .compact-confessions{padding:24px 18px 28px}
+}
+@media(max-width:620px){
+  .confessions-page .sub-hero{padding:28px 20px}
+  .confessions-page .sub-hero h1{font-size:28px;margin:6px 0 8px}
+  .confessions-page .sub-hero>p:last-child{font-size:12px;line-height:1.4}
+  .compact-confessions{padding:12px 10px 18px}
+  .compact-confessions .confession-cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .compact-confessions .confession-cards article{padding:12px;min-height:112px}
+  .compact-confessions .confession-cards span{font-size:11px}
+  .compact-confessions .confession-cards h3{font-size:16px;line-height:1.35;margin:6px 0 10px;word-break:keep-all}
+  .compact-confessions .confession-cards p{display:none}
+  .compact-confessions .confession-cards a{font-size:12px}
+}
+
+/* Compact interior pages and home: keep essential actions visible with less scrolling. */
+.compact-page .sub-hero{padding-top:34px;padding-bottom:34px}
+.compact-page .sub-hero h1{font-size:clamp(31px,4vw,46px);margin:8px 0 10px}
+.compact-page .sub-hero>p:last-child{font-size:14px;line-height:1.5;margin-bottom:0}
+.compact-page footer{padding-top:34px;padding-bottom:34px;gap:18px}
+
+.compact-about{padding-top:26px;padding-bottom:30px}
+.about-summary-heading{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:16px}
+.about-summary-heading h2{font:500 clamp(25px,3vw,36px)/1.35 "Noto Serif KR",serif;margin:0}
+.about-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.about-summary article{padding:18px;border:1px solid #d7cebd;background:#fffdf7}
+.about-summary article>span{font:italic 14px Georgia;color:var(--terracotta)}
+.about-summary h3{font:500 20px "Noto Serif KR",serif;margin:8px 0 6px}
+.about-summary p{font-size:13px;line-height:1.5;color:var(--muted);margin:0}
+.compact-roots{margin-top:18px;padding:22px;background:var(--navy);color:var(--paper);display:grid;grid-template-columns:.9fr 1.8fr;gap:14px 28px;align-items:start}
+.compact-roots h2{font:500 28px "Noto Serif KR",serif;margin:8px 0}
+.compact-roots>div>p:last-child{font-size:13px;line-height:1.55;color:#c7ced0;margin:0}
+.compact-roots ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.compact-roots li{padding:10px 12px;border:1px solid #ffffff25;display:grid;gap:4px}
+.compact-roots time{font-size:11px;color:#d8b573}
+.compact-roots strong{font-size:13px;line-height:1.35}
+.compact-roots .text-link{grid-column:2;color:#e5c17f;border-color:#e5c17f;font-size:12px;margin-top:0;justify-self:start}
+.church-signature{height:76px;display:flex;align-items:flex-end;justify-content:flex-end;padding:10px 8px 0}
+.church-signature img{display:block;width:64px;height:64px;object-fit:contain;filter:grayscale(1) sepia(.16) contrast(.82);opacity:.38}
+
+.compact-sermons{min-height:0;padding-top:26px;padding-bottom:30px}
+.compact-sermons .featured-sermon{padding:24px;grid-template-columns:52px 1fr auto;gap:18px}
+.compact-sermons .play{width:48px;height:48px}
+.compact-sermons .featured-sermon h2{font-size:28px;margin:7px 0}
+.compact-sermons .featured-sermon p{font-size:14px;margin-bottom:0}
+.compact-sermons .button{min-height:44px;padding:0 18px;font-size:13px}
+
+.compact-board{padding-top:24px;padding-bottom:28px}
+.compact-board .board-toolbar{padding-bottom:14px}
+.compact-board .board-toolbar p{font-size:13px}
+.compact-board .button{min-height:42px;padding:0 18px;font-size:13px}
+.compact-board .board-form{padding:20px;margin:16px 0}
+.compact-board .post-list article{padding:18px 8px}
+.compact-board .post-list h3{font-size:19px;margin-top:8px}
+.compact-board .empty-state{padding:34px 16px}
+.compact-board .empty-state strong{font-size:20px}
+.compact-board .empty-state p{font-size:13px;margin-bottom:0}
+.compact-board .admin-link{margin-top:14px}
+
+.compact-directions{padding-top:28px;padding-bottom:32px;gap:4vw}
+.compact-directions h2{font-size:clamp(30px,3vw,42px);margin:9px 0 14px}
+.compact-directions .directions-address{font-size:clamp(21px,2.2vw,29px);margin-bottom:12px}
+.compact-directions .postal-code{margin-top:-6px;margin-bottom:10px}
+.compact-directions .muted{font-size:13px;line-height:1.5;margin-bottom:0}
+.compact-directions .naver-map-button{margin-top:14px;padding:12px 16px;font-size:13px}
+.compact-directions .map-preview,.compact-directions .map-preview iframe{min-height:280px;height:280px}
+
+/* Shorter home flow while preserving the complete sign image. */
+.home-page .hero{min-height:0}
+.home-page .site-header{height:86px}
+.home-page .hero-grid{min-height:0;grid-template-columns:52% 48%}
+.home-page .hero-copy{padding:58px clamp(28px,5vw,72px)}
+.home-page .hero h1{font-size:clamp(38px,3.6vw,54px);margin:14px 0 18px;line-height:1.35}
+.home-page .gold-rule{margin-bottom:18px}
+.home-page .lead{font-size:16px;line-height:1.65;margin-bottom:0}
+.home-page .hero-media{min-height:0}
+.home-page .identity,.home-page .confessions,.home-page .directions{padding-top:42px;padding-bottom:42px}
+.home-page .identity{gap:5vw}
+.home-page .identity-intro h2{font-size:clamp(32px,3.3vw,44px);margin:8px 0 14px}
+.home-page .identity-intro>p:last-of-type{font-size:14px;line-height:1.55}
+.home-page .pillars article{padding:16px 0;grid-template-columns:36px 170px 1fr;gap:12px}
+.home-page .pillars h3{font-size:19px}
+.home-page .pillars p{font-size:13px;line-height:1.5}
+.home-page .section-heading{margin:12px 0 22px}
+.home-page .section-heading h2{font-size:clamp(30px,3.2vw,42px)}
+.home-page .section-heading p{font-size:14px;line-height:1.55}
+.home-page .confession-list article>a,.home-page .confession-list article:first-child>a{padding:20px}
+.home-page .confession-list h3{font-size:21px;margin:10px 0 8px}
+.home-page .confession-list p{font-size:13px;line-height:1.5;margin-bottom:8px}
+.home-page .confession-list strong{font-size:13px;margin-top:4px}
+.home-page .directions{gap:4vw}
+.home-page .directions h2{font-size:36px;margin:8px 0 14px}
+.home-page .directions-address{font-size:25px;margin-bottom:12px}
+.home-page .map-preview,.home-page .map-preview iframe{min-height:280px;height:280px}
+.home-page footer{padding-top:34px;padding-bottom:34px;gap:18px}
+
+@media(max-width:900px){
+  .about-summary{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .compact-roots{grid-template-columns:1fr}
+  .compact-roots .text-link{grid-column:1}
+  .compact-sermons .featured-sermon{grid-template-columns:52px 1fr}
+  .compact-sermons .featured-sermon .button{grid-column:1/-1;width:100%}
+  .home-page .hero-grid{grid-template-columns:1fr}
+  .home-page .hero-copy{padding-top:40px;padding-bottom:32px}
+  .home-page .identity,.home-page .confessions,.home-page .directions{padding-top:34px;padding-bottom:34px}
+  .home-page .pillars article{grid-template-columns:36px 160px 1fr}
+}
+
+@media(max-width:620px){
+  .compact-page .sub-hero{padding:24px 20px}
+  .compact-page .sub-hero h1{font-size:27px;margin:5px 0 7px}
+  .compact-page .sub-hero>p:last-child{font-size:12px;line-height:1.4}
+  .compact-page footer{padding:28px 20px;font-size:13px}
+  .compact-about{padding:12px 10px 18px}
+  .about-summary-heading{display:block;margin:0 2px 10px}
+  .about-summary-heading h2{font-size:22px;margin-top:5px}
+  .about-summary{grid-template-columns:1fr;gap:6px}
+  .about-summary article{display:grid;grid-template-columns:26px 92px 1fr;align-items:center;padding:10px;gap:5px}
+  .about-summary h3{font-size:15px;margin:0}
+  .about-summary p{font-size:11px;line-height:1.35}
+  .church-signature{height:60px;padding:8px 4px 0}
+  .church-signature img{width:50px;height:50px;opacity:.42}
+  .compact-roots{margin-top:8px;padding:14px;gap:10px}
+  .compact-roots h2{font-size:21px;margin:4px 0}
+  .compact-roots>div>p:last-child{font-size:11px;line-height:1.4}
+  .compact-roots ol{gap:5px}
+  .compact-roots li{padding:8px}
+  .compact-roots strong{font-size:11px}
+  .compact-roots .text-link{font-size:11px;margin-top:0}
+  .compact-sermons{padding:12px 10px 18px}
+  .compact-sermons .featured-sermon{padding:16px;grid-template-columns:42px 1fr;gap:12px}
+  .compact-sermons .play{width:40px;height:40px;font-size:13px}
+  .compact-sermons .featured-sermon h2{font-size:21px}
+  .compact-sermons .featured-sermon p{font-size:12px;line-height:1.4}
+  .compact-board{padding:12px 12px 18px}
+  .compact-board .board-toolbar p{font-size:11px}
+  .compact-board .board-form{padding:14px 12px}
+  .compact-board .empty-state{padding:26px 10px}
+  .compact-directions{padding:16px 14px 20px}
+  .compact-directions h2{font-size:27px}
+  .compact-directions .directions-address{font-size:19px}
+  .compact-directions .directions-address br{display:none}
+  .compact-directions .map-preview,.compact-directions .map-preview iframe{min-height:220px;height:220px}
+  .home-page .site-header{height:72px}
+  .home-page .hero-copy{padding:28px 20px 24px}
+  .home-page .hero h1{font-size:30px;margin:9px 0 12px}
+  .home-page .lead{font-size:13px;line-height:1.5}
+  .home-page .hero-facebook-link{padding-top:11px;padding-bottom:11px}
+  .home-page .identity,.home-page .confessions,.home-page .directions{padding:26px 18px}
+  .home-page .identity-intro h2{font-size:27px}
+  .home-page .identity-intro>p:last-of-type{font-size:12px}
+  .home-page .pillars{margin-top:10px}
+  .home-page .pillars article{padding:10px 0;grid-template-columns:28px 1fr}
+  .home-page .pillars article p{display:none}
+  .home-page .pillars h3{font-size:17px}
+  .home-page .section-heading{display:block;margin:8px 0 12px}
+  .home-page .section-heading h2{font-size:27px;margin-bottom:6px}
+  .home-page .section-heading p{font-size:12px;margin-bottom:0}
+  .home-page .confession-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;border:0}
+  .home-page .confession-list article{border:1px solid #d7cebd!important}
+  .home-page .confession-list article>a,.home-page .confession-list article:first-child>a{padding:10px}
+  .home-page .confession-list span,.home-page .confession-list p{display:none}
+  .home-page .confession-list h3{font-size:14px;line-height:1.35;margin:0 0 8px;word-break:keep-all}
+  .home-page .confession-list strong{font-size:10px;border:0;padding:0}
+  .home-page .directions h2{font-size:27px}
+  .home-page .directions-address{font-size:19px}
+  .home-page .directions-address br{display:none}
+  .home-page .directions-copy .muted{display:none}
+  .home-page .naver-map-button{margin-top:8px;padding:10px 12px;font-size:12px}
+  .home-page .map-preview,.home-page .map-preview iframe{min-height:200px;height:200px}
+  .home-page footer{padding:28px 20px;font-size:13px}
+}
+
+/* Twelve-document library: dense grid with short mobile scrolling. */
+.compact-resources{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding-top:20px;padding-bottom:24px}
+.compact-resources .resource-card{padding:14px;grid-template-columns:38px minmax(0,1fr);gap:9px}
+.compact-resources .file-badge{width:36px;height:43px;font-size:8px}
+.compact-resources .resource-card h2{font-size:18px;margin:3px 0 5px}
+.compact-resources .resource-card p{font-size:11px;line-height:1.35;margin-bottom:4px}
+.compact-resources .resource-card small{font-size:9px}
+.compact-resources .resource-actions .button{min-height:34px;font-size:11px;padding:0 9px}
+@media(max-width:900px){
+  .compact-resources{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:16px 12px 20px}
+}
+@media(max-width:620px){
+  .resources-page .sub-hero{padding:20px 16px}
+  .resources-page .sub-hero h1{font-size:25px}
+  .compact-resources{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:9px 7px 14px}
+  .compact-resources .resource-card{padding:9px 7px;min-height:98px;gap:5px}
+  .compact-resources .resource-card h2{font-size:13px;line-height:1.3}
+  .compact-resources .resource-actions .button{min-height:30px;font-size:10px;padding:0 4px}
+}
+
+/* Search every PDF's text, with touch-friendly result navigation. */
+.reader-controls{position:sticky;top:0;z-index:5;width:min(900px,100%);margin:0 auto 16px;box-shadow:0 5px 18px #0003;border-radius:6px;overflow:hidden}
+.reader-controls .reader-toolbar{position:static;width:100%;margin:0;border-radius:0;box-shadow:none}
+.reader-search{display:grid;grid-template-columns:auto minmax(150px,1fr) auto;align-items:center;gap:8px;padding:9px 10px;background:#fff;border-bottom:1px solid #d5cbb9}
+.reader-search-bottom{width:min(900px,100%);margin:10px auto 0;border:1px solid #c8beae;border-radius:6px;box-shadow:0 4px 14px #0002}
+.reader-search>label{font-size:13px;font-weight:800;color:var(--navy);white-space:nowrap}
+.reader-search>input{min-width:0;height:38px;border:1px solid #b9b1a4;border-radius:4px;padding:0 11px;font:inherit;color:var(--navy);background:#fff}
+.reader-search>button{height:38px;border:0;border-radius:4px;padding:0 15px;background:var(--forest);color:#fff;font:inherit;font-weight:800;cursor:pointer}
+.reader-search>button:disabled{opacity:.45;cursor:default}
+.reader-search-status{grid-column:1/-1;display:flex;align-items:center;gap:6px;min-height:28px;color:#42504b;font-size:12px}
+.reader-search-status span{margin-right:auto;font-weight:700}
+.reader-search-status button{height:28px;min-width:32px;border:1px solid #b9b1a4;border-radius:4px;background:#f5f1e9;color:var(--navy);font-weight:900;cursor:pointer}
+.reader-search-status .reader-search-clear{padding:0 9px;font-size:11px}
+.pdf-search-highlight{position:absolute;z-index:1;margin:0;padding:0;border:0;border-radius:2px;background:#ffe45ccc;box-shadow:0 0 0 1px #ddaa00;pointer-events:none;mix-blend-mode:multiply}
+@media(max-width:620px){
+  .reader-controls{margin-bottom:8px;border-radius:4px}
+  .reader-search{grid-template-columns:minmax(0,1fr) auto;padding:7px;gap:6px}
+  .reader-search>label{grid-column:1/-1;font-size:11px}
+  .reader-search>input{height:36px;font-size:14px}
+  .reader-search>button{height:36px;padding:0 13px;font-size:13px}
+  .reader-search-status{font-size:11px;gap:4px}
+}

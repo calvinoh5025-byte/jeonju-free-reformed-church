@@ -1,0 +1,123 @@
+.church-roots {
+  padding: 100px clamp(28px, 7vw, 110px);
+  background: var(--forest);
+  color: #fff;
+}
+
+.roots-heading {
+  max-width: 940px;
+  margin-bottom: 64px;
+}
+
+.roots-heading h2 {
+  margin: 14px 0 28px;
+  font: 500 clamp(40px, 5vw, 62px) "Noto Serif KR", serif;
+}
+
+.roots-heading > p:not(.section-kicker) {
+  color: #d0dbd5;
+  font-size: 17px;
+  line-height: 1.9;
+}
+
+.roots-timeline {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 34px;
+}
+
+.roots-timeline::before {
+  content: "";
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: 7px;
+  width: 1px;
+  background: rgba(216, 181, 115, 0.55);
+}
+
+.roots-timeline li {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(120px, 0.35fr) 1.65fr;
+  gap: 32px;
+  padding: 0 0 42px;
+}
+
+.roots-timeline li::before {
+  content: "";
+  position: absolute;
+  top: 7px;
+  left: -34px;
+  width: 15px;
+  height: 15px;
+  border: 2px solid #d8b573;
+  border-radius: 50%;
+  background: var(--forest);
+}
+
+.roots-timeline time {
+  color: #e5c17f;
+  font: italic 18px Georgia, serif;
+}
+
+.roots-timeline h3 {
+  margin: 0 0 9px;
+  font: 500 25px "Noto Serif KR", serif;
+}
+
+.roots-timeline p {
+  margin: 0;
+  color: #cbd7d1;
+  line-height: 1.8;
+}
+
+.roots-confession {
+  margin-top: 30px;
+  padding: clamp(32px, 5vw, 58px);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: #173f30;
+}
+
+.roots-confession > span {
+  color: #d8b573;
+  font: italic 15px Georgia, serif;
+  letter-spacing: 0.08em;
+}
+
+.roots-confession h3 {
+  margin: 18px 0;
+  font: 500 clamp(28px, 3vw, 40px) "Noto Serif KR", serif;
+}
+
+.roots-confession p {
+  max-width: 900px;
+  color: #d0dbd5;
+  line-height: 1.9;
+}
+
+.roots-confession small {
+  display: block;
+  margin-top: 28px;
+  padding-top: 22px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  color: #aebeb6;
+  line-height: 1.7;
+}
+
+@media (max-width: 620px) {
+  .church-roots {
+    padding: 72px 24px;
+  }
+
+  .roots-heading {
+    margin-bottom: 48px;
+  }
+
+  .roots-timeline li {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding-bottom: 36px;
+  }
+}

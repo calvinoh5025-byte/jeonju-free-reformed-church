@@ -1,0 +1,33 @@
+.description {
+  color: #b9c1c4;
+  line-height: 1.8;
+}
+
+.motto {
+  margin-top: 38px;
+  padding: 3px 0 3px 22px;
+  border-left: 2px solid var(--gold);
+  display: grid;
+  gap: 9px;
+}
+
+.motto span {
+  color: #dab672;
+  font: italic 16px Georgia, serif;
+  letter-spacing: 0.08em;
+}
+
+.motto strong {
+  color: #f7f0e2;
+  font: 500 21px/1.65 "Noto Serif KR", serif;
+}
+
+@media (max-width: 620px) {
+  .motto {
+    margin-top: 30px;
+  }
+
+  .motto strong {
+    font-size: 19px;
+  }
+}
