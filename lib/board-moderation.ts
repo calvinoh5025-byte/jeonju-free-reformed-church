@@ -30,6 +30,7 @@ export async function serviceRest(path: string, init: RequestInit = {}) {
   return fetch(`${config.url}/rest/v1/${path}`, {
     ...init,
     cache: "no-store",
-    headers: { apikey: config.key, Authorization: `Bearer ${config.key}`, ...init.headers },
+    // 새 형식 비밀 키(sb_secret_)는 apikey 헤더로만 보냅니다. 예전 JWT 형식은 Authorization도 함께 보냅니다.
+    headers: { apikey: config.key, ...(config.key.startsWith("sb_") ? {} : { Authorization: `Bearer ${config.key}` }), ...init.headers },
   });
 }
