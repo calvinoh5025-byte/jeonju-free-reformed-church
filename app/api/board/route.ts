@@ -49,12 +49,16 @@ async function sendNewPostAlert(id: number | null, author: string, title: string
 }
 
 async function findNewPostId(author: string, title: string) {
-  if (!moderationReady()) return null;
+  if (!moderationReady()) {
+    console.error("[board-alert] SUPABASE_SERVICE_ROLE_KEY is not available; sending email without buttons");
+    return null;
+  }
   try {
     const query = `frck_board_posts?select=id&status=eq.pending&author=eq.${encodeURIComponent(author)}&title=eq.${encodeURIComponent(title)}&order=id.desc&limit=1`;
     const response = await serviceRest(query, { headers: { Accept: "application/json" } });
     if (!response.ok) throw new Error(await response.text());
     const rows = await response.json() as Array<{ id: number }>;
+    console.log(`[board-alert] post id lookup status=${response.status} rows=${rows.length}`);
     return rows[0]?.id ?? null;
   } catch (error) {
     console.error("[board-alert] could not find new post id", error instanceof Error ? error.message : error);
