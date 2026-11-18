@@ -32,7 +32,7 @@ export default function Home() {
             <h1>말씀 위에 서는 교회,<br />언약 안에서 함께 걷는 공동체</h1>
             <div className="gold-rule" />
             <p className="lead">성경과 세 일치 신조를 따라 그리스도를 고백하며, 세대와 세대를 이어 신실한 교회를 세우시는 그리스도 안에서 살아갑니다.</p>
-            <aside className="visitor-card"><strong>처음 오시는 분</strong>{worshipTimes.map(item => <p key={item.label}>{item.label} {item.time}</p>)}<p>{address}</p><p>문의 <a href={contact.phoneHref}>{contact.phone}</a> · <a href={`mailto:${contact.email}`}>{contact.email}</a></p><a className="button secondary" href="/location">오시는 길</a><a className="button secondary" href="/resources/read/worship-order">예배순서 보기</a></aside>
+            <aside className="visitor-card"><strong>처음 오시는 분</strong>{worshipTimes.map(item => <p key={item.label}>{item.label} {item.time}</p>)}<p>{address}</p><p>문의 <a href={contact.phoneHref}>{contact.phone}</a> · <a href={`mailto:${contact.email}`}>{contact.email}</a></p><a className="button secondary" href="/newcomers">새가족 안내</a><a className="button secondary" href="/location">오시는 길</a><a className="button secondary" href="/resources/read/worship-order">예배순서 보기</a></aside>
             <InstallApp />
           </div>
           <div className="hero-media">
