@@ -2,7 +2,6 @@ import { supabaseRest } from "../../../lib/supabase-rest";
 import { keyKind, moderationReady, serviceRest, signModeration } from "../../../lib/board-moderation";
 
 const alertEmail = process.env.BOARD_ALERT_EMAIL;
-const adminBoardUrl = process.env.BOARD_ADMIN_URL;
 const siteUrl = "https://jeonju-free-reformed-church.vercel.app";
 const requests = new Map<string, number[]>();
 
@@ -23,11 +22,12 @@ async function sendNewPostAlert(id: number | null, author: string, title: string
     const approveUrl = id && moderationReady() ? moderationLink(id, "approve") : null;
     const deleteUrl = id && moderationReady() ? moderationLink(id, "delete") : null;
     const lines = [`제목: ${title}`, `작성자: ${author}`, "", content, ""];
-    if (approveUrl && deleteUrl) lines.push(`승인하기: ${approveUrl}`, `삭제하기: ${deleteUrl}`);
-    else if (adminBoardUrl) lines.push(`승인 페이지: ${adminBoardUrl}`);
+    if (approveUrl && deleteUrl) lines.push(`공개하기(승인): ${approveUrl}`, `삭제하기: ${deleteUrl}`, "승인한 뒤에도 확인 화면의 '공개 취소하기' 버튼으로 언제든 되돌릴 수 있습니다.");
+    else lines.push("지금은 메일에서 바로 승인할 수 없습니다. 관리자에게 알려 주세요.");
+    const btn = (href: string, label: string, color: string, filled: boolean) => `<a href="${href}" style="display:block;text-align:center;${filled ? `background:${color};color:#fff;` : `background:#fff;color:${color};border:2px solid ${color};`}padding:16px;border-radius:12px;font-size:18px;font-weight:700;text-decoration:none;margin:0 0 12px">${label}</a>`;
     const buttons = approveUrl && deleteUrl
-      ? `<p style="margin:24px 0"><a href="${approveUrl}" style="display:inline-block;background:#1f5b45;color:#fff;padding:14px 26px;border-radius:10px;font-size:17px;font-weight:700;text-decoration:none;margin:0 8px 8px 0">승인하기</a><a href="${deleteUrl}" style="display:inline-block;background:#fff;color:#a12d2d;border:2px solid #a12d2d;padding:12px 24px;border-radius:10px;font-size:17px;font-weight:700;text-decoration:none">삭제하기</a></p><p style="color:#5b6475;font-size:14px">버튼을 누르면 확인 화면이 열리고, 한 번 더 누르면 처리됩니다.</p>`
-      : adminBoardUrl ? `<p><a href="${adminBoardUrl}">승인 페이지 열기</a></p>` : "";
+      ? `<div style="margin:24px 0">${btn(approveUrl, "공개하기 (승인)", "#1f5b45", true)}${btn(deleteUrl, "삭제하기", "#a12d2d", false)}</div><p style="color:#5b6475;font-size:15px">버튼을 누르면 확인 화면이 열리고, 한 번 더 누르면 처리됩니다. 승인한 뒤에도 그 화면의 <b>공개 취소하기</b> 버튼으로 언제든 되돌릴 수 있습니다.</p>`
+      : `<p style="color:#a12d2d">지금은 메일에서 바로 승인할 수 없습니다. 관리자에게 알려 주세요.</p>`;
     const html = `<div style="font-family:sans-serif;line-height:1.7;color:#1d2433;max-width:560px"><h2 style="margin:0 0 12px">자유게시판에 새 글이 올라왔습니다</h2><p style="margin:0;color:#5b6475">작성자: ${escapeHtml(author)}</p><p style="margin:4px 0 12px"><strong>${escapeHtml(title)}</strong></p><div style="white-space:pre-wrap;background:#f4efe6;padding:14px;border-radius:10px">${escapeHtml(content)}</div>${buttons}</div>`;
     const response = await fetch("https://api.resend.com/emails", {
       method: "POST",
