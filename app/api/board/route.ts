@@ -1,5 +1,5 @@
 import { supabaseRest } from "../../../lib/supabase-rest";
-import { moderationReady, serviceRest, signModeration } from "../../../lib/board-moderation";
+import { keyKind, moderationReady, serviceRest, signModeration } from "../../../lib/board-moderation";
 
 const alertEmail = process.env.BOARD_ALERT_EMAIL;
 const adminBoardUrl = process.env.BOARD_ADMIN_URL;
@@ -54,12 +54,14 @@ async function findNewPostId(author: string, title: string) {
     return null;
   }
   try {
-    const query = `frck_board_posts?select=id&status=eq.pending&author=eq.${encodeURIComponent(author)}&title=eq.${encodeURIComponent(title)}&order=id.desc&limit=1`;
+    // 방금 저장한 승인 대기 글 가운데 가장 최근 것을 찾습니다.
+    const query = `frck_board_posts?select=id,author,title&status=eq.pending&order=id.desc&limit=5`;
     const response = await serviceRest(query, { headers: { Accept: "application/json" } });
     if (!response.ok) throw new Error(await response.text());
-    const rows = await response.json() as Array<{ id: number }>;
-    console.log(`[board-alert] post id lookup status=${response.status} rows=${rows.length}`);
-    return rows[0]?.id ?? null;
+    const rows = await response.json() as Array<{ id: number; author: string; title: string }>;
+    const match = rows.find(row => row.author === author && row.title === title) ?? null;
+    console.log(`[board-alert] post id lookup status=${response.status} rows=${rows.length} matched=${match ? "yes" : "no"} key=${keyKind()}`);
+    return match?.id ?? null;
   } catch (error) {
     console.error("[board-alert] could not find new post id", error instanceof Error ? error.message : error);
     return null;
