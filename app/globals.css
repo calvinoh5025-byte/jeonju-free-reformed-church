@@ -594,3 +594,8 @@ footer small{border-color:#b8c7b9;color:#4f5b55}
 .worship-card{border-radius:18px;border-color:#e5dccb;box-shadow:0 6px 18px #3a30200a;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
 .worship-card:hover{transform:translateY(-3px);border-color:#29463f;box-shadow:0 12px 28px #3a302014}
 @media (prefers-reduced-motion:reduce){.worship-card,.confession-cards article{transition:none}.worship-card:hover,.confession-cards article:hover{transform:none}}
+/* Psalter number cards: colour change on hover */
+.worship-number-grid a{border-radius:12px;transition:background-color .15s ease,color .15s ease,border-color .15s ease,transform .15s ease}
+.worship-number-grid a:hover,.worship-number-grid a:focus-visible{background:#29463f;border-color:#29463f;color:#fffcf5;transform:translateY(-2px)}
+.worship-number-grid a:hover small,.worship-number-grid a:focus-visible small{color:#e8efe7}
+@media (prefers-reduced-motion:reduce){.worship-number-grid a:hover{transform:none}}
