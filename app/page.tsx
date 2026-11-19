@@ -21,7 +21,7 @@ export default function Home() {
             <span>자유개혁교회</span>
           </a>
           <nav className="desktop-nav" aria-label="주요 메뉴">
-            <a href="/about">교회소개</a><a href="/church">우리의 신앙고백</a><a href="/sermons">설교</a>
+            <a href="/about">교회소개</a><a href="/newcomers">새가족 안내</a><a href="/church">개혁교회 신앙고백서</a><a href="/worship">예배생활</a><a href="/sermons">설교</a>
             <a href="/board">공지게시판</a><a href="/free-board">자유게시판</a><a href="/resources">자료실</a><a href="/location">오시는 길</a>
           </nav>
           <MobileMenu />

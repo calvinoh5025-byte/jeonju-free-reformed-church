@@ -22,7 +22,7 @@ export default function AboutPage() {
           <li><time>1561–1619</time><strong>세 일치 신조</strong></li>
           <li><time>1944</time><strong>자유와 복귀 선언</strong></li>
         </ol>
-        <a className="text-link" href="/church">우리의 신앙고백 보기 →</a>
+        <a className="text-link" href="/church">개혁교회 신앙고백서 보기 →</a>
       </div>
       <div className="church-signature" aria-label="교회 로고">
         <img src="/images/church-logo-transparent.png" alt="자유 교회 로고" />
