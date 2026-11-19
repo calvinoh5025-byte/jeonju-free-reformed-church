@@ -1,0 +1,2 @@
+"use client";
+export function DaySelect({ current, maximum }: { current: number; maximum: number }) { return <><label className="confession-select-label" htmlFor="heidelberg-day">주일 선택</label><select id="heidelberg-day" className="confession-select" value={current} onChange={event=>{window.location.href=`/confessions/heidelberg/${event.target.value}`}}>{Array.from({length:maximum},(_,index)=><option key={index+1} value={index+1}>제{index+1}주</option>)}</select></>; }

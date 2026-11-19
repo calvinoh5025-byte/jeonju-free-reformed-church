@@ -6,7 +6,7 @@ import { address, contact } from "../church-info";
 const nav = [
   ["교회소개", "/about"],
   ["새가족 안내", "/newcomers"],
-  ["우리의 신앙고백", "/church"],
+  ["개혁교회 신앙고백서", "/church"],
   ["예배생활", "/worship"],
   ["설교", "/sermons"],
   ["자유게시판", "/board"],
