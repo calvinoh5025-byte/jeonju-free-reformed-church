@@ -604,3 +604,9 @@ footer small{border-color:#b8c7b9;color:#4f5b55}
 .compact-roots .section-kicker{color:#e4c27d !important}
 /* about cards numbers: darker for readability */
 .about-summary article span{color:#9a4f37 !important}
+/* Sermons: rounded boxes that lift on hover; whole YouTube box is the link */
+a.featured-sermon{display:grid;color:inherit;text-decoration:none}
+.featured-sermon,.external-resource-cards a{border-radius:18px;box-shadow:0 6px 18px #3a30200a;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+a.featured-sermon:hover,.external-resource-cards a:hover{transform:translateY(-3px);border-color:#29463f;box-shadow:0 12px 28px #3a302014}
+a.featured-sermon:focus-visible,.external-resource-cards a:focus-visible{outline:3px solid #e4c27d;outline-offset:3px}
+@media (prefers-reduced-motion:reduce){a.featured-sermon:hover,.external-resource-cards a:hover{transform:none}}
