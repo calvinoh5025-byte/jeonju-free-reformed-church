@@ -1,50 +1,32 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import data from "../data/universal-creeds.json";
 
-const creeds = [
-  { id: "apostles", title: "사도신경", firstPage: 1, lastPage: 1 },
-  { id: "nicene", title: "니케아 신경", firstPage: 2, lastPage: 2 },
-  { id: "athanasian", title: "아타나시우스 신경", firstPage: 3, lastPage: 4 },
-];
+type Item = { n: number; part?: string | null; lines?: string[]; text?: string };
+type Creed = { id: string; title: string; intro: string; kind: string; items?: Item[]; lines?: string[] };
+const creeds = data.creeds as Creed[];
 
 export function UniversalCreedsReader() {
-  const [selected, setSelected] = useState(creeds[0]);
-  const [page, setPage] = useState(creeds[0].firstPage);
-
-  function selectCreed(creed: typeof creeds[number]) {
-    setSelected(creed);
-    setPage(creed.firstPage);
-  }
+  const [selectedId, setSelectedId] = useState(creeds[0].id);
+  useEffect(() => {
+    const fromHash = location.hash.replace("#", "");
+    if (creeds.some(c => c.id === fromHash)) setSelectedId(fromHash);
+  }, []);
+  const select = (id: string) => { setSelectedId(id); history.replaceState(null, "", `#${id}`); };
+  const creed = creeds.find(c => c.id === selectedId) ?? creeds[0];
 
   return <div className="universal-creed-reader">
+    <p className="confession-intro">{data.intro}</p>
     <nav className="universal-creed-choices" aria-label="보편 신경 선택">
-      {creeds.map(creed => <button
-        key={creed.id}
-        type="button"
-        className="universal-creed-choice"
-        aria-pressed={selected.id === creed.id}
-        onClick={() => selectCreed(creed)}
-      >{creed.title}</button>)}
+      {creeds.map(c => <button key={c.id} type="button" className="universal-creed-choice" aria-pressed={c.id === creed.id} onClick={() => select(c.id)}>{c.title}</button>)}
     </nav>
-
-    <div className="universal-creed-reader-heading">
-      <h2>{selected.title}</h2>
-      {selected.firstPage !== selected.lastPage && <nav className="universal-creed-pages" aria-label={`${selected.title} 쪽 선택`}>
-        <button type="button" disabled={page === selected.firstPage} onClick={() => setPage(current => Math.max(selected.firstPage, current - 1))}>이전 쪽</button>
-        <span>{page - selected.firstPage + 1} / {selected.lastPage - selected.firstPage + 1}쪽</span>
-        <button type="button" disabled={page === selected.lastPage} onClick={() => setPage(current => Math.min(selected.lastPage, current + 1))}>다음 쪽</button>
-      </nav>}
-    </div>
-
-    <iframe
-      key={`${selected.id}-${page}`}
-      title={`${selected.title} 원문`}
-      src={`/resources/universal-creeds-section.pdf#page=${page}&view=FitH`}
-      loading="lazy"
-      className="universal-creed-frame"
-    />
-    <p className="universal-creed-caption">원문 PDF를 표시합니다. PDF 도구 모음에서 확대하거나 내려받을 수 있습니다.</p>
-    <a className="universal-creed-fallback" href={`/resources/universal-creeds-section.pdf#page=${page}`} target="_blank" rel="noreferrer">PDF 원문 새 창에서 열기 ↗</a>
+    <article className="universal-creed-text confession-reading" aria-live="polite">
+      <h2>{creed.title}</h2>
+      <p className="universal-creed-intro">{creed.intro}</p>
+      {creed.kind === "articles" && <ol className="creed-articles">{creed.items!.map(item => <li key={item.n}><span className="creed-part">{item.part ? `${item.part}.` : ""}</span><span className="creed-num">{item.n}.</span><span className="creed-lines">{item.lines!.map((line, i) => <span key={i}>{line}<br /></span>)}</span></li>)}</ol>}
+      {creed.kind === "lines" && <div className="creed-lines-block">{creed.lines!.map((line, i) => <p key={i}>{line}</p>)}</div>}
+      {creed.kind === "numbered" && <ol className="creed-numbered">{creed.items!.map(item => <li key={item.n}><span className="creed-num">{item.n}</span><span>{item.text}</span></li>)}</ol>}
+    </article>
   </div>;
 }

@@ -565,3 +565,13 @@ footer small{border-color:#b8c7b9;color:#4f5b55}
 .form-notice{background:#eef3eb;color:#263530;border-left-color:#29463f}
 @media(max-width:900px){.sub-hero h1,.sub-hero>p{max-width:calc(100% - 250px)}.sub-hero-illustration{right:180px;width:64px}}
 @media(max-width:620px){.sub-hero h1,.sub-hero>p{max-width:calc(100% - 148px)}.sub-hero-illustration{top:auto;right:104px;bottom:20px;width:48px;transform:none}.hero-image{background-image:linear-gradient(90deg,rgba(255,252,245,.72),rgba(255,252,245,.62)),url('/images/church-community.png')}}
+/* Universal creeds as text */
+.universal-creed-text h2{margin:8px 0 10px;font:500 26px "Noto Serif KR",serif;color:#29463f}
+.universal-creed-intro{color:#545e59;font-size:.82em;line-height:1.8;padding:12px 14px;border-left:3px solid #e4c27d;background:#fffcf5;margin:0 0 22px}
+.creed-articles,.creed-numbered{list-style:none;margin:0;padding:0}
+.creed-articles li{display:grid;grid-template-columns:2.4em 2em 1fr;gap:4px;margin:0 0 12px;line-height:1.9}
+.creed-part{color:#8a5a1f;font-weight:700}
+.creed-articles li .creed-lines{grid-column:3}
+.creed-num{color:#8a5a1f;font-weight:700}
+.creed-lines-block p{margin:0;line-height:2}
+.creed-numbered li{display:grid;grid-template-columns:2.2em 1fr;gap:8px;margin:0 0 12px;line-height:1.9}
