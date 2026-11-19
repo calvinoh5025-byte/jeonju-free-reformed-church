@@ -516,3 +516,52 @@ footer{background:#243b35;color:#efe9dc}
 .universal-creed-caption{margin:12px 0 0;color:#69736d;font-size:13px;line-height:1.6}
 .universal-creed-fallback{display:inline-block;margin-top:8px;color:#29463f;font-size:13px;font-weight:700;text-decoration:underline;text-underline-offset:3px}
 @media(max-width:620px){.universal-creed-frame{min-height:480px;height:70vh}.universal-creed-choice{flex:1;min-width:calc(50% - 10px)}}
+
+/* Original decorative illustrations and brighter, high-contrast palette. */
+:root{--navy:#263530;--navy2:#33443d;--ivory:#f7f2e8;--paper:#fffcf5;--gold:#b9954d;--forest:#29463f;--terracotta:#c97968;--terracotta-text:#29463f;--ink:#263530;--muted:#4f5b55}
+body{background:#f7f2e8;color:#263530;font-family:"Noto Sans KR","Pretendard",sans-serif;font-weight:400;letter-spacing:-.012em;line-height:1.75;-webkit-font-smoothing:antialiased}
+h1,h2,h3{letter-spacing:-.025em;font-weight:500}
+.sub-page{background-color:#f7f2e8;background-image:url('/illustrations/paper-grain.svg');background-repeat:repeat;background-size:160px 160px}
+.site-header,.sub-header{background:#fffcf5;color:#263530;border-color:#d8dfd5;box-shadow:0 2px 12px #2635300a}
+.brand,.footer-brand{color:#263530}
+.brand-mark{border-color:#617c69;color:#263530}
+.desktop-nav,.sub-header .desktop-nav{color:#263530}
+.desktop-nav a:hover,.sub-header .desktop-nav a:hover{color:#29463f;background:#e8efe7}
+.hero{background:#e8efe7;color:#263530}
+.hero h1,.hero .lead{color:#263530}
+.hero .eyebrow,.section-kicker,.section-kicker.light,.eyebrow{color:#29463f}
+.hero-image{background-image:linear-gradient(90deg,rgba(255,252,245,.72),rgba(255,252,245,.62)),url('/images/church-community.png');filter:saturate(.9)}
+.gold-rule{background:#617c69}
+.button.primary{background:#29463f;color:#fffcf5}
+.button.primary:hover{background:#203a34}
+.button.secondary,.button.secondary.dark{border-color:#29463f;color:#29463f;background:#fffcf5}
+.visit-card,.sermon-card{background:#fffcf5;color:#263530;border-color:#d8dfd5}
+.visit-card a,.card-label,.text-link,.address-card>p:first-child,.address-card a{color:#29463f}
+.identity,.sermons{background:#e8efe7;color:#263530}
+.identity-intro>p:last-child,.sermons>div>p:last-child,.pillars p,.confession-list p{color:#4f5b55}
+.pillars article{border-color:#b8c7b9}
+.pillars span,.confession-list span,.sermon-card small{color:#29463f}
+.sermon-card{border:1px solid #d8dfd5}
+.play{background:#29463f;color:#fffcf5}
+.confessions{background:#f7f2e8}
+.confession-list{border-color:#b8c7b9}
+.confession-list article{border-color:#cbd5c9}
+footer{background:#e8efe7;color:#263530;border-top:1px solid #cbd5c9}
+footer a{color:#29463f}
+footer small{border-color:#b8c7b9;color:#4f5b55}
+.sub-hero{position:relative;overflow:hidden;background-image:linear-gradient(100deg,rgba(255,252,245,.74),rgba(255,252,245,.66)),url('/images/church-community.png');color:#263530}
+.sub-hero .eyebrow,.sub-hero h1,.sub-hero>p:last-of-type{color:#263530}
+.sub-hero:after{box-shadow:0 8px 20px #26353020;border-color:#fffcf5}
+.sub-hero-illustration{position:absolute;z-index:1;right:calc(clamp(22px,7vw,108px) + clamp(112px,15vw,188px) + 20px);top:50%;width:clamp(72px,8vw,108px);aspect-ratio:1;transform:translateY(-50%);background-position:center;background-repeat:no-repeat;background-size:contain;opacity:.62;pointer-events:none}
+.sub-hero h1,.sub-hero>p{position:relative;z-index:2;max-width:min(660px,66%)}
+.mobile-menu summary{border-color:#617c69;color:#263530;background:#fffcf5}
+.mobile-menu nav{background:#fffcf5;color:#263530;border:1px solid #d8dfd5;box-shadow:0 12px 28px #26353020}
+.mobile-menu nav a{color:#263530;border-color:#d8dfd5}
+.mobile-menu nav a:hover{background:#e8efe7;color:#29463f}
+.mobile-menu summary:focus-visible,.mobile-menu nav a:focus-visible,.desktop-nav a:focus-visible,footer a:focus-visible,.button:focus-visible,.worship-card:focus-visible,.confession-cards a:focus-visible{outline:3px solid #29463f;outline-offset:3px}
+.worship-card,.confession-cards article,.resource-card,.board-form,.order-service,.confession-content{background:#fffcf5}
+.empty-state{color:#263530;background:#fffcf5}
+.empty-state-illustration{display:block;width:min(120px,40vw);height:auto;margin:0 auto 14px;opacity:.86}
+.form-notice{background:#eef3eb;color:#263530;border-left-color:#29463f}
+@media(max-width:900px){.sub-hero h1,.sub-hero>p{max-width:calc(100% - 250px)}.sub-hero-illustration{right:180px;width:64px}}
+@media(max-width:620px){.sub-hero h1,.sub-hero>p{max-width:calc(100% - 148px)}.sub-hero-illustration{top:auto;right:104px;bottom:20px;width:48px;transform:none}.hero-image{background-image:linear-gradient(90deg,rgba(255,252,245,.72),rgba(255,252,245,.62)),url('/images/church-community.png')}}

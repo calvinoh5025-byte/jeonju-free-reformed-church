@@ -61,7 +61,7 @@ export default function FreeBoardClient() {
           <h3><button className="post-title-button" type="button" aria-expanded={expanded} aria-controls={`free-post-${post.id}`} onClick={() => setOpenPostId(expanded ? null : post.id)}><span>{post.title}</span><span aria-hidden="true">{expanded ? "−" : "+"}</span></button></h3>
           {expanded && <div className="post-detail" id={`free-post-${post.id}`}><p>{post.content}</p></div>}
         </article>;
-      }) : <div className="empty-state"><strong>아직 게시글이 없습니다.</strong><p>첫 번째 이야기를 남겨주세요.</p></div>}
+      }) : <div className="empty-state"><img className="empty-state-illustration" src="/illustrations/morning-light.svg" alt="" aria-hidden="true" /><strong>아직 게시글이 없습니다.</strong><p>첫 번째 이야기를 남겨주세요.</p></div>}
     </div>
     {!open && message && <p className="board-status" role="status">{message}</p>}
   </div>;
