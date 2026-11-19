@@ -1,11 +1,11 @@
-const CACHE = "frck-shell-v6";
+const CACHE = "frck-shell-v7";
 const SHELL = [
   "/",
   "/manifest.webmanifest",
   "/favicon.svg",
   "/icons/icon-192.png",
   "/icons/icon-512.png",
-  "/images/church-sign-square.jpg"
+  "/images/church-sign-photo.jpg"
 ];
 
 self.addEventListener("install", (event) => {
