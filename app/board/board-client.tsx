@@ -10,5 +10,5 @@ export default function BoardClient() {
     <div className="post-list">{posts.length ? posts.map(p => {
       const isOpen = openPostId === p.id;
       return <article key={p.id}><div className="post-meta"><span>{p.author}</span><time>{new Date(p.createdAt).toLocaleDateString("ko-KR")}</time></div><h3><button className="post-title-button" type="button" aria-expanded={isOpen} aria-controls={`post-${p.id}`} onClick={() => setOpenPostId(isOpen ? null : p.id)}><span>{p.title}</span><span aria-hidden="true">{isOpen ? "−" : "+"}</span></button></h3>{isOpen && <div className="post-detail" id={`post-${p.id}`}><p>{p.content}</p></div>}</article>;
-    }) : <div className="empty-state"><strong>등록된 공지사항이 없습니다.</strong></div>}</div></div>;
+    }) : <div className="empty-state"><img className="empty-state-illustration" src="/illustrations/morning-light.svg" alt="" aria-hidden="true" /><strong>등록된 공지사항이 없습니다.</strong></div>}</div></div>;
 }

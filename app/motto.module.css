@@ -1,5 +1,5 @@
 .description {
-  color: #b9c1c4;
+  color: #3f5148;
   line-height: 1.8;
 }
 
@@ -12,13 +12,13 @@
 }
 
 .motto span {
-  color: #dab672;
+  color: #29463f;
   font: italic 16px Georgia, serif;
   letter-spacing: 0.08em;
 }
 
 .motto strong {
-  color: #f7f0e2;
+  color: #263530;
   font: 500 21px/1.65 "Noto Serif KR", serif;
 }
 

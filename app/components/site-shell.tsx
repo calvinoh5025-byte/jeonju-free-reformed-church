@@ -41,6 +41,6 @@ export function SiteFooter() {
   );
 }
 
-export function SubHero({ kicker, title, description }: { kicker: string; title: string; description: string }) {
-  return <section className="sub-hero"><p className="eyebrow">{kicker}</p><h1>{title}</h1><p>{description}</p></section>;
+export function SubHero({ kicker, title, description, illustration }: { kicker: string; title: string; description: string; illustration?: string }) {
+  return <section className="sub-hero"><p className="eyebrow">{kicker}</p><h1>{title}</h1><p>{description}</p>{illustration && <span className="sub-hero-illustration" aria-hidden="true" style={{ backgroundImage: `url('${illustration}')` }} />}</section>;
 }
