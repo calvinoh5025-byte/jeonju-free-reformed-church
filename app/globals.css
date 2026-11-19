@@ -447,3 +447,14 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--gold);outline-offse
 .footnote-verse b{display:block;font-size:12px;color:var(--forest)}
 .footnote-popover>small{display:block;margin-top:10px;padding-top:7px;border-top:1px solid #e6ddcb;color:#777;font-size:11px}
 @media(max-width:620px){.confession-content{padding:28px 18px 48px}.confession-intro,.confession-preamble{font-size:15px;line-height:1.8;margin-bottom:24px}.confession-reading{font-size:var(--confession-font-size,18px)}.confession-list{grid-template-columns:1fr;gap:7px}.confession-list section h2{font-size:20px;margin-top:24px}.confession-list-card{padding:13px}.confession-questions>article,.confession-dort-articles>article,.confession-rejections>article{padding:17px 0}.confession-questions h2,.confession-dort-articles h2{font-size:20px}.confession-rejections>h2{font-size:24px}.confession-block{padding:13px}.confession-navigation{font-size:13px;gap:7px}.footnote-popover{position:fixed;left:16px;right:16px;bottom:12px;transform:none;width:auto;max-height:50vh;padding:18px;background:#fffaf0}}
+/* Worship documents */
+.doc-crumb{margin-bottom:12px}.doc-crumb a{color:var(--muted)}
+.doc-reading h2{font:500 clamp(22px,3.4vw,30px) var(--font-noto-serif),serif;color:var(--navy);margin:38px 0 14px}
+.doc-reading h3{font:600 1.1em var(--font-noto-serif),serif;color:var(--navy);margin:42px 0 12px;padding-top:14px;border-top:1px solid #e0d8cb;scroll-margin-top:80px}
+.doc-reading h4{font-size:.95em;color:#8a5a1f;margin:28px 0 8px;letter-spacing:.02em}
+.doc-reading p{margin:0 0 1em;text-indent:0}
+.doc-reading .doc-note{font-size:.8em;color:var(--muted);border-left:3px solid #e0d8cb;padding-left:10px}
+.doc-toc{margin:0 0 28px;padding:16px 18px;border:1px solid #e0d8cb;background:#fffdf7;font-size:16px;line-height:1.7}.doc-toc ol{margin:8px 0 0;padding-left:22px;columns:2;column-gap:28px}.doc-toc a{color:var(--navy)}
+.doc-toc-inline{display:flex;gap:10px}.doc-toc-inline a{min-width:90px;min-height:44px;display:grid;place-items:center;border:1px solid #cfc6b4;background:#fff}
+.order-form{margin-bottom:36px;scroll-margin-top:80px}.order-services{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.order-service{border:1px solid #e0d8cb;background:#fffdf7;padding:14px 18px}.order-service h3{margin:0 0 8px;border:0;padding:0}.order-service ol{margin:0;padding-left:0;list-style:none;font-size:.92em;line-height:1.7}.order-service li{margin:4px 0}.order-optional{color:var(--muted);font-style:italic}.order-service ul{list-style:none;padding-left:8px;margin:2px 0}
+@media(max-width:620px){.doc-toc ol{columns:1}.order-services{grid-template-columns:1fr}}

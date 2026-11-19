@@ -6,6 +6,7 @@ import { ReadingControls } from "./reading-controls";
 type Notes = Record<string, { ref: string; verses: { label: string; text: string | null }[] }>;
 type Lines = string[];
 function pick(text: string, notes?: Notes): Notes | undefined { if (!notes) return undefined; const out: Notes = {}; for (const m of text.matchAll(/\[\[(\d+)\]\]/g)) { const n = notes[m[1]]; if (n) out[m[1]] = n; } return Object.keys(out).length ? out : undefined; }
+export function NotedText({ text, notes }: { text: string; notes?: object }) { return <FootnoteText text={text} notes={notes}/>; }
 function FootnoteText({ text, notes }: { text: string; notes?: object }) { const own = pick(text, notes as Notes | undefined); return own ? <ClientFootnoteText text={text} notes={own}/> : <>{text}</>; }
 export function ConfessionShell({ children }: { children: ReactNode }) { return <><ReadingControls/><div className="confession-reading">{children}</div></>; }
 export function LinesText({ lines, notes }: { lines: Lines; notes?: object }) { return <div className="confession-lines">{lines.map((line,index)=><p key={index}><FootnoteText text={line} notes={notes}/></p>)}</div>; }
