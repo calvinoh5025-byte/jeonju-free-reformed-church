@@ -583,9 +583,19 @@ footer small{border-color:#b8c7b9;color:#4f5b55}
 .worship-audio p{margin:0;color:#545e59}
 .worship-audio small{color:#545e59;width:100%}
 /* Whole confession card is clickable */
-.confession-cards article{padding:0;transition:box-shadow .15s,border-color .15s}
+.confession-cards article{padding:0;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
 .confession-cards a.confession-card-link{display:block;height:100%;padding:38px;border:0;color:inherit;font-weight:inherit;text-decoration:none}
 .confession-cards article:hover{border-color:#29463f;box-shadow:0 8px 22px rgba(41,70,63,.12)}
 .confession-cards a.confession-card-link:focus-visible{outline:3px solid #e4c27d;outline-offset:-3px}
 .confession-card-read{display:inline-block;margin-top:6px;color:var(--forest);border-bottom:1px solid var(--forest);padding-bottom:5px}
 @media(max-width:620px){.confession-cards a.confession-card-link{padding:28px}}
+
+/* Worship hub cards: rounded, lift on hover (same feel as confession cards) */
+.worship-card{border-radius:18px;border-color:#e5dccb;box-shadow:0 6px 18px #3a30200a;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+.worship-card:hover{transform:translateY(-3px);border-color:#29463f;box-shadow:0 12px 28px #3a302014}
+@media (prefers-reduced-motion:reduce){.worship-card,.confession-cards article{transition:none}.worship-card:hover,.confession-cards article:hover{transform:none}}
+/* Psalter number cards: colour change on hover */
+.worship-number-grid a{border-radius:12px;transition:background-color .15s ease,color .15s ease,border-color .15s ease,transform .15s ease}
+.worship-number-grid a:hover,.worship-number-grid a:focus-visible{background:#29463f;border-color:#29463f;color:#fffcf5;transform:translateY(-2px)}
+.worship-number-grid a:hover small,.worship-number-grid a:focus-visible small{color:#e8efe7}
+@media (prefers-reduced-motion:reduce){.worship-number-grid a:hover{transform:none}}

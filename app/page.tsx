@@ -64,9 +64,9 @@ export default function Home() {
         <p className="section-kicker">THREE FORMS OF UNITY</p>
         <div className="section-heading"><h2>우리가 함께 고백하는 신앙</h2><p>우리는 교회가 성경을 따라 함께 고백해 온 믿음의 내용을 소중히 여깁니다.</p></div>
         <div className="confession-list">
-          <article><a href="/confessions/belgic" aria-label="벨직 신앙고백 인터랙티브 읽기"><span>1561</span><h3>벨직 신앙고백</h3><p>삼위 하나님과 구원, 교회와 성례에 관한 성경적 신앙을 체계적으로 고백합니다.</p><strong>읽기 →</strong></a></article>
-          <article><a href="/confessions/heidelberg" aria-label="하이델베르크 교리문답 인터랙티브 읽기"><span>1563</span><h3>하이델베르크 교리문답</h3><p>죄와 비참, 구원, 감사의 구조로 그리스도인의 유일한 위로를 가르칩니다.</p><strong>읽기 →</strong></a></article>
-          <article><a href="/confessions/dort" aria-label="돌트 신경 인터랙티브 읽기"><span>1619</span><h3>돌트 신경</h3><p>하나님의 주권적 은혜와 성도의 견인을 분명하게 증언합니다.</p><strong>읽기 →</strong></a></article>
+          <article><a href="/confessions/belgic" aria-label="벨직 신앙고백 인터랙티브 읽기"><span>1561</span><h3>벨직 신앙고백</h3><p>삼위 하나님과 구원, 교회와 성례에 관한 성경적 신앙을 체계적으로 고백합니다.</p></a></article>
+          <article><a href="/confessions/heidelberg" aria-label="하이델베르크 교리문답 인터랙티브 읽기"><span>1563</span><h3>하이델베르크 교리문답</h3><p>죄와 비참, 구원, 감사의 구조로 그리스도인의 유일한 위로를 가르칩니다.</p></a></article>
+          <article><a href="/confessions/dort" aria-label="돌트 신경 인터랙티브 읽기"><span>1619</span><h3>돌트 신경</h3><p>하나님의 주권적 은혜와 성도의 견인을 분명하게 증언합니다.</p></a></article>
         </div>
       </section>
 
