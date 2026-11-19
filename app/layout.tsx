@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   description: "전주시 덕진구에 있는 전주자유개혁교회입니다. 성경과 세 일치 신조를 따라 그리스도를 고백하며, 신실한 교회를 세우시는 그리스도 안에서 살아가는 자유개혁교회입니다.",
   applicationName: "자유개혁교회",
   alternates: { canonical: "/" },
-  openGraph: { type: "website", locale: "ko_KR", siteName: "자유개혁교회", images: ["/images/church-sign-square.jpg"] },
+  openGraph: { type: "website", locale: "ko_KR", siteName: "자유개혁교회", images: ["/images/church-sign-photo.jpg"] },
   twitter: { card: "summary_large_image" },
   icons: {
     icon: [
