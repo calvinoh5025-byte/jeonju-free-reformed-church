@@ -1,0 +1,8 @@
+/* Hotfix: the identity section lost its dark background, so give its text dark colours on the light page. */
+#church { color: var(--ink); }
+#church h2, #church h3 { color: var(--navy) !important; }
+#church p { color: #545e59 !important; }
+#church .section-kicker { color: #8a5a1f !important; }
+#church strong { color: var(--ink) !important; }
+#church span { color: #8a5a1f !important; }
+.confessions article span { color: #9a4f37 !important; }
