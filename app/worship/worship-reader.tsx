@@ -11,7 +11,7 @@ export function WorshipReader({ item, kind, maximum }: { item: Item; kind: "psal
   const changeSize = (delta: number) => setFontSize(current => { const next = Math.max(16, Math.min(32, current + delta)); try { localStorage.setItem("worship-font-size", String(next)); } catch {} return next; });
   return <>
     <div className="worship-reader-tools"><button type="button" onClick={() => changeSize(-2)}>가−</button><button type="button" onClick={() => changeSize(2)}>가+</button><a href={`/resources/${pdf}#page=${item.scorePage}`} target="_blank" rel="noreferrer">악보 보기 ↗</a></div>
-    <header className="worship-reader-title"><div><h2>{label} {item.n}{kind === "psalms" ? "편" : "장"}{kind === "hymns" && item.title ? ` ${item.title}` : ""}</h2><p>{item.title}{item.subtitle.length ? ` · ${item.subtitle.join(" · ")}` : ""}</p></div>{item.tune.length > 0 && <small>{item.tune.join(" · ")}</small>}</header>
+    <header className="worship-reader-title"><div><h2>{label} {item.n}{kind === "psalms" ? "편" : "장"}{kind === "hymns" && item.title ? ` ${item.title}` : ""}</h2>{(() => { const parts = [kind === "psalms" ? item.title : "", ...item.subtitle].filter(Boolean); return parts.length ? <p>{parts.join(" · ")}</p> : null; })()}</div>{item.tune.length > 0 && <small>{item.tune.join(" · ")}</small>}</header>
     {item.audio && <audio controls src={item.audio}>오디오 재생을 지원하지 않는 브라우저입니다.</audio>}
     <div className="worship-stanzas" style={{ fontSize }}>
       {item.stanzas.map(stanza => <section className="worship-stanza" key={stanza.n}>{stanza.section && <h3>{stanza.section}</h3>}<h4>{stanza.n}.</h4><div>{stanza.lines.map((line, index) => <p key={`${stanza.n}-${index}`}>{line}</p>)}</div></section>)}
