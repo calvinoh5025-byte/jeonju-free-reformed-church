@@ -1,0 +1,406 @@
+{
+ "forms": [
+  {
+   "name": "A형",
+   "services": [
+    {
+     "name": "오전 예배",
+     "items": [
+      {
+       "n": 1,
+       "optional": false,
+       "sub": [],
+       "text": "1. 예배부름(Votum) : 시편 124:8"
+      },
+      {
+       "n": 2,
+       "optional": false,
+       "sub": [],
+       "text": "2. 축도인사(Salutation) : 고전1:3 또는 계시록 1:4,5a"
+      },
+      {
+       "n": 3,
+       "optional": false,
+       "sub": [],
+       "text": "3. 회중화답송(Congregational Singing)"
+      },
+      {
+       "n": 4,
+       "optional": false,
+       "sub": [],
+       "text": "4. 언약의 십계명 선포(The Ten Words of the Covenant) : 출애굽기 20:2-17 또는 신명기 5:6-21)"
+      },
+      {
+       "n": 5,
+       "optional": false,
+       "sub": [],
+       "text": "5. 회중화답송(Congregational Singing)"
+      },
+      {
+       "n": 6,
+       "optional": false,
+       "sub": [],
+       "text": "6. 성경낭독(Reading of the Holy Scripture) :설교 연관 구절, 회중화답송과 연결(기도 후에도 가능)"
+      },
+      {
+       "n": 7,
+       "optional": true,
+       "sub": [],
+       "text": "(7. 세례 집례 Administration of Baptism)"
+      },
+      {
+       "n": 8,
+       "optional": false,
+       "sub": [],
+       "text": "8. 기도 (with confession of sins, for forgiveness, renewal, and illumination, and intercessions 죄의 고백, 용서, 성령의 새롭게 하심과 조명, 중보기도)"
+      },
+      {
+       "n": 9,
+       "optional": false,
+       "sub": [],
+       "text": "9. 자비사역 연보(Offertory)"
+      },
+      {
+       "n": 10,
+       "optional": false,
+       "sub": [],
+       "text": "10. 회중화답송(Congregational Singing)"
+      },
+      {
+       "n": 11,
+       "optional": false,
+       "sub": [],
+       "text": "11. 설교본문 낭독(Reading of the Text)"
+      },
+      {
+       "n": 12,
+       "optional": false,
+       "sub": [],
+       "text": "12. 말씀 사역(Ministry of the Word 회중화답송과 연결)"
+      },
+      {
+       "n": 13,
+       "optional": false,
+       "sub": [],
+       "text": "13. 감사기도(Prayer of Thanksgiving)"
+      },
+      {
+       "n": 14,
+       "optional": true,
+       "sub": [],
+       "text": "(14. 성만찬 예식 Celebration of the Lord’s Supper)"
+      },
+      {
+       "n": 15,
+       "optional": false,
+       "sub": [],
+       "text": "15. 송영(Closing Song)"
+      },
+      {
+       "n": 16,
+       "optional": false,
+       "sub": [],
+       "text": "16. 축도(Benediction) : 민 6:24-26 또는 고후 13:14"
+      }
+     ]
+    },
+    {
+     "name": "오후 예배",
+     "items": [
+      {
+       "n": 1,
+       "optional": false,
+       "sub": [],
+       "text": "1. 예배부름(Votum) : 시편 124:8"
+      },
+      {
+       "n": 2,
+       "optional": false,
+       "sub": [],
+       "text": "2. 축도인사(Salutation) : 고전1:3 또는 계시록 1:4,5a, 또는 디모데전서 1:2"
+      },
+      {
+       "n": 3,
+       "optional": false,
+       "sub": [],
+       "text": "3. 회중화답송(Congregational Singing)"
+      },
+      {
+       "n": 4,
+       "optional": false,
+       "sub": [
+        "(ㄱ) 사도신경 또는 니케아 신경(찬송)",
+        "(ㄴ) 사도신경 찬송(찬송 1 또는 찬송 2)"
+       ],
+       "text": "4. 신앙고백(Profession of Faith)"
+      },
+      {
+       "n": 5,
+       "optional": false,
+       "sub": [],
+       "text": "5. 성경낭독(Reading of the Holy Scripture) : 하이델베르크 교리문답 설교 연관 구절, 회중화답송과 연결"
+      },
+      {
+       "n": 6,
+       "optional": true,
+       "sub": [],
+       "text": "(6. 세례집례 Administration of Baptism)"
+      },
+      {
+       "n": 7,
+       "optional": false,
+       "sub": [],
+       "text": "7. 기도 (for the opening of the Word, and intercessions 설교 전 준비, 중보)(이후 성경낭독 가능)"
+      },
+      {
+       "n": 8,
+       "optional": false,
+       "sub": [],
+       "text": "8. 자비사역 연보(Offertory)"
+      },
+      {
+       "n": 9,
+       "optional": false,
+       "sub": [],
+       "text": "9. 회중화답송(Congregational Singing)"
+      },
+      {
+       "n": 10,
+       "optional": false,
+       "sub": [],
+       "text": "10. 하이델베르크 교리문답 낭독(Reading of the Heidelberg Catechism): 주중 해설된 주의 날 본문"
+      },
+      {
+       "n": 11,
+       "optional": false,
+       "sub": [],
+       "text": "11. 하이델베르크 교리문답 설교(Ministry of the Word 회중화답송과 연결)"
+      },
+      {
+       "n": 12,
+       "optional": false,
+       "sub": [],
+       "text": "12. 감사기도(Prayer of Thanksgiving)"
+      },
+      {
+       "n": 13,
+       "optional": true,
+       "sub": [],
+       "text": "(13. 성만찬 예식Celebration of the Lord’s Supper)"
+      },
+      {
+       "n": 14,
+       "optional": false,
+       "sub": [],
+       "text": "14. 송영(Closing Song)"
+      },
+      {
+       "n": 15,
+       "optional": false,
+       "sub": [],
+       "text": "15. 축도(Benediction) : 민 6:24-26 또는 고후 13:14"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "B형",
+   "services": [
+    {
+     "name": "오전 예배",
+     "items": [
+      {
+       "n": 1,
+       "optional": false,
+       "sub": [],
+       "text": "1. 예배부름(Votum) : 시편 124:8"
+      },
+      {
+       "n": 2,
+       "optional": false,
+       "sub": [],
+       "text": "2. 축도인사(Salutation) : 고전1:3, 딤전1:2 또는 계시록 1:4,5a"
+      },
+      {
+       "n": 3,
+       "optional": false,
+       "sub": [],
+       "text": "3. 회중화답송(Congregational Singing)"
+      },
+      {
+       "n": 4,
+       "optional": false,
+       "sub": [],
+       "text": "4. 언약의 십계명 선포(The Ten Words of the Covenant) : 출애굽기 20:2-17 또는 신명기 5:6-21"
+      },
+      {
+       "n": 5,
+       "optional": false,
+       "sub": [],
+       "text": "5. 회중화답송(Congregational Singing)"
+      },
+      {
+       "n": 6,
+       "optional": false,
+       "sub": [],
+       "text": "6. 기도 (public confession of sins, for forgiveness, renewal, and illumination, and intercessions 죄의 고백, 용서, 성령의 새롭게 하심과 조명, 중보기도)"
+      },
+      {
+       "n": 7,
+       "optional": false,
+       "sub": [],
+       "text": "7. 성경낭독(Reading of the Holy Scripture) :설교 연관 구절, 회중화답송과 연결(기도 후에도 가능)"
+      },
+      {
+       "n": 8,
+       "optional": false,
+       "sub": [],
+       "text": "8. 설교본문 낭독(Reading of the Text)"
+      },
+      {
+       "n": 9,
+       "optional": false,
+       "sub": [],
+       "text": "9. 말씀 사역(Ministry of the Word 회중화답송과 연결)"
+      },
+      {
+       "n": 10,
+       "optional": false,
+       "sub": [],
+       "text": "10. 회중화답송(Responsive Song)"
+      },
+      {
+       "n": 11,
+       "optional": true,
+       "sub": [],
+       "text": "(11. 세례 집례 Administration of Baptism)"
+      },
+      {
+       "n": 12,
+       "optional": false,
+       "sub": [],
+       "text": "12. 기도( thanksgiving, and prayer for all the needs of Christendom 감사 및 기독교의 모든 필요를 위한 기도)"
+      },
+      {
+       "n": 13,
+       "optional": false,
+       "sub": [],
+       "text": "13. 자비사역 연보(Offertory)"
+      },
+      {
+       "n": 14,
+       "optional": true,
+       "sub": [],
+       "text": "(14. 성만찬 예식Celebration of the Lord’s Supper)(4와 5 사이에도 가능)"
+      },
+      {
+       "n": 15,
+       "optional": false,
+       "sub": [],
+       "text": "15. 송영(Closing Song)"
+      },
+      {
+       "n": 16,
+       "optional": false,
+       "sub": [],
+       "text": "16. 축도(Benediction) : 민 6:24-26 또는 고후 13:14"
+      }
+     ]
+    },
+    {
+     "name": "오후 예배",
+     "items": [
+      {
+       "n": 1,
+       "optional": false,
+       "sub": [],
+       "text": "1. 예배부름(Votum) : 시편 124:8"
+      },
+      {
+       "n": 2,
+       "optional": false,
+       "sub": [],
+       "text": "2. 축도인사(Salutation) : 고전1:3, 딤전1:2 또는 계시록 1:4,5a"
+      },
+      {
+       "n": 3,
+       "optional": false,
+       "sub": [],
+       "text": "3. 회중화답송(Congregational Singing)"
+      },
+      {
+       "n": 4,
+       "optional": false,
+       "sub": [],
+       "text": "4. 기도 (for the opening of the Word, and intercessions 설교 전 준비)"
+      },
+      {
+       "n": 5,
+       "optional": false,
+       "sub": [],
+       "text": "5. 성경낭독(Reading of the Holy Scripture) : 하이델베르크 교리문답 설교 연관 구절, 회중화답송과 연결"
+      },
+      {
+       "n": 6,
+       "optional": false,
+       "sub": [],
+       "text": "6. 하이델베르크 교리문답 낭독(Reading of the Heidelberg Catechism) : 주중 해설된 주의 날 본문"
+      },
+      {
+       "n": 7,
+       "optional": false,
+       "sub": [],
+       "text": "7. 하이델베르크 교리문답 설교(Ministry of the Word 회중화답송과 연결)"
+      },
+      {
+       "n": 8,
+       "optional": false,
+       "sub": [
+        "(ㄱ) 사도신경 또는 니케아 신경(찬송)",
+        "(ㄴ) 사도신경 찬송(찬송 1 또는 찬송 2)"
+       ],
+       "text": "8. 신앙고백(Profession of Faith)"
+      },
+      {
+       "n": 9,
+       "optional": true,
+       "sub": [],
+       "text": "(9. 세례집례 Administration of Baptism)"
+      },
+      {
+       "n": 10,
+       "optional": false,
+       "sub": [],
+       "text": "10. 감사와 중보기도(Prayer of Thanksgiving and intercessions)"
+      },
+      {
+       "n": 11,
+       "optional": false,
+       "sub": [],
+       "text": "11. 자비사역 연보(Offertory)"
+      },
+      {
+       "n": 12,
+       "optional": true,
+       "sub": [],
+       "text": "(12. 성만찬 예식Celebration of the Lord’s Supper)"
+      },
+      {
+       "n": 13,
+       "optional": false,
+       "sub": [],
+       "text": "13. 송영(Closing Song)"
+      },
+      {
+       "n": 14,
+       "optional": false,
+       "sub": [],
+       "text": "14. 축도(Benediction) :고린도 후서 13:14절 또는 민수기 6:24-26"
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}
