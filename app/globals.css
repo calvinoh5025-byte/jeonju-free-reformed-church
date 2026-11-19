@@ -576,7 +576,7 @@ footer small{border-color:#b8c7b9;color:#4f5b55}
 .creed-lines-block p{margin:0;line-height:2}
 .creed-numbered li{display:grid;grid-template-columns:2.2em 1fr;gap:8px;margin:0 0 12px;line-height:1.9}
 /* Worship audio */
-.worship-audio-button{min-height:44px;padding:10px 16px;border:1px solid #29463f;background:#29463f;color:#fffcf5;font:inherit;font-weight:700;border-radius:12px;cursor:pointer}
+.worship-reader-tools .worship-audio-button{min-height:44px;padding:10px 16px;border:1px solid #29463f;background:#29463f;color:#fffcf5;font:inherit;font-weight:700;border-radius:12px;cursor:pointer}
 .worship-audio{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:16px 0;padding:14px 16px;border:1px solid #e0d8cb;border-radius:14px;background:#fffcf5}
 .worship-audio audio{width:100%;max-width:520px}
 .worship-audio button{min-height:40px;padding:8px 14px;border:1px solid #cfc6b4;border-radius:10px;background:#fff;color:#29463f;font:inherit;cursor:pointer}
