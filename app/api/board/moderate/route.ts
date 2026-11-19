@@ -19,7 +19,7 @@ button,a.btn{display:block;width:100%;box-sizing:border-box;font-size:1.15rem;fo
   return new Response(html, { status, headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" } });
 }
 
-const failPage = (message: string, status = 400) => page("처리할 수 없습니다", `<h1>처리할 수 없습니다</h1><p class="notice">${escapeHtml(message)}</p><a class="btn home" href="/board">자유게시판으로 가기</a>`, status);
+const failPage = (message: string, status = 400) => page("처리할 수 없습니다", `<h1>처리할 수 없습니다</h1><p class="notice">${escapeHtml(message)}</p><a class="btn home" href="/board">공지게시판으로 가기</a>`, status);
 
 function readParams(params: URLSearchParams) {
   const id = Number(params.get("id"));
@@ -38,7 +38,7 @@ async function loadPost(id: number) {
 }
 
 const labels: Record<ModerationAction, { question: string; button: string; done: string }> = {
-  approve: { question: "이 글을 게시판에 공개할까요?", button: "공개하기 (승인)", done: "승인되었습니다. 이제 자유게시판에 보입니다." },
+  approve: { question: "이 글을 게시판에 공개할까요?", button: "공개하기 (승인)", done: "승인되었습니다. 이제 공지게시판에 보입니다." },
   unapprove: { question: "이 글의 공개를 취소할까요?", button: "공개 취소하기 (승인 취소)", done: "승인을 취소했습니다. 이제 게시판에 보이지 않습니다." },
   delete: { question: "이 글을 완전히 삭제할까요?", button: "삭제하기", done: "삭제되었습니다." },
 };
@@ -87,7 +87,7 @@ export async function POST(request: Request) {
       : await serviceRest(path, { method: "PATCH", headers: { "content-type": "application/json", Prefer: "return=minimal" }, body: JSON.stringify(params.action === "approve" ? { status: "approved", approved_at: new Date().toISOString() } : { status: "pending", approved_at: null }) });
     if (!response.ok) throw new Error(await response.text());
     const more = params.action === "delete" ? "" : `<p class="notice">마음이 바뀌시면 아래 버튼을 누르세요.</p>${nextButtons(params.id, params.action === "approve" ? "approved" : "pending")}`;
-    return page("처리 완료", `<h1>${labels[params.action].done}</h1>${more}<a class="btn home" href="/board">자유게시판에서 확인하기</a>`);
+    return page("처리 완료", `<h1>${labels[params.action].done}</h1>${more}<a class="btn home" href="/board">공지게시판에서 확인하기</a>`);
   } catch (error) {
     console.error("[board-moderate] update failed", error instanceof Error ? error.message : error);
     return failPage("처리하지 못했습니다. 잠시 후 다시 시도해 주세요.", 500);

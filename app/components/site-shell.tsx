@@ -9,7 +9,8 @@ const nav = [
   ["개혁교회 신앙고백서", "/church"],
   ["예배생활", "/worship"],
   ["설교", "/sermons"],
-  ["자유게시판", "/board"],
+  ["공지게시판", "/board"],
+  ["자유게시판", "/free-board"],
   ["자료실", "/resources"],
   ["오시는 길", "/location"],
 ];
