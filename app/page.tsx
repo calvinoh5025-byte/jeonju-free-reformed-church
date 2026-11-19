@@ -21,7 +21,7 @@ export default function Home() {
           </a>
           <nav className="desktop-nav" aria-label="주요 메뉴">
             <a href="/about">교회소개</a><a href="/church">우리의 신앙고백</a><a href="/sermons">설교</a>
-            <a href="/board">자유게시판</a><a href="/resources">자료실</a><a href="/location">오시는 길</a>
+            <a href="/board">공지게시판</a><a href="/free-board">자유게시판</a><a href="/resources">자료실</a><a href="/location">오시는 길</a>
           </nav>
           <MobileMenu />
         </header>
@@ -32,11 +32,11 @@ export default function Home() {
             <h1>말씀 위에 서는 교회,<br />언약 안에서 함께 걷는 공동체</h1>
             <div className="gold-rule" />
             <p className="lead">성경과 세 일치 신조를 따라 그리스도를 고백하며, 세대와 세대를 이어 신실한 교회를 세우시는 그리스도 안에서 살아갑니다.</p>
-            <aside className="visitor-card"><strong>처음 오시는 분</strong>{worshipTimes.map(item => <p key={item.label}>{item.label} {item.time}</p>)}<p>{address}</p><p>문의 <a href={contact.phoneHref}>{contact.phone}</a> · <a href={`mailto:${contact.email}`}>{contact.email}</a></p><a className="button secondary" href="/newcomers">새가족 안내</a><a className="button secondary" href="/location">오시는 길</a><a className="button secondary" href="/resources/read/worship-order">예배순서 보기</a></aside>
+            <aside className="visitor-card"><strong>처음 오시는 분</strong>{worshipTimes.map(item => <p key={item.label}>{item.label} {item.time}</p>)}<p>{address}</p><p>문의 <a href={contact.phoneHref}>{contact.phone}</a> · <a href={`mailto:${contact.email}`}>{contact.email}</a></p><a className="button secondary" href="/newcomers">새가족 안내</a><a className="button secondary" href="/location">오시는 길</a><a className="button secondary" href="/worship/order">예배순서 보기</a></aside>
             <InstallApp />
           </div>
           <div className="hero-media">
-            <div className="hero-image" role="img" aria-label="자유개혁교회 간판" />
+            <div className="hero-image" role="img" aria-label="예배 공간의 성경" />
             <a className="hero-facebook-link" href={facebook} target="_blank" rel="noreferrer">교회 페이스북 안내 <span aria-hidden="true">↗</span></a>
           </div>
         </div>
@@ -63,9 +63,9 @@ export default function Home() {
         <p className="section-kicker">THREE FORMS OF UNITY</p>
         <div className="section-heading"><h2>우리가 함께 고백하는 신앙</h2><p>우리는 교회가 성경을 따라 함께 고백해 온 믿음의 내용을 소중히 여깁니다.</p></div>
         <div className="confession-list">
-          <article><a href="/resources/read/belgic" aria-label="벨직 신앙고백 원문 보기"><span>1561</span><h3>벨직 신앙고백</h3><p>삼위 하나님과 구원, 교회와 성례에 관한 성경적 신앙을 체계적으로 고백합니다.</p><strong>원문 보기 →</strong></a></article>
-          <article><a href="/resources/read/heidelberg" aria-label="하이델베르크 교리문답 원문 보기"><span>1563</span><h3>하이델베르크 교리문답</h3><p>죄와 비참, 구원, 감사의 구조로 그리스도인의 유일한 위로를 가르칩니다.</p><strong>원문 보기 →</strong></a></article>
-          <article><a href="/resources/read/dort" aria-label="돌트 신경 원문 보기"><span>1619</span><h3>돌트 신경</h3><p>하나님의 주권적 은혜와 성도의 견인을 분명하게 증언합니다.</p><strong>원문 보기 →</strong></a></article>
+          <article><a href="/confessions/belgic" aria-label="벨직 신앙고백 인터랙티브 읽기"><span>1561</span><h3>벨직 신앙고백</h3><p>삼위 하나님과 구원, 교회와 성례에 관한 성경적 신앙을 체계적으로 고백합니다.</p><strong>읽기 →</strong></a></article>
+          <article><a href="/confessions/heidelberg" aria-label="하이델베르크 교리문답 인터랙티브 읽기"><span>1563</span><h3>하이델베르크 교리문답</h3><p>죄와 비참, 구원, 감사의 구조로 그리스도인의 유일한 위로를 가르칩니다.</p><strong>읽기 →</strong></a></article>
+          <article><a href="/confessions/dort" aria-label="돌트 신경 인터랙티브 읽기"><span>1619</span><h3>돌트 신경</h3><p>하나님의 주권적 은혜와 성도의 견인을 분명하게 증언합니다.</p><strong>읽기 →</strong></a></article>
         </div>
       </section>
 
