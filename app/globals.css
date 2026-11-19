@@ -599,3 +599,8 @@ footer small{border-color:#b8c7b9;color:#4f5b55}
 .worship-number-grid a:hover,.worship-number-grid a:focus-visible{background:#29463f;border-color:#29463f;color:#fffcf5;transform:translateY(-2px)}
 .worship-number-grid a:hover small,.worship-number-grid a:focus-visible small{color:#e8efe7}
 @media (prefers-reduced-motion:reduce){.worship-number-grid a:hover{transform:none}}
+
+/* OUR ROOTS label sits on a dark box: use light gold */
+.compact-roots .section-kicker{color:#e4c27d !important}
+/* about cards numbers: darker for readability */
+.about-summary article span{color:#9a4f37 !important}
