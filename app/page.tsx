@@ -1,3 +1,4 @@
+import "./home-contrast.css";
 import styles from "./motto.module.css";
 import { MobileMenu } from "./components/mobile-menu";
 import { MapPreview } from "./components/map-preview";
