@@ -37,7 +37,7 @@ export default function Home() {
             <InstallApp />
           </div>
           <div className="hero-media">
-            <div className="hero-image" role="img" aria-label="예배 공간의 성경" />
+            <div className="hero-image" role="img" aria-label="자유개혁교회 안내 간판" />
             <a className="hero-facebook-link" href={facebook} target="_blank" rel="noreferrer">교회 페이스북 안내 <span aria-hidden="true">↗</span></a>
           </div>
         </div>

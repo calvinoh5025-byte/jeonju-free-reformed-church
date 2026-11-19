@@ -530,7 +530,7 @@ h1,h2,h3{letter-spacing:-.025em;font-weight:500}
 .hero{background:#e8efe7;color:#263530}
 .hero h1,.hero .lead{color:#263530}
 .hero .eyebrow,.section-kicker,.section-kicker.light,.eyebrow{color:#29463f}
-.hero-image{background-image:linear-gradient(90deg,rgba(255,252,245,.72),rgba(255,252,245,.62)),url('/images/church-community.png');filter:saturate(.9)}
+.hero-image{background-image:url('/images/church-sign-home-edited.png');background-position:center;background-size:contain;background-repeat:no-repeat;background-color:#e8efe7;filter:none}
 .gold-rule{background:#617c69}
 .button.primary{background:#29463f;color:#fffcf5}
 .button.primary:hover{background:#203a34}
@@ -564,7 +564,7 @@ footer small{border-color:#b8c7b9;color:#4f5b55}
 .empty-state-illustration{display:block;width:min(120px,40vw);height:auto;margin:0 auto 14px;opacity:.86}
 .form-notice{background:#eef3eb;color:#263530;border-left-color:#29463f}
 @media(max-width:900px){.sub-hero h1,.sub-hero>p{max-width:calc(100% - 250px)}.sub-hero-illustration{right:180px;width:64px}}
-@media(max-width:620px){.sub-hero h1,.sub-hero>p{max-width:calc(100% - 148px)}.sub-hero-illustration{top:auto;right:104px;bottom:20px;width:48px;transform:none}.hero-image{background-image:linear-gradient(90deg,rgba(255,252,245,.72),rgba(255,252,245,.62)),url('/images/church-community.png')}}
+@media(max-width:620px){.sub-hero h1,.sub-hero>p{max-width:calc(100% - 148px)}.sub-hero-illustration{top:auto;right:104px;bottom:20px;width:48px;transform:none}.hero-image{background-image:url('/images/church-sign-home-edited.png')}}
 /* Universal creeds as text */
 .universal-creed-text h2{margin:8px 0 10px;font:500 26px "Noto Serif KR",serif;color:#29463f}
 .universal-creed-intro{color:#545e59;font-size:.82em;line-height:1.8;padding:12px 14px;border-left:3px solid #e4c27d;background:#fffcf5;margin:0 0 22px}
