@@ -14,7 +14,7 @@ const cards = [
 
 export default function WorshipPage() {
   return <main id="main" tabIndex={-1} className="sub-page worship-page"><SiteHeader /><SubHero kicker="WORSHIP" title="예배생활" description="" illustration="/illustrations/psalm-notes.svg" /><section className="worship-grid" aria-label="예배생활 자료">
-    {cards.map(card => <Link className="worship-card" href={card.href} key={card.href}><strong>{card.title}</strong>{card.detail && <span>{card.detail}</span>}<span aria-hidden="true">열기 →</span></Link>)}
-    <Link className="worship-card" href="/worship/subscription"><strong>동의서약서</strong><span aria-hidden="true">열기 →</span></Link>
+    {cards.map(card => <Link className="worship-card" href={card.href} key={card.href}><strong>{card.title}</strong>{card.detail && <span>{card.detail}</span>}</Link>)}
+    <Link className="worship-card" href="/worship/subscription"><strong>동의서약서</strong></Link>
   </section><SiteFooter /></main>;
 }

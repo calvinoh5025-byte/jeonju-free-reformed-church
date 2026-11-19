@@ -13,7 +13,7 @@ const confessions = [
 export default function ChurchPage() {
   return <main id="main" tabIndex={-1} className="sub-page confessions-page"><SiteHeader /><SubHero kicker="OUR CONFESSION" title="우리가 함께 고백하는 믿음" description="자유개혁교회는 성경을 유일하고 충분한 신앙의 규범으로 받으며, 보편 신경과 세 일치 신조를 함께 고백합니다." illustration="/illustrations/olive-branch.svg" />
     <section className="content-section confession-page compact-confessions">
-      <div className="confession-cards">{confessions.map(c => <article key={c.title}><a className="confession-card-link" href={c.href}><span>{c.year}</span><h3>{c.title}</h3><p>{c.text}</p><strong className="confession-card-read">읽기 →</strong></a></article>)}</div>
+      <div className="confession-cards">{confessions.map(c => <article key={c.title}><a className="confession-card-link" href={c.href}><span>{c.year}</span><h3>{c.title}</h3><p>{c.text}</p></a></article>)}</div>
     </section>
     <SiteFooter /></main>;
 }
