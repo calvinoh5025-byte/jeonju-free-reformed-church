@@ -12,11 +12,13 @@ export function InstallApp() {
   const [runningAsApp, setRunningAsApp] = useState(false);
   const [installComplete, setInstallComplete] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
+  const [ios, setIos] = useState(false);
 
   useEffect(() => {
     const standalone = window.matchMedia("(display-mode: standalone)").matches ||
       ("standalone" in navigator && Boolean((navigator as Navigator & { standalone?: boolean }).standalone));
     setRunningAsApp(standalone);
+    setIos(/iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1));
     setInstallComplete(sessionStorage.getItem("frck-install-complete") === "yes");
 
     const onPrompt = (event: Event) => {
@@ -40,12 +42,32 @@ export function InstallApp() {
   if (runningAsApp) return null;
 
   const install = async () => {
-    if (!promptEvent) {
+    const ua = navigator.userAgent;
+    const isIOS = /iPhone|iPad|iPod/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    const url = `${location.origin}/?source=pwa-install`;
+    // In-app browsers (KakaoTalk, Naver, Instagram, Facebook, Line, Daum) cannot install apps: hand off to the phone's real browser.
+    if (/KAKAOTALK/i.test(ua)) { location.href = `kakaotalk://web/openExternal?url=${encodeURIComponent(url)}`; return; }
+    if (/\bLine\//i.test(ua)) { location.href = `${url}&openExternalBrowser=1`; return; }
+    if (!isIOS && /NAVER|Instagram|FBAN|FBAV|FB_IAB|DaumApps|wv\)/i.test(ua)) {
+      location.href = `intent://${location.host}/?source=pwa-install#Intent;scheme=https;package=com.android.chrome;end`;
+      return;
+    }
+    let event = promptEvent;
+    if (!event && !isIOS) {
+      // The browser may fire its install event a moment after the page loads; wait briefly before falling back to the guide.
+      event = await new Promise<InstallPromptEvent | null>(resolve => {
+        const done = (e: Event) => { e.preventDefault(); resolve(e as InstallPromptEvent); };
+        window.addEventListener("beforeinstallprompt", done, { once: true });
+        setTimeout(() => { window.removeEventListener("beforeinstallprompt", done); resolve(null); }, 2500);
+      });
+    }
+    if (!event) {
       setShowHelp(true);
       return;
     }
-    await promptEvent.prompt();
-    const choice = await promptEvent.userChoice;
+    const promptEvent_ = event;
+    await promptEvent_.prompt();
+    const choice = await promptEvent_.userChoice;
     if (choice.outcome === "accepted") {
       sessionStorage.setItem("frck-install-complete", "yes");
       setInstallComplete(true);
@@ -74,8 +96,9 @@ export function InstallApp() {
         <div className="install-help" role="dialog" aria-modal="true" aria-labelledby="install-help-title">
           <button className="install-help-close" type="button" onClick={() => setShowHelp(false)} aria-label="설치 안내 닫기">×</button>
           <strong id="install-help-title">홈 화면에 설치하기</strong>
-          <p><b>삼성 인터넷·크롬</b><br />브라우저 메뉴(⋮) → 앱 설치 또는 홈 화면에 추가</p>
-          <p><b>아이폰 Safari</b><br />공유 버튼(□↑) → 홈 화면에 추가</p>
+          {ios
+            ? <><p>아이폰은 애플 정책상 버튼 한 번으로 설치할 수 없습니다. 두 단계만 해 주세요.</p><p><b>1.</b> 화면 아래 공유 버튼(□↑)을 누르세요.</p><p><b>2.</b> "홈 화면에 추가"를 누르세요.</p></>
+            : <p>브라우저 메뉴(⋮)에서 <b>앱 설치</b> 또는 <b>홈 화면에 추가</b>를 누르세요.</p>}
         </div>
       )}
     </div>
