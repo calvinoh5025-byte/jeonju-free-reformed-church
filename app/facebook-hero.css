@@ -1,8 +1,8 @@
 .hero-image {
   display: block;
   background-image:
-    linear-gradient(90deg, var(--navy) 0%, rgba(11, 27, 43, 0.24) 18%, rgba(11, 27, 43, 0.02) 100%),
-    url('/images/church-sign-square.jpg');
+    linear-gradient(90deg, rgba(11,27,43,0) 0%, rgba(11,27,43,0) 100%),
+    url('/images/church-sign-photo.jpg');
   filter: saturate(0.86);
   transition: filter 0.2s, transform 0.2s;
 }
