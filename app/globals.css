@@ -442,11 +442,12 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--gold);outline-offse
 .footnote-mark{border:0;background:transparent;color:#8a5a1f;padding:0 2px;font:700 .72em/1 inherit;vertical-align:super;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
 .footnote-mark:focus-visible,.confession-size-controls button:focus-visible,.confession-select:focus-visible{outline:3px solid #b99a61;outline-offset:2px}
 .footnote-popover{position:absolute;z-index:20;left:50%;bottom:calc(100% + 9px);transform:translateX(-50%);width:min(360px,calc(100vw - 32px));max-height:50vh;overflow:auto;padding:16px 18px;border:1px solid #d0c1a2;border-radius:5px;background:#fffaf0;color:#282e2b;box-shadow:0 10px 30px #17130d38;font-size:14px;line-height:1.65;white-space:normal}
+.footnote-popover-positioned{position:fixed;bottom:auto}
 .footnote-popover>strong{display:block;margin-bottom:8px;color:var(--navy);font-size:15px}
 .footnote-verse{display:block;margin:8px 0}
 .footnote-verse b{display:block;font-size:12px;color:var(--forest)}
 .footnote-popover>small{display:block;margin-top:10px;padding-top:7px;border-top:1px solid #e6ddcb;color:#777;font-size:11px}
-@media(max-width:620px){.confession-content{padding:28px 18px 48px}.confession-intro,.confession-preamble{font-size:15px;line-height:1.8;margin-bottom:24px}.confession-reading{font-size:var(--confession-font-size,18px)}.confession-list{grid-template-columns:1fr;gap:7px}.confession-list section h2{font-size:20px;margin-top:24px}.confession-list-card{padding:13px}.confession-questions>article,.confession-dort-articles>article,.confession-rejections>article{padding:17px 0}.confession-questions h2,.confession-dort-articles h2{font-size:20px}.confession-rejections>h2{font-size:24px}.confession-block{padding:13px}.confession-navigation{font-size:13px;gap:7px}.footnote-popover{position:fixed;left:16px;right:16px;bottom:12px;transform:none;width:auto;max-height:50vh;padding:18px;background:#fffaf0}}
+@media(max-width:620px){.confession-content{padding:28px 18px 48px}.confession-intro,.confession-preamble{font-size:15px;line-height:1.8;margin-bottom:24px}.confession-reading{font-size:var(--confession-font-size,18px)}.confession-list{grid-template-columns:1fr;gap:7px}.confession-list section h2{font-size:20px;margin-top:24px}.confession-list-card{padding:13px}.confession-questions>article,.confession-dort-articles>article,.confession-rejections>article{padding:17px 0}.confession-questions h2,.confession-dort-articles h2{font-size:20px}.confession-rejections>h2{font-size:24px}.confession-block{padding:13px}.confession-navigation{font-size:13px;gap:7px}.footnote-popover{position:fixed;left:16px!important;right:16px;top:auto!important;bottom:12px;transform:none!important;width:auto;max-height:50vh;padding:18px;background:#fffaf0}}
 /* Worship documents */
 .doc-crumb{margin-bottom:12px}.doc-crumb a{color:var(--muted)}
 .doc-reading h2{font:500 clamp(22px,3.4vw,30px) var(--font-noto-serif),serif;color:var(--navy);margin:38px 0 14px}
@@ -458,3 +459,60 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--gold);outline-offse
 .doc-toc-inline{display:flex;gap:10px}.doc-toc-inline a{min-width:90px;min-height:44px;display:grid;place-items:center;border:1px solid #cfc6b4;background:#fff}
 .order-form{margin-bottom:36px;scroll-margin-top:80px}.order-services{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.order-service{border:1px solid #e0d8cb;background:#fffdf7;padding:14px 18px}.order-service h3{margin:0 0 8px;border:0;padding:0}.order-service ol{margin:0;padding-left:0;list-style:none;font-size:.92em;line-height:1.7}.order-service li{margin:4px 0}.order-optional{color:var(--muted);font-style:italic}.order-service ul{list-style:none;padding-left:8px;margin:2px 0}
 @media(max-width:620px){.doc-toc ol{columns:1}.order-services{grid-template-columns:1fr}}
+.document-choice-button,.document-back-button,.document-item-navigation button{border:1px solid #cfc6b4;border-radius:4px;background:#fffaf1;color:var(--navy);font:inherit;font-weight:700;cursor:pointer}
+.document-choice-button{min-height:48px;padding:10px 16px;text-align:left}
+.doc-toc .document-choice-button{width:100%;margin:3px 0}
+.doc-toc-inline .document-choice-button{min-width:120px;min-height:48px;text-align:center}
+.document-choice-button:hover,.document-back-button:hover,.document-item-navigation button:not(:disabled):hover{border-color:var(--gold);background:#f7f1e6}
+.document-choice-button:focus-visible,.document-back-button:focus-visible,.document-item-navigation button:focus-visible{outline:3px solid #b99a61;outline-offset:2px}
+.document-back-button{padding:9px 14px;margin-bottom:18px}
+.document-item-navigation{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:24px 0;padding:13px 0;border-top:1px solid #d8cfbd;border-bottom:1px solid #d8cfbd;color:var(--forest);font-weight:700}
+.document-item-navigation button{padding:9px 12px}
+.document-item-navigation button:disabled{opacity:.45;cursor:default}
+@media(max-width:620px){.doc-toc-inline{display:flex;flex-wrap:wrap}.doc-toc-inline .document-choice-button{flex:1;min-width:calc(50% - 10px)}.document-item-navigation{gap:6px;font-size:13px}.document-item-navigation button{padding:8px 6px;font-size:12px}}
+
+/* Friendly, pastoral visual direction documented in design.md. */
+:root{--navy:#29463f;--navy2:#3d5b4e;--ivory:#f7f2e8;--paper:#fffcf5;--gold:#e4c27d;--forest:#617c69;--terracotta:#c97968;--ink:#263530;--muted:#69736d}
+body{background:#f7f2e8;color:#263530}
+.brand{color:#f1d99f}
+.brand-mark{border-radius:14px 14px 14px 4px;background:#ffffff0c}
+.site-header,.sub-header{background:#29463f;border-color:#ffffff24}
+.desktop-nav a,.sub-header .desktop-nav a{border-radius:999px;padding:9px 12px}
+.desktop-nav a:hover,.sub-header .desktop-nav a:hover{background:#ffffff18}
+.hero{background:#29463f}
+.hero-image{border-radius:110px 12px 12px 12px;filter:saturate(.88)}
+.visit-card,.sermon-card,.confession-cards article,.resource-card,.featured-sermon,.board-form,.order-service{border-radius:18px}
+.visit-card{border-color:#e8d8b9;box-shadow:0 18px 45px #18271f35}
+.button{border-radius:12px}
+.button.primary{background:#e4c27d;color:#263530}
+.button.secondary{border-radius:12px}
+.sub-hero{background-image:linear-gradient(100deg,rgba(41,70,63,.95),rgba(41,70,63,.78)),url('/images/church-community.png');background-position:center,center 48%;background-size:cover;color:#fffcf5}
+.sub-hero:after{width:clamp(112px,15vw,188px);height:clamp(112px,15vw,188px);right:clamp(22px,7vw,108px);top:50%;transform:translateY(-50%);border:5px solid #ffffff60;background:url('/images/church-sign-square.jpg') center/cover;box-shadow:0 12px 30px #13231b55}
+.sub-hero h1{max-width:min(820px,75%)}
+.section,.content-section{background:transparent}
+.confession-content{background:#fffcf5;border:1px solid #e9e0d1;border-top:0;border-radius:0 0 24px 24px}
+.confession-list-card,.confession-cards article,.resource-card,.order-service{background:#fffcf5;border-color:#e5dccb;box-shadow:0 6px 18px #3a30200a}
+.confession-list-card{border-radius:14px}
+.confession-list-card:hover,.confession-cards article:hover,.resource-card:hover{transform:translateY(-2px);box-shadow:0 12px 28px #3a302014}
+.confession-list-card,.confession-cards article,.resource-card{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+.confession-jump,.confession-block,.board-form{border-radius:14px}
+.footnote-popover{border-color:#e0cfaa;border-radius:14px;box-shadow:0 16px 42px #26353030}
+.document-choice-button,.document-back-button,.document-item-navigation button,.confession-select{border-radius:12px}
+.document-choice-button[aria-pressed="true"],.document-choice-button:hover{background:#e8efe7;border-color:#91a88f;color:#29463f}
+.post-list article,.order-service{border-color:#e5dccb}
+footer{background:#243b35;color:#efe9dc}
+@media(max-width:900px){.sub-hero:after{right:24px}.sub-hero h1{max-width:calc(100% - 130px)}}
+@media(max-width:620px){.hero-image{border-radius:72px 0 0 0}.sub-hero{background-position:center,58% center}.sub-hero:after{width:76px;height:76px;right:18px;top:auto;bottom:18px;transform:none;border-width:3px}.sub-hero h1{max-width:calc(100% - 74px)}.confession-content{border-radius:0 0 18px 18px}}
+@media(min-width:901px) and (max-width:1350px){.site-header .desktop-nav,.sub-header .desktop-nav{display:none}.site-header .mobile-menu,.sub-header .mobile-menu{display:block}}
+.universal-creed-choices{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px}
+.universal-creed-choice,.universal-creed-pages button{min-height:46px;padding:10px 16px;border:1px solid #cfc6b4;border-radius:12px;background:#fffcf5;color:#29463f;font:inherit;font-weight:700;cursor:pointer}
+.universal-creed-choice[aria-pressed="true"]{background:#29463f;border-color:#29463f;color:#fffcf5}
+.universal-creed-choice:focus-visible,.universal-creed-pages button:focus-visible{outline:3px solid #e4c27d;outline-offset:2px}
+.universal-creed-reader-heading{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+.universal-creed-reader-heading h2{margin:0;font:500 24px "Noto Serif KR",serif;color:#29463f}
+.universal-creed-pages{display:flex;align-items:center;gap:8px}
+.universal-creed-pages button:disabled{opacity:.45;cursor:default}
+.universal-creed-frame{display:block;width:100%;height:min(78vh,980px);min-height:560px;border:1px solid #e5dccb;border-radius:14px;background:#fff}
+.universal-creed-caption{margin:12px 0 0;color:#69736d;font-size:13px;line-height:1.6}
+.universal-creed-fallback{display:inline-block;margin-top:8px;color:#29463f;font-size:13px;font-weight:700;text-decoration:underline;text-underline-offset:3px}
+@media(max-width:620px){.universal-creed-frame{min-height:480px;height:70vh}.universal-creed-choice{flex:1;min-width:calc(50% - 10px)}}

@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import data from "../data/prayers.json";
 import { DocFrame } from "../doc-frame";
-import { DocBlocks, type Block } from "../doc-blocks";
+import type { Block } from "../doc-blocks";
+import { PrayerSelector } from "../document-selectors";
 export const metadata: Metadata = { title: "개혁교회 기도문" };
 export default function PrayersPage() {
   const blocks = data.blocks as Block[];
-  const titles = blocks.filter(block => block.type === "h3");
+  const starts = blocks.map((block, index) => block.type === "h3" ? index : -1).filter(index => index >= 0);
+  const sections = starts.map((start, index) => ({ title: blocks[start].text, blocks: blocks.slice(start, starts[index + 1] ?? blocks.length) }));
   return <DocFrame kicker="PRAYERS" title="개혁교회 기도문">
-    <nav className="doc-toc" aria-label="기도문 목차"><strong>목차</strong><ol>{titles.map(title => { const n = title.text.match(/^(\d+)\./)?.[1]; return <li key={title.text}><a href={`#p${n}`}>{title.text.replace(/^\d+\.\s*/, "")}</a></li>; })}</ol></nav>
-    <DocBlocks blocks={blocks} />
+    <PrayerSelector sections={sections} />
   </DocFrame>;
 }
