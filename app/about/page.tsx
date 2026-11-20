@@ -6,9 +6,9 @@ export const metadata: Metadata = { title: "교회소개", description: "말씀�
 export default function AboutPage() {
   return <main id="main" tabIndex={-1} className="sub-page compact-page about-page">
     <SiteHeader />
-    <SubHero kicker="ABOUT OUR CHURCH" title="자유개혁교회를 소개합니다" description="말씀과 신앙고백 위에 서서 언약 안에서 함께 자라가는 개혁교회입니다." />
+    <SubHero kicker="ABOUT OUR CHURCH" title="그리스도께 속한 교회, 자유개혁교회" description="말씀과 신앙고백 위에 서서 언약 안에서 함께 자라가는 개혁교회입니다." />
     <section className="content-section compact-about" aria-labelledby="about-summary-title">
-      <div className="about-summary-heading"><p className="section-kicker">WHO WE ARE</p><h2 id="about-summary-title">성경을 따라 함께 세워지는 교회</h2></div>
+      <div className="about-summary-heading"><p className="section-kicker">WHO WE ARE</p><h2 id="about-summary-title">우리가 믿고 고백하는 것</h2></div>
       <div className="about-summary">
         <article><span>01</span><h3><a href="/worship/bible" aria-label="성경 중심 — 성경읽기 보기">성경 중심</a></h3><p>성경을 신앙과 삶의 유일하고 충분한 규범으로 받습니다.</p></article>
         <article><span>02</span><h3><a href="/church" aria-label="개혁교회 신앙 — 개혁교회 신앙고백서 보기">개혁교회 신앙</a></h3><p>역사적 개혁교회의 신앙고백을 함께 고백합니다.</p></article>
