@@ -40,7 +40,12 @@ export function BulletinBoard() {
     }
   }, []);
 
-  useEffect(() => { setDate(comingSunday()); load(); }, [load]);
+  useEffect(() => {
+    // 주일 날짜는 브라우저 현지 시간 기준으로 정해 서버 렌더링과의 날짜 차이를 피합니다.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setDate(comingSunday());
+    load();
+  }, [load]);
 
   const send = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
