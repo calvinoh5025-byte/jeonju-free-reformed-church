@@ -1,4 +1,3 @@
-import { getDocument } from "pdfjs-dist/legacy/build/pdf.mjs";
 import { BULLETIN_TYPES, MAX_BULLETIN_BYTES, deleteBulletinObject, listBulletins, signBulletinManage, storageReady, uploadBulletin, verifyBulletinManage } from "../../../lib/bulletin-storage";
 
 export const dynamic = "force-dynamic";
@@ -14,13 +13,24 @@ function tooMany(request: Request) {
   if (times.length >= LIMIT) return true;
   times.push(now); recent.set(who, times); return false;
 }
-async function pdfPageCount(file: File): Promise<number | null> {
+// pdfjs는 서버에서 불러오다 실패할 수 있으므로 필요할 때만, 그리고 실패해도 요청 전체가
+// 죽지 않도록 감싸서 가져옵니다. 쪽수를 셀 수 없으면 쪽수 제한만 건너뜁니다.
+type PdfCheck = { pages: number } | { pages: null; reason: "unavailable" | "unreadable" };
+
+async function pdfPageCount(file: File): Promise<PdfCheck> {
+  let getDocument: typeof import("pdfjs-dist/legacy/build/pdf.mjs").getDocument;
+  try {
+    ({ getDocument } = await import("pdfjs-dist/legacy/build/pdf.mjs"));
+  } catch (error) {
+    console.error("[bulletin] pdfjs unavailable", error instanceof Error ? error.message : error);
+    return { pages: null, reason: "unavailable" };
+  }
   const bytes = new Uint8Array(await file.arrayBuffer());
   const task = getDocument({ data: bytes, useSystemFonts: true, isEvalSupported: false });
   try {
     const pdf = await task.promise;
-    return pdf.numPages;
-  } catch { return null; }
+    return { pages: pdf.numPages };
+  } catch { return { pages: null, reason: "unreadable" }; }
   finally { await task.destroy(); }
 }
 async function notifyBulletinAdmin(date: string, id: string, token: string, pageCount: number) {
@@ -55,8 +65,14 @@ export async function POST(request: Request) {
   if (files.some(file => file.size === 0)) return Response.json({ error: "빈 파일입니다." }, { status: 400 });
   if (files.reduce((sum, file) => sum + file.size, 0) > MAX_BULLETIN_BYTES) return Response.json({ error: "파일 전체 크기는 10MB 이하로 올려 주세요." }, { status: 400 });
   if (files.length > 1 && files.some(file => file.type === "application/pdf")) return Response.json({ error: "PDF는 한 파일에 최대 2페이지를 담아 올려 주세요. 사진은 최대 2장까지 올릴 수 있습니다." }, { status: 400 });
-  const pdfPages = files.length === 1 && files[0].type === "application/pdf" ? await pdfPageCount(files[0]) : null;
-  if (files.length === 1 && files[0].type === "application/pdf" && (pdfPages === null || pdfPages < 1 || pdfPages > 2)) return Response.json({ error: "PDF를 읽지 못했거나 2페이지를 넘습니다." }, { status: 400 });
+  let pdfPages: number | null = null;
+  // 쪽수를 셀 수 없는 환경이면 올리기를 막지 않고 쪽수 제한만 건너뜁니다.
+  if (files.length === 1 && files[0].type === "application/pdf") {
+    const check = await pdfPageCount(files[0]);
+    if (check.pages === null && check.reason === "unreadable") return Response.json({ error: "PDF를 읽지 못했습니다. 다른 파일로 올려 주세요." }, { status: 400 });
+    if (check.pages !== null && (check.pages < 1 || check.pages > 2)) return Response.json({ error: "주보는 2페이지까지 올릴 수 있습니다." }, { status: 400 });
+    pdfPages = check.pages;
+  }
 
   const id = crypto.randomUUID();
   const uploaded: string[] = [];

@@ -7,6 +7,6 @@ export const metadata: Metadata = { title: "예배순서" };
 export default function OrderPage() {
   return <DocFrame kicker="ORDER OF WORSHIP" title="예배순서">
     <WorshipOrderSelector forms={data.forms} />
-    <Link className="order-bulletin-cta" href="/worship/bulletin">이번 주 주보 보기</Link>
+    <Link className="order-bulletin-cta" href="/worship/bulletin">주보</Link>
   </DocFrame>;
 }
