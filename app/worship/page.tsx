@@ -6,6 +6,7 @@ import hymns from "./data/hymns.json";
 
 export const metadata: Metadata = { title: "예배생활" };
 const cards = [
+  { title: "성경읽기", href: "/worship/bible", detail: "개역한글판 · 구약 39권 · 신약 27권" },
   { title: "시편찬송 부르기", href: "/worship/psalms", detail: `시편 ${psalms.length}편 · 찬송 ${hymns.length}장` },
   { title: "개혁교회 기도문", href: "/worship/prayers" },
   { title: "예배순서", href: "/worship/order" },
