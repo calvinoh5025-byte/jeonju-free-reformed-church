@@ -260,6 +260,7 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--gold);outline-offse
 .home-page .site-header{height:86px}
 .home-page .hero-grid{min-height:0;grid-template-columns:52% 48%}
 .home-page .hero-copy{padding:58px clamp(28px,5vw,72px)}
+.home-page .home-bulletin-cta{margin-top:18px}
 .home-page .hero h1{font-size:clamp(38px,3.6vw,54px);margin:14px 0 18px;line-height:1.35}
 .home-page .gold-rule{margin-bottom:18px}
 .home-page .lead{font-size:16px;line-height:1.65;margin-bottom:0}
@@ -334,6 +335,7 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--gold);outline-offse
   .home-page .site-header{height:72px}
   .home-page .hero-copy{padding:28px 20px 24px}
   .home-page .hero h1{font-size:30px;margin:9px 0 12px}
+  .home-page .home-bulletin-cta{width:100%;min-height:48px;margin-top:14px}
   .home-page .home-hero-title{font-size:clamp(24px,7.5vw,29px);word-break:keep-all;text-wrap:balance}
   .home-page .home-hero-title span{display:block}
   .home-page .lead{font-size:13px;line-height:1.5}

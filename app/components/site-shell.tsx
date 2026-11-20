@@ -8,6 +8,7 @@ const nav = [
   ["새가족 안내", "/newcomers"],
   ["개혁교회 신앙고백서", "/church"],
   ["예배생활", "/worship"],
+  ["주보", "/worship/bulletin"],
   ["설교", "/sermons"],
   ["공지게시판", "/board"],
   ["자유게시판", "/free-board"],
