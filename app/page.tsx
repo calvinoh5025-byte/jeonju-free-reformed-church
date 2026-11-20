@@ -1,4 +1,5 @@
 import "./home-contrast.css";
+import Link from "next/link";
 import styles from "./motto.module.css";
 import { MobileMenu } from "./components/mobile-menu";
 import { MapPreview } from "./components/map-preview";
@@ -52,7 +53,7 @@ export default function Home() {
           </div>
         </div>
         <div className="pillars" id="confession">
-          <article><span>01</span><h3><a href="/worship/bible" aria-label="오직 성경 — 성경읽기 보기">오직 성경</a></h3><p>성경을 신앙과 삶의 유일하고 충분한 규범으로 고백합니다.</p></article>
+          <article><span>01</span><h3><Link href="/worship/bible" aria-label="오직 성경 — 성경읽기 보기">오직 성경</Link></h3><p>성경을 신앙과 삶의 유일하고 충분한 규범으로 고백합니다.</p></article>
           <article><span>02</span><h3><a href="/church" aria-label="세 일치 신조 — 개혁교회 신앙고백서 보기">세 일치 신조</a></h3><p>벨직 신앙고백, 하이델베르크 교리문답, 돌트 신경을 받아 고백합니다.</p></article>
           <article><span>03</span><h3><a href="/worship" aria-label="언약 공동체 — 예배생활 보기">언약 공동체</a></h3><p>가정과 학교와 교회가 함께 다음 세대에 믿음을 전수하며 자라갑니다.</p></article>
         </div>
@@ -62,9 +63,9 @@ export default function Home() {
         <p className="section-kicker">THREE FORMS OF UNITY</p>
         <div className="section-heading"><h2>우리가 함께 고백하는 신앙</h2><p>우리는 교회가 성경을 따라 함께 고백해 온 믿음의 내용을 소중히 여깁니다.</p></div>
         <div className="confession-list">
-          <article><a href="/confessions/belgic" aria-label="벨직 신앙고백 인터랙티브 읽기"><span>1561</span><h3>벨직 신앙고백</h3><p>삼위 하나님과 구원, 교회와 성례에 관한 성경적 신앙을 체계적으로 고백합니다.</p></a></article>
-          <article><a href="/confessions/heidelberg" aria-label="하이델베르크 교리문답 인터랙티브 읽기"><span>1563</span><h3>하이델베르크 교리문답</h3><p>죄와 비참, 구원, 감사의 구조로 그리스도인의 유일한 위로를 가르칩니다.</p></a></article>
-          <article><a href="/confessions/dort" aria-label="돌트 신경 인터랙티브 읽기"><span>1619</span><h3>돌트 신경</h3><p>하나님의 주권적 은혜와 성도의 견인을 분명하게 증언합니다.</p></a></article>
+          <article><Link href="/confessions/belgic" aria-label="벨직 신앙고백 인터랙티브 읽기"><span>1561</span><h3>벨직 신앙고백</h3><p>삼위 하나님과 구원, 교회와 성례에 관한 성경적 신앙을 체계적으로 고백합니다.</p></Link></article>
+          <article><Link href="/confessions/heidelberg" aria-label="하이델베르크 교리문답 인터랙티브 읽기"><span>1563</span><h3>하이델베르크 교리문답</h3><p>죄와 비참, 구원, 감사의 구조로 그리스도인의 유일한 위로를 가르칩니다.</p></Link></article>
+          <article><Link href="/confessions/dort" aria-label="돌트 신경 인터랙티브 읽기"><span>1619</span><h3>돌트 신경</h3><p>하나님의 주권적 은혜와 성도의 견인을 분명하게 증언합니다.</p></Link></article>
         </div>
       </section>
 

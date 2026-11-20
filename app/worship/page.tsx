@@ -11,7 +11,6 @@ const cards = [
   { title: "개혁교회 기도문", href: "/worship/prayers" },
   { title: "예배순서", href: "/worship/order" },
   { title: "예전예식서", href: "/worship/liturgy" },
-  { title: "주보", href: "/worship/bulletin", detail: "이번 주 주보와 지난 주보 보기" },
 ];
 
 export default function WorshipPage() {

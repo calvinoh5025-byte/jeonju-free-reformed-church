@@ -721,3 +721,7 @@ a.featured-sermon:focus-visible,.external-resource-cards a:focus-visible{outline
 
 /* Korean titles wrap between words, never inside one, and split evenly. */
 .sub-hero h1,.sub-hero>p{word-break:keep-all;overflow-wrap:break-word}
+
+.order-bulletin-cta{display:flex;width:100%;min-height:58px;align-items:center;justify-content:center;margin-top:24px;padding:16px 20px;border-radius:12px;background:#29463f;color:#fffcf5;text-align:center;font-size:16px;font-weight:700;transition:background-color .18s ease,transform .18s ease}
+.order-bulletin-cta:hover{background:#203a34;transform:translateY(-1px)}
+.order-bulletin-cta:focus-visible{outline:3px solid #e4c27d;outline-offset:3px}
