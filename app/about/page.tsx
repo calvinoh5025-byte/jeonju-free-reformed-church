@@ -10,9 +10,9 @@ export default function AboutPage() {
     <section className="content-section compact-about" aria-labelledby="about-summary-title">
       <div className="about-summary-heading"><p className="section-kicker">WHO WE ARE</p><h2 id="about-summary-title">성경을 따라 함께 세워지는 교회</h2></div>
       <div className="about-summary">
-        <article><span>01</span><h3>성경 중심</h3><p>성경을 신앙과 삶의 유일하고 충분한 규범으로 받습니다.</p></article>
-        <article><span>02</span><h3>개혁교회 신앙</h3><p>역사적 개혁교회의 신앙고백을 함께 고백합니다.</p></article>
-        <article><span>03</span><h3>언약 공동체</h3><p>가정·학교·교회가 함께 다음 세대에 믿음을 전합니다.</p></article>
+        <article><span>01</span><h3><a href="/worship/bible" aria-label="성경 중심 — 성경읽기 보기">성경 중심</a></h3><p>성경을 신앙과 삶의 유일하고 충분한 규범으로 받습니다.</p></article>
+        <article><span>02</span><h3><a href="/church" aria-label="개혁교회 신앙 — 개혁교회 신앙고백서 보기">개혁교회 신앙</a></h3><p>역사적 개혁교회의 신앙고백을 함께 고백합니다.</p></article>
+        <article><span>03</span><h3><a href="/worship" aria-label="언약 공동체 — 예배생활 보기">언약 공동체</a></h3><p>가정·학교·교회가 함께 다음 세대에 믿음을 전합니다.</p></article>
       </div>
       <div className="compact-roots" aria-labelledby="roots-title">
         <div><p className="section-kicker light">OUR ROOTS</p><h2 id="roots-title">우리의 뿌리</h2><p>그리스도께서 사도시대부터 모으신 보편교회와 종교개혁을 통해 회복된 성경의 권위와 은혜의 복음을 이어갑니다.</p></div>

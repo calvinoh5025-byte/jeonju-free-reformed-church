@@ -32,7 +32,7 @@ export default function Home() {
             <h1>말씀 위에 서는 교회,<br />언약 안에서 함께 걷는 공동체</h1>
             <div className="gold-rule" />
             <p className="lead">성경과 세 일치 신조를 따라 그리스도를 고백하며, 세대와 세대를 이어 신실한 교회를 세우시는 그리스도 안에서 살아갑니다.</p>
-            <aside className="visitor-card"><strong>처음 오시는 분</strong>{worshipTimes.map(item => <p key={item.label}>{item.label} {item.time}</p>)}<p>{address}</p><p>문의 <a href={contact.phoneHref}>{contact.phone}</a> · <a href={`mailto:${contact.email}`}>{contact.email}</a></p><a className="button secondary" href="/newcomers">새가족 안내</a><a className="button secondary" href="/location">오시는 길</a><a className="button secondary" href="/worship/order">예배순서 보기</a></aside>
+            <aside className="visitor-card"><strong>처음 오시는 분</strong>{worshipTimes.map(item => <p key={item.label}>{item.label} {item.time}</p>)}<p>{address}</p><p>문의 <a href={contact.phoneHref}>{contact.phone}</a> · <a href={contact.phone2Href}>{contact.phone2}</a> · <a href={`mailto:${contact.email}`}>{contact.email}</a></p><a className="button secondary" href="/newcomers">새가족 안내</a><a className="button secondary" href="/location">오시는 길</a><a className="button secondary" href="/worship/order">예배순서 보기</a></aside>
           </div>
           <div className="hero-media">
             <div className="hero-image" role="img" aria-label="자유개혁교회 간판" />
@@ -80,7 +80,7 @@ export default function Home() {
         <MapPreview />
       </section>
 
-      <footer><a className="brand footer-brand" href="#home"><span className="brand-mark">FRCK</span><span>자유개혁교회</span></a><p>말씀과 신앙고백 위에 세워지는 언약 공동체</p><p>전주자유개혁교회 · {address}</p><div className="footer-install"><InstallApp /></div><div><a href={youtube} target="_blank" rel="noreferrer">YouTube</a><a href={facebook} target="_blank" rel="noreferrer">Facebook</a><a href={contact.phoneHref}>{contact.phone}</a><a href={`mailto:${contact.email}`}>{contact.email}</a></div><small>© 2026 Free Reformed Church in Korea</small></footer>
+      <footer><a className="brand footer-brand" href="#home"><span className="brand-mark">FRCK</span><span>자유개혁교회</span></a><p>말씀과 신앙고백 위에 세워지는 언약 공동체</p><p>전주자유개혁교회 · {address}</p><div className="footer-install"><InstallApp /></div><div><a href={youtube} target="_blank" rel="noreferrer">YouTube</a><a href={facebook} target="_blank" rel="noreferrer">Facebook</a><a href={contact.phoneHref}>{contact.phone}</a><a href={contact.phone2Href}>{contact.phone2}</a><a href={`mailto:${contact.email}`}>{contact.email}</a></div><small>© 2026 Free Reformed Church in Korea</small></footer>
     </main>
   );
 }

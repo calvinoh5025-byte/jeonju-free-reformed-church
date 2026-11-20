@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteFooter, SiteHeader, SubHero } from "../../components/site-shell";
 import books from "../data/bible-books.json";
+import { BibleSearch } from "../bible-search";
 
 export const metadata: Metadata = { title: "성경읽기" };
 
@@ -13,6 +14,7 @@ const groups = [
 export default function BiblePage() {
   return <main id="main" tabIndex={-1} className="sub-page"><SiteHeader /><SubHero kicker="BIBLE" title="성경읽기" description="개역한글판 성경을 책과 장을 골라 읽을 수 있습니다." />
     <section className="bible-index">
+      <BibleSearch books={books} />
       {groups.map(group => <section className="bible-group" key={group.id}>
         <h2>{group.label}</h2>
         <div className="bible-book-grid">

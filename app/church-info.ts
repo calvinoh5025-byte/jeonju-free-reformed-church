@@ -9,6 +9,8 @@ export const postalCode = "55019";
 export const contact = {
   phone: "010-2764-1996",
   phoneHref: "tel:01027641996",
+  phone2: "010-4163-0290",
+  phone2Href: "tel:01041630290",
   email: "dongsupsong79@gmail.com",
   facebook: "https://www.facebook.com/DongSupSong/",
 };

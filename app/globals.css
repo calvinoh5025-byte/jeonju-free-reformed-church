@@ -678,3 +678,34 @@ a.featured-sermon:focus-visible,.external-resource-cards a:focus-visible{outline
 .pillars article h3 a:focus-visible::after{outline:2px solid #d5ae67;outline-offset:3px}
 .pillars article h3 a:active{color:#e5c17f}
 @media(hover:hover){.pillars article:hover h3 a{color:#e5c17f;border-bottom-color:#e5c17f}}
+
+/* The three cards on 교회소개 lead onward too. */
+.about-summary article{position:relative}
+.about-summary h3 a{color:inherit;touch-action:manipulation;-webkit-tap-highlight-color:rgba(33,76,58,.18);border-bottom:1px solid rgba(33,76,58,.4);padding-bottom:2px}
+.about-summary h3 a::after{content:"";position:absolute;inset:0}
+.about-summary h3 a:focus-visible::after{outline:2px solid var(--forest);outline-offset:3px}
+.about-summary h3 a:active{color:var(--forest)}
+@media(hover:hover){.about-summary article:hover h3 a{color:var(--forest);border-bottom-color:var(--forest)}}
+
+/* Word search inside 성경읽기. */
+.bible-search{margin:0 0 26px;padding:18px;border:1px solid #e5dccb;border-radius:14px;background:#fffcf5}
+.bible-search h2{font:500 20px "Noto Serif KR",serif;margin:0 0 12px;color:var(--navy)}
+.bible-scope{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.bible-scope button{min-height:40px;padding:0 14px;border:1px solid #e5dccb;border-radius:999px;background:#fff;color:var(--navy);font:inherit;font-size:14px;cursor:pointer;touch-action:manipulation}
+.bible-scope button[aria-pressed="true"]{background:var(--forest);border-color:var(--forest);color:#fffcf5;font-weight:700}
+.bible-search-form{display:flex;gap:8px;flex-wrap:wrap}
+.bible-search-form input{flex:1 1 220px;min-width:0;min-height:46px;padding:0 14px;border:1px solid #c9c0b0;border-radius:10px;background:#fff;font:inherit;font-size:16px;color:var(--ink)}
+.bible-search-form button{min-height:46px;padding:0 18px;border:1px solid var(--forest);border-radius:10px;background:var(--forest);color:#fffcf5;font:inherit;font-weight:700;cursor:pointer;touch-action:manipulation}
+.bible-search-form button:disabled{opacity:.5;cursor:default}
+.bible-search-form .bible-search-clear{background:#fff;color:var(--forest)}
+.bible-search-note{margin:12px 0 0;color:var(--muted);font-size:13px;line-height:1.6}
+.bible-hits{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:8px;max-height:420px;overflow:auto}
+.bible-hits a{display:grid;gap:4px;padding:11px 13px;border:1px solid #e5dccb;border-radius:10px;background:#fff;color:var(--ink);touch-action:manipulation}
+.bible-hits strong{color:var(--forest);font-size:13px;font-weight:700}
+.bible-hits span{font-size:14px;line-height:1.65}
+.bible-hits mark{background:#ffe9a8;color:inherit;padding:0 1px;border-radius:2px}
+.bible-hits a:focus-visible{outline:3px solid var(--forest);outline-offset:2px}
+@media(hover:hover){.bible-hits a:hover{border-color:var(--forest);background:#f7faf7}}
+.bible-verses p{scroll-margin-top:84px}
+.bible-verse-found span{background:#ffe9a8;border-radius:3px;box-shadow:0 0 0 4px #ffe9a8}
+@media(max-width:620px){.bible-search{padding:14px;border-radius:12px}.bible-search h2{font-size:18px}.bible-hits{max-height:340px}}
