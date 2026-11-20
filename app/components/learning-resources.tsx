@@ -1,6 +1,6 @@
 const items = [
   { title: "개혁교회 설교 자료실", detail: "TheSeed 공개 설교 2,821건 · 본문과 설교자 검색", hash: "sermons" },
-  { title: "클라리온 잡지", detail: "1973–2024년 공개 잡지와 연간 색인 1,314건", hash: "clarion" },
+  { title: "클라리온 잡지", detail: "1973–2024년 호별 목록과 연간 색인 1,314건 · 클라리온 공식 사이트의 원문 PDF로 연결", hash: "clarion" },
 ];
 
 export function LearningResources() {
