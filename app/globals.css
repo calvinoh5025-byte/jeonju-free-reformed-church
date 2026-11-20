@@ -632,3 +632,49 @@ a.featured-sermon:focus-visible,.external-resource-cards a:focus-visible{outline
 @media(max-width:900px){.footer-install .install-app{display:block}.footer-install .install-button{width:100%;min-width:0}.footer-install .install-app>p{text-align:center;margin-top:8px}}
 @media(max-width:900px){footer{grid-template-columns:minmax(0,1fr)}footer>div{flex-wrap:wrap;gap:14px 20px}footer p,footer small,footer>div a{overflow-wrap:anywhere}footer .brand-mark{overflow-wrap:normal;word-break:keep-all}}
 .footer-install .install-app>p{color:#4d5654}
+
+/* Bible reading (/worship/bible): book list, chapter picker, verse text. */
+.bible-index{max-width:1080px;margin:0 auto;padding:30px clamp(18px,5vw,60px)}
+.bible-group+.bible-group{margin-top:34px}
+.bible-group h2{font:500 22px var(--font-noto-serif),serif;margin:0 0 14px;color:var(--navy)}
+.bible-book-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
+.bible-book-grid a{min-height:66px;padding:8px 6px;border:1px solid #e5dccb;border-radius:12px;background:#fffcf5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-align:center;color:var(--navy);word-break:keep-all;transition:background-color .15s ease,color .15s ease,border-color .15s ease}
+.bible-book-grid strong{font-size:16px;font-weight:500}
+.bible-book-grid small{font-size:11px;color:var(--muted)}
+.bible-book-grid a:focus-visible{outline:3px solid #29463f;outline-offset:3px}
+@media(hover:hover){.bible-book-grid a:hover{background:#29463f;border-color:#29463f;color:#fffcf5}.bible-book-grid a:hover small{color:#e8efe7}}
+.bible-chapters{padding:22px 0 6px;border-bottom:1px solid #d7cebd}
+.bible-chapter-grid{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:7px}
+.bible-chapter-grid button{min-height:46px;padding:4px;border:1px solid #e5dccb;border-radius:10px;background:#fffcf5;color:var(--navy);font:inherit;font-size:16px;cursor:pointer;transition:background-color .15s ease,color .15s ease,border-color .15s ease}
+.bible-chapter-grid button[aria-current]{background:var(--navy);border-color:var(--navy);color:#fffcf5;font-weight:700}
+@media(hover:hover){.bible-chapter-grid button:hover{background:#29463f;border-color:#29463f;color:#fffcf5}}
+.bible-verses p{display:grid;grid-template-columns:34px 1fr;gap:10px;margin:0 0 14px;font-size:1em;line-height:1.95}
+.bible-verses b{font-size:.68em;font-weight:700;color:var(--muted);text-align:right;padding-top:.42em}
+.bible-reader .bible-verses{padding:22px 0 4px}
+.bible-notice{padding:26px 0;color:var(--muted)}
+.bible-credit{margin:28px 0 0;padding-top:14px;border-top:1px solid #e5dccb;color:var(--muted);font-size:13px;text-align:center}
+.worship-reader-nav button{min-height:44px;padding:10px 12px;display:grid;place-items:center;border:1px solid #c9c0b0;border-radius:4px;background:#fff;color:var(--navy);font:inherit;cursor:pointer}
+@media(max-width:900px){.bible-book-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:620px){
+  .bible-index{padding:20px 18px 26px}
+  .bible-book-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .bible-book-grid strong{font-size:14px}
+  .bible-chapter-grid{grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}
+  .bible-chapter-grid button{min-height:44px;font-size:15px}
+  .bible-verses p{grid-template-columns:26px 1fr;gap:8px}
+  .worship-reader-nav button{flex:1 1 28%;font-size:14px;padding:8px 5px}
+}
+.bible-chapters>summary{list-style:none;cursor:pointer;min-height:48px;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;margin-bottom:14px;border:1px solid #e5dccb;border-radius:12px;background:#fffcf5;color:var(--navy);font-weight:700}
+.bible-chapters>summary::-webkit-details-marker{display:none}
+.bible-chapters>summary::after{content:"▾";color:var(--muted);font-weight:400}
+.bible-chapters[open]>summary::after{content:"▴"}
+.bible-chapters>summary:focus-visible{outline:3px solid #29463f;outline-offset:3px}
+.bible-anchor{scroll-margin-top:72px}
+
+/* The three foundation rows on the home page now lead somewhere. */
+.pillars article{position:relative}
+.pillars article h3 a{color:inherit;touch-action:manipulation;-webkit-tap-highlight-color:rgba(213,174,103,.3);border-bottom:1px solid rgba(213,174,103,.45);padding-bottom:3px}
+.pillars article h3 a::after{content:"";position:absolute;inset:0}
+.pillars article h3 a:focus-visible::after{outline:2px solid #d5ae67;outline-offset:3px}
+.pillars article h3 a:active{color:#e5c17f}
+@media(hover:hover){.pillars article:hover h3 a{color:#e5c17f;border-bottom-color:#e5c17f}}

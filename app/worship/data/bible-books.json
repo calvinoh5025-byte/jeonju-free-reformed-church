@@ -1,0 +1,662 @@
+[
+ {
+  "slug": "gen",
+  "code": "GEN",
+  "ko": "창세기",
+  "en": "Genesis",
+  "order": 1,
+  "testament": "ot",
+  "chapters": 50,
+  "verses": 1533
+ },
+ {
+  "slug": "exo",
+  "code": "EXO",
+  "ko": "출애굽기",
+  "en": "Exodus",
+  "order": 2,
+  "testament": "ot",
+  "chapters": 40,
+  "verses": 1213
+ },
+ {
+  "slug": "lev",
+  "code": "LEV",
+  "ko": "레위기",
+  "en": "Leviticus",
+  "order": 3,
+  "testament": "ot",
+  "chapters": 27,
+  "verses": 859
+ },
+ {
+  "slug": "num",
+  "code": "NUM",
+  "ko": "민수기",
+  "en": "Numbers",
+  "order": 4,
+  "testament": "ot",
+  "chapters": 36,
+  "verses": 1288
+ },
+ {
+  "slug": "deu",
+  "code": "DEU",
+  "ko": "신명기",
+  "en": "Deuteronomy",
+  "order": 5,
+  "testament": "ot",
+  "chapters": 34,
+  "verses": 959
+ },
+ {
+  "slug": "jos",
+  "code": "JOS",
+  "ko": "여호수아",
+  "en": "Joshua",
+  "order": 6,
+  "testament": "ot",
+  "chapters": 24,
+  "verses": 658
+ },
+ {
+  "slug": "jdg",
+  "code": "JDG",
+  "ko": "사사기",
+  "en": "Judges",
+  "order": 7,
+  "testament": "ot",
+  "chapters": 21,
+  "verses": 618
+ },
+ {
+  "slug": "rut",
+  "code": "RUT",
+  "ko": "룻기",
+  "en": "Ruth",
+  "order": 8,
+  "testament": "ot",
+  "chapters": 4,
+  "verses": 85
+ },
+ {
+  "slug": "1sa",
+  "code": "1SA",
+  "ko": "사무엘상",
+  "en": "1 Samuel",
+  "order": 9,
+  "testament": "ot",
+  "chapters": 31,
+  "verses": 809
+ },
+ {
+  "slug": "2sa",
+  "code": "2SA",
+  "ko": "사무엘하",
+  "en": "2 Samuel",
+  "order": 10,
+  "testament": "ot",
+  "chapters": 24,
+  "verses": 695
+ },
+ {
+  "slug": "1ki",
+  "code": "1KI",
+  "ko": "열왕기상",
+  "en": "1 Kings",
+  "order": 11,
+  "testament": "ot",
+  "chapters": 22,
+  "verses": 816
+ },
+ {
+  "slug": "2ki",
+  "code": "2KI",
+  "ko": "열왕기하",
+  "en": "2 Kings",
+  "order": 12,
+  "testament": "ot",
+  "chapters": 25,
+  "verses": 719
+ },
+ {
+  "slug": "1ch",
+  "code": "1CH",
+  "ko": "역대상",
+  "en": "1 Chronicles",
+  "order": 13,
+  "testament": "ot",
+  "chapters": 29,
+  "verses": 942
+ },
+ {
+  "slug": "2ch",
+  "code": "2CH",
+  "ko": "역대하",
+  "en": "2 Chronicles",
+  "order": 14,
+  "testament": "ot",
+  "chapters": 36,
+  "verses": 822
+ },
+ {
+  "slug": "ezr",
+  "code": "EZR",
+  "ko": "에스라",
+  "en": "Ezra",
+  "order": 15,
+  "testament": "ot",
+  "chapters": 10,
+  "verses": 280
+ },
+ {
+  "slug": "neh",
+  "code": "NEH",
+  "ko": "느헤미야",
+  "en": "Nehemiah",
+  "order": 16,
+  "testament": "ot",
+  "chapters": 13,
+  "verses": 406
+ },
+ {
+  "slug": "est",
+  "code": "EST",
+  "ko": "에스더",
+  "en": "Esther",
+  "order": 17,
+  "testament": "ot",
+  "chapters": 10,
+  "verses": 167
+ },
+ {
+  "slug": "job",
+  "code": "JOB",
+  "ko": "욥기",
+  "en": "Job",
+  "order": 18,
+  "testament": "ot",
+  "chapters": 42,
+  "verses": 1070
+ },
+ {
+  "slug": "psa",
+  "code": "PSA",
+  "ko": "시편",
+  "en": "Psalms",
+  "order": 19,
+  "testament": "ot",
+  "chapters": 150,
+  "verses": 2460
+ },
+ {
+  "slug": "pro",
+  "code": "PRO",
+  "ko": "잠언",
+  "en": "Proverbs",
+  "order": 20,
+  "testament": "ot",
+  "chapters": 31,
+  "verses": 915
+ },
+ {
+  "slug": "ecc",
+  "code": "ECC",
+  "ko": "전도서",
+  "en": "Ecclesiastes",
+  "order": 21,
+  "testament": "ot",
+  "chapters": 12,
+  "verses": 222
+ },
+ {
+  "slug": "sng",
+  "code": "SNG",
+  "ko": "아가",
+  "en": "Song of Solomon",
+  "order": 22,
+  "testament": "ot",
+  "chapters": 8,
+  "verses": 118
+ },
+ {
+  "slug": "isa",
+  "code": "ISA",
+  "ko": "이사야",
+  "en": "Isaiah",
+  "order": 23,
+  "testament": "ot",
+  "chapters": 66,
+  "verses": 1292
+ },
+ {
+  "slug": "jer",
+  "code": "JER",
+  "ko": "예레미야",
+  "en": "Jeremiah",
+  "order": 24,
+  "testament": "ot",
+  "chapters": 52,
+  "verses": 1364
+ },
+ {
+  "slug": "lam",
+  "code": "LAM",
+  "ko": "예레미야애가",
+  "en": "Lamentations",
+  "order": 25,
+  "testament": "ot",
+  "chapters": 5,
+  "verses": 154
+ },
+ {
+  "slug": "ezk",
+  "code": "EZK",
+  "ko": "에스겔",
+  "en": "Ezekiel",
+  "order": 26,
+  "testament": "ot",
+  "chapters": 48,
+  "verses": 1273
+ },
+ {
+  "slug": "dan",
+  "code": "DAN",
+  "ko": "다니엘",
+  "en": "Daniel",
+  "order": 27,
+  "testament": "ot",
+  "chapters": 12,
+  "verses": 357
+ },
+ {
+  "slug": "hos",
+  "code": "HOS",
+  "ko": "호세아",
+  "en": "Hosea",
+  "order": 28,
+  "testament": "ot",
+  "chapters": 14,
+  "verses": 197
+ },
+ {
+  "slug": "jol",
+  "code": "JOL",
+  "ko": "요엘",
+  "en": "Joel",
+  "order": 29,
+  "testament": "ot",
+  "chapters": 3,
+  "verses": 73
+ },
+ {
+  "slug": "amo",
+  "code": "AMO",
+  "ko": "아모스",
+  "en": "Amos",
+  "order": 30,
+  "testament": "ot",
+  "chapters": 9,
+  "verses": 146
+ },
+ {
+  "slug": "oba",
+  "code": "OBA",
+  "ko": "오바댜",
+  "en": "Obadiah",
+  "order": 31,
+  "testament": "ot",
+  "chapters": 1,
+  "verses": 21
+ },
+ {
+  "slug": "jon",
+  "code": "JON",
+  "ko": "요나",
+  "en": "Jonah",
+  "order": 32,
+  "testament": "ot",
+  "chapters": 4,
+  "verses": 48
+ },
+ {
+  "slug": "mic",
+  "code": "MIC",
+  "ko": "미가",
+  "en": "Micah",
+  "order": 33,
+  "testament": "ot",
+  "chapters": 7,
+  "verses": 105
+ },
+ {
+  "slug": "nam",
+  "code": "NAM",
+  "ko": "나훔",
+  "en": "Nahum",
+  "order": 34,
+  "testament": "ot",
+  "chapters": 3,
+  "verses": 47
+ },
+ {
+  "slug": "hab",
+  "code": "HAB",
+  "ko": "하박국",
+  "en": "Habakkuk",
+  "order": 35,
+  "testament": "ot",
+  "chapters": 3,
+  "verses": 56
+ },
+ {
+  "slug": "zep",
+  "code": "ZEP",
+  "ko": "스바냐",
+  "en": "Zephaniah",
+  "order": 36,
+  "testament": "ot",
+  "chapters": 3,
+  "verses": 53
+ },
+ {
+  "slug": "hag",
+  "code": "HAG",
+  "ko": "학개",
+  "en": "Haggai",
+  "order": 37,
+  "testament": "ot",
+  "chapters": 2,
+  "verses": 38
+ },
+ {
+  "slug": "zec",
+  "code": "ZEC",
+  "ko": "스가랴",
+  "en": "Zechariah",
+  "order": 38,
+  "testament": "ot",
+  "chapters": 14,
+  "verses": 211
+ },
+ {
+  "slug": "mal",
+  "code": "MAL",
+  "ko": "말라기",
+  "en": "Malachi",
+  "order": 39,
+  "testament": "ot",
+  "chapters": 4,
+  "verses": 55
+ },
+ {
+  "slug": "mat",
+  "code": "MAT",
+  "ko": "마태복음",
+  "en": "Matthew",
+  "order": 40,
+  "testament": "nt",
+  "chapters": 28,
+  "verses": 1071
+ },
+ {
+  "slug": "mrk",
+  "code": "MRK",
+  "ko": "마가복음",
+  "en": "Mark",
+  "order": 41,
+  "testament": "nt",
+  "chapters": 16,
+  "verses": 678
+ },
+ {
+  "slug": "luk",
+  "code": "LUK",
+  "ko": "누가복음",
+  "en": "Luke",
+  "order": 42,
+  "testament": "nt",
+  "chapters": 24,
+  "verses": 1151
+ },
+ {
+  "slug": "jhn",
+  "code": "JHN",
+  "ko": "요한복음",
+  "en": "John",
+  "order": 43,
+  "testament": "nt",
+  "chapters": 21,
+  "verses": 879
+ },
+ {
+  "slug": "act",
+  "code": "ACT",
+  "ko": "사도행전",
+  "en": "Acts",
+  "order": 44,
+  "testament": "nt",
+  "chapters": 28,
+  "verses": 1007
+ },
+ {
+  "slug": "rom",
+  "code": "ROM",
+  "ko": "로마서",
+  "en": "Romans",
+  "order": 45,
+  "testament": "nt",
+  "chapters": 16,
+  "verses": 433
+ },
+ {
+  "slug": "1co",
+  "code": "1CO",
+  "ko": "고린도전서",
+  "en": "1 Corinthians",
+  "order": 46,
+  "testament": "nt",
+  "chapters": 16,
+  "verses": 437
+ },
+ {
+  "slug": "2co",
+  "code": "2CO",
+  "ko": "고린도후서",
+  "en": "2 Corinthians",
+  "order": 47,
+  "testament": "nt",
+  "chapters": 13,
+  "verses": 256
+ },
+ {
+  "slug": "gal",
+  "code": "GAL",
+  "ko": "갈라디아서",
+  "en": "Galatians",
+  "order": 48,
+  "testament": "nt",
+  "chapters": 6,
+  "verses": 149
+ },
+ {
+  "slug": "eph",
+  "code": "EPH",
+  "ko": "에베소서",
+  "en": "Ephesians",
+  "order": 49,
+  "testament": "nt",
+  "chapters": 6,
+  "verses": 155
+ },
+ {
+  "slug": "php",
+  "code": "PHP",
+  "ko": "빌립보서",
+  "en": "Philippians",
+  "order": 50,
+  "testament": "nt",
+  "chapters": 4,
+  "verses": 104
+ },
+ {
+  "slug": "col",
+  "code": "COL",
+  "ko": "골로새서",
+  "en": "Colossians",
+  "order": 51,
+  "testament": "nt",
+  "chapters": 4,
+  "verses": 95
+ },
+ {
+  "slug": "1th",
+  "code": "1TH",
+  "ko": "데살로니가전서",
+  "en": "1 Thessalonians",
+  "order": 52,
+  "testament": "nt",
+  "chapters": 5,
+  "verses": 89
+ },
+ {
+  "slug": "2th",
+  "code": "2TH",
+  "ko": "데살로니가후서",
+  "en": "2 Thessalonians",
+  "order": 53,
+  "testament": "nt",
+  "chapters": 3,
+  "verses": 47
+ },
+ {
+  "slug": "1ti",
+  "code": "1TI",
+  "ko": "디모데전서",
+  "en": "1 Timothy",
+  "order": 54,
+  "testament": "nt",
+  "chapters": 6,
+  "verses": 113
+ },
+ {
+  "slug": "2ti",
+  "code": "2TI",
+  "ko": "디모데후서",
+  "en": "2 Timothy",
+  "order": 55,
+  "testament": "nt",
+  "chapters": 4,
+  "verses": 83
+ },
+ {
+  "slug": "tit",
+  "code": "TIT",
+  "ko": "디도서",
+  "en": "Titus",
+  "order": 56,
+  "testament": "nt",
+  "chapters": 3,
+  "verses": 46
+ },
+ {
+  "slug": "phm",
+  "code": "PHM",
+  "ko": "빌레몬서",
+  "en": "Philemon",
+  "order": 57,
+  "testament": "nt",
+  "chapters": 1,
+  "verses": 25
+ },
+ {
+  "slug": "heb",
+  "code": "HEB",
+  "ko": "히브리서",
+  "en": "Hebrews",
+  "order": 58,
+  "testament": "nt",
+  "chapters": 13,
+  "verses": 303
+ },
+ {
+  "slug": "jas",
+  "code": "JAS",
+  "ko": "야고보서",
+  "en": "James",
+  "order": 59,
+  "testament": "nt",
+  "chapters": 5,
+  "verses": 108
+ },
+ {
+  "slug": "1pe",
+  "code": "1PE",
+  "ko": "베드로전서",
+  "en": "1 Peter",
+  "order": 60,
+  "testament": "nt",
+  "chapters": 5,
+  "verses": 105
+ },
+ {
+  "slug": "2pe",
+  "code": "2PE",
+  "ko": "베드로후서",
+  "en": "2 Peter",
+  "order": 61,
+  "testament": "nt",
+  "chapters": 3,
+  "verses": 61
+ },
+ {
+  "slug": "1jn",
+  "code": "1JN",
+  "ko": "요한일서",
+  "en": "1 John",
+  "order": 62,
+  "testament": "nt",
+  "chapters": 5,
+  "verses": 105
+ },
+ {
+  "slug": "2jn",
+  "code": "2JN",
+  "ko": "요한이서",
+  "en": "2 John",
+  "order": 63,
+  "testament": "nt",
+  "chapters": 1,
+  "verses": 13
+ },
+ {
+  "slug": "3jn",
+  "code": "3JN",
+  "ko": "요한삼서",
+  "en": "3 John",
+  "order": 64,
+  "testament": "nt",
+  "chapters": 1,
+  "verses": 15
+ },
+ {
+  "slug": "jud",
+  "code": "JUD",
+  "ko": "유다서",
+  "en": "Jude",
+  "order": 65,
+  "testament": "nt",
+  "chapters": 1,
+  "verses": 25
+ },
+ {
+  "slug": "rev",
+  "code": "REV",
+  "ko": "요한계시록",
+  "en": "Revelation",
+  "order": 66,
+  "testament": "nt",
+  "chapters": 22,
+  "verses": 404
+ }
+]
