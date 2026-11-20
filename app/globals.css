@@ -714,5 +714,7 @@ a.featured-sermon:focus-visible,.external-resource-cards a:focus-visible{outline
 @media(max-width:620px){
   .sub-hero:after{display:none}
   .sub-hero h1,.sub-hero>p{max-width:100%}
-  .sub-hero h1{word-break:keep-all}
 }
+
+/* Korean titles wrap between words, never inside one, and split evenly. */
+.sub-hero h1,.sub-hero>p{word-break:keep-all;overflow-wrap:break-word}
