@@ -733,3 +733,7 @@ a.featured-sermon:focus-visible,.external-resource-cards a:focus-visible{outline
 .home-page .home-hero-title{word-break:keep-all}
 /* The long second line is about 12.2em wide, so the size follows the column (52vw minus padding) and never spills over. */
 @media(min-width:621px){.home-page .hero h1.home-hero-title{font-size:clamp(30px,3.2vw,50px)}.home-page .home-hero-title span{white-space:nowrap}}
+
+/* Footer contact links: a full-width row that wraps between links, never inside one. */
+footer>div{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:10px 28px;align-items:center}
+footer>div a{white-space:nowrap}
