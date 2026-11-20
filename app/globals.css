@@ -623,3 +623,12 @@ a.featured-sermon:focus-visible,.external-resource-cards a:focus-visible{outline
   .home-page .confession-list article>a,.home-page .confession-list article:first-child>a{min-height:76px;display:flex;align-items:center;padding:12px 10px}
   .home-page .confession-list h3{margin:0}
 }
+
+/* App install moved to the foot of the home page, out of the hero. */
+.footer-install{grid-column:1/-1;display:block}
+.footer-install .install-app{margin-top:0;justify-content:center}
+.footer-install .install-button{min-width:260px;justify-content:center}
+.footer-install .install-help{left:50%;top:auto;bottom:66px;transform:translateX(-50%)}
+@media(max-width:900px){.footer-install .install-app{display:block}.footer-install .install-button{width:100%;min-width:0}.footer-install .install-app>p{text-align:center;margin-top:8px}}
+@media(max-width:900px){footer{grid-template-columns:minmax(0,1fr)}footer>div{flex-wrap:wrap;gap:14px 20px}footer p,footer small,footer>div a{overflow-wrap:anywhere}footer .brand-mark{overflow-wrap:normal;word-break:keep-all}}
+.footer-install .install-app>p{color:#4d5654}
