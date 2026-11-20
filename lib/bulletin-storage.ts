@@ -24,7 +24,7 @@ export function signBulletinManage(id: string) {
 }
 export function verifyBulletinManage(id: string, signature: string) {
   const expected = signBulletinManage(id);
-  return !!expected && signature.length === expected.length && timingSafeEqual(Buffer.from(expected), Buffer.from(signature));
+  return !!expected && /^[a-f0-9]{64}$/.test(signature) && timingSafeEqual(Buffer.from(expected), Buffer.from(signature));
 }
 
 export function publicUrl(name: string) {

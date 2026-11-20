@@ -22,12 +22,12 @@ export function signFreeBoardManage(id: number) {
 
 export function verifyFreeBoardManage(id: number, signature: string) {
   const expected = signFreeBoardManage(id);
-  return !!expected && signature.length === expected.length && timingSafeEqual(Buffer.from(expected), Buffer.from(signature));
+  return !!expected && /^[a-f0-9]{64}$/.test(signature) && timingSafeEqual(Buffer.from(expected), Buffer.from(signature));
 }
 
 export function verifyFreeBoardDelete(id: number, signature: string) {
   const expected = signFreeBoardDelete(id);
-  if (!expected || signature.length !== expected.length) return false;
+  if (!expected || !/^[a-f0-9]{64}$/.test(signature)) return false;
   return timingSafeEqual(Buffer.from(expected), Buffer.from(signature));
 }
 
