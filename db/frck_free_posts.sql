@@ -11,7 +11,7 @@ create table if not exists public.frck_free_posts (
 
 alter table public.frck_free_posts enable row level security;
 revoke all on table public.frck_free_posts from public, anon, authenticated;
-grant select, insert, delete on table public.frck_free_posts to service_role;
+grant select, insert, update, delete on table public.frck_free_posts to service_role;
 grant usage, select on sequence public.frck_free_posts_id_seq to service_role;
 
 commit;

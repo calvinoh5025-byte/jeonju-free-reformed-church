@@ -1,4 +1,4 @@
-import { freeBoardServiceRest, signFreeBoardDelete } from "../../../lib/free-board-moderation";
+import { freeBoardServiceRest, signFreeBoardManage, verifyFreeBoardManage } from "../../../lib/free-board-moderation";
 
 const siteUrl = "https://jeonju-free-reformed-church.vercel.app";
 const alertEmail = process.env.BOARD_ALERT_EMAIL;
@@ -26,10 +26,10 @@ function takeRateLimit(ip: string) {
 
 async function sendDeleteAlert(post: { id: number; author: string; title: string; content: string }) {
   const apiKey = process.env.RESEND_API_KEY;
-  const signature = signFreeBoardDelete(post.id);
+  const signature = signFreeBoardManage(post.id);
   if (!alertEmail || !apiKey || !signature) return;
-  const deleteUrl = `${siteUrl}/api/free-board/moderate?id=${post.id}&sig=${signature}`;
-  const html = `<div style="font-family:sans-serif;line-height:1.7;color:#1d2433;max-width:560px"><h2>자유게시판에 새 글이 게시되었습니다</h2><p>작성자: ${escapeHtml(post.author)}</p><p><strong>${escapeHtml(post.title)}</strong></p><div style="white-space:pre-wrap;background:#f4efe6;padding:14px;border-radius:10px">${escapeHtml(post.content)}</div><p><a href="${deleteUrl}" style="display:inline-block;padding:12px 18px;background:#fff;color:#a12d2d;border:2px solid #a12d2d;border-radius:8px;font-weight:700;text-decoration:none">삭제 검토하기</a></p><p>링크를 열면 확인 화면이 표시됩니다. 확인 화면에서 한 번 더 선택해야 글이 삭제됩니다.</p></div>`;
+  const manageUrl = `${siteUrl}/api/free-board/moderate?id=${post.id}&sig=${signature}`;
+  const html = `<div style="font-family:sans-serif;line-height:1.7;color:#1d2433;max-width:560px"><h2>자유게시판에 새 글이 게시되었습니다</h2><p>작성자: ${escapeHtml(post.author)}</p><p><strong>${escapeHtml(post.title)}</strong></p><div style="white-space:pre-wrap;background:#f4efe6;padding:14px;border-radius:10px">${escapeHtml(post.content)}</div><p><a href="${manageUrl}" style="display:inline-block;padding:12px 18px;background:#fff;color:#1d2433;border:2px solid #1d2433;border-radius:8px;font-weight:700;text-decoration:none">글 관리하기</a></p><p>링크를 열어 글을 수정하거나 삭제할 수 있습니다. 삭제는 확인 화면에서 한 번 더 선택해야 합니다.</p></div>`;
   try {
     const response = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -38,7 +38,7 @@ async function sendDeleteAlert(post: { id: number; author: string; title: string
         from: "자유개혁교회 <onboarding@resend.dev>",
         to: [alertEmail],
         subject: "[자유개혁교회] 자유게시판 새 글",
-        text: `작성자: ${post.author}\n제목: ${post.title}\n\n${post.content}\n\n삭제 검토: ${deleteUrl}`,
+        text: `작성자: ${post.author}\n제목: ${post.title}\n\n${post.content}\n\n글 관리: ${manageUrl}`,
         html,
       }),
     });
@@ -92,9 +92,57 @@ export async function POST(request: Request) {
     const [post] = await response.json() as Array<{ id: number; author: string; title: string; content: string; created_at: string }>;
     if (!post) throw new Error("Supabase did not return the inserted post");
     await sendDeleteAlert({ id: post.id, author: post.author, title: post.title, content: post.content });
-    return Response.json({ ok: true, post: { id: post.id, createdAt: post.created_at } }, { status: 201 });
+    return Response.json({ ok: true, post: { id: post.id, createdAt: post.created_at }, manageToken: signFreeBoardManage(post.id) }, { status: 201 });
   } catch (error) {
     console.error("[free-board] create failed", error instanceof Error ? error.message : error);
     return Response.json({ error: "글을 저장하지 못했습니다. 잠시 후 다시 시도해 주세요." }, { status: 503 });
+  }
+}
+
+type ManageRequest = { id?: number; token?: string; author?: string; title?: string; content?: string };
+async function parseManageRequest(request: Request): Promise<ManageRequest | null> {
+  try {
+    const data = await request.json();
+    return data && typeof data === "object" ? data as ManageRequest : null;
+  } catch { return null; }
+}
+function canManage(data: ManageRequest | null): data is ManageRequest & { id: number; token: string } {
+  return !!data && Number.isSafeInteger(data.id) && (data.id ?? 0) > 0 && typeof data.token === "string" && verifyFreeBoardManage(data.id!, data.token);
+}
+
+export async function PATCH(request: Request) {
+  const data = await parseManageRequest(request);
+  if (!canManage(data)) return Response.json({ error: "이 글을 수정할 권한이 없습니다." }, { status: 403 });
+  if (typeof data.author !== "string" || typeof data.title !== "string" || typeof data.content !== "string") return Response.json({ error: "이름, 제목, 내용을 확인해 주세요." }, { status: 400 });
+  const author = data.author.trim().slice(0, 30);
+  const title = data.title.trim().slice(0, 100);
+  const content = data.content.trim().slice(0, 3000);
+  if (!author || !title || content.length < 2) return Response.json({ error: "이름, 제목, 내용을 모두 입력해 주세요." }, { status: 400 });
+  try {
+    const response = await freeBoardServiceRest(`frck_free_posts?id=eq.${data.id}&select=id,author,title,content,created_at`, {
+      method: "PATCH", headers: { "content-type": "application/json", Prefer: "return=representation" }, body: JSON.stringify({ author, title, content }),
+    });
+    if (!response.ok) throw new Error(await response.text());
+    const [post] = await response.json() as Array<{ id: number; author: string; title: string; content: string; created_at: string }>;
+    if (!post) return Response.json({ error: "글을 찾을 수 없습니다." }, { status: 404 });
+    return Response.json({ ok: true, post: { id: post.id, author: post.author, title: post.title, content: post.content, createdAt: post.created_at } });
+  } catch (error) {
+    console.error("[free-board] update failed", error instanceof Error ? error.message : error);
+    return Response.json({ error: "글을 수정하지 못했습니다. 잠시 후 다시 시도해 주세요." }, { status: 503 });
+  }
+}
+
+export async function DELETE(request: Request) {
+  const data = await parseManageRequest(request);
+  if (!canManage(data)) return Response.json({ error: "이 글을 삭제할 권한이 없습니다." }, { status: 403 });
+  try {
+    const response = await freeBoardServiceRest(`frck_free_posts?id=eq.${data.id}`, { method: "DELETE", headers: { Prefer: "return=representation" } });
+    if (!response.ok) throw new Error(await response.text());
+    const deleted = await response.json() as Array<{ id: number }>;
+    if (!deleted.length) return Response.json({ error: "이미 삭제되었거나 글을 찾을 수 없습니다." }, { status: 404 });
+    return Response.json({ ok: true });
+  } catch (error) {
+    console.error("[free-board] delete failed", error instanceof Error ? error.message : error);
+    return Response.json({ error: "글을 삭제하지 못했습니다. 잠시 후 다시 시도해 주세요." }, { status: 503 });
   }
 }
