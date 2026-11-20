@@ -21,7 +21,7 @@ export default function Home() {
             <span>자유개혁교회</span>
           </a>
           <nav className="desktop-nav" aria-label="주요 메뉴">
-            <a href="/about">교회소개</a><a href="/newcomers">새가족 안내</a><a href="/church">개혁교회 신앙고백서</a><a href="/worship">예배생활</a><Link href="/worship/bulletin">주보</Link><a href="/sermons">설교</a>
+            <a href="/about">교회소개</a><a href="/newcomers">새가족 안내</a><a href="/church">개혁교회 신앙고백서</a><a href="/worship">예배생활</a><a href="/sermons">설교</a>
             <a href="/board">공지게시판</a><a href="/free-board">자유게시판</a><a href="/resources">자료실</a><a href="/location">오시는 길</a>
           </nav>
           <MobileMenu />
@@ -33,7 +33,6 @@ export default function Home() {
             <h1 className="home-hero-title"><span>말씀 위에 서는 교회,</span><span>언약 안에서 함께 걷는 공동체</span></h1>
             <div className="gold-rule" />
             <p className="lead">성경과 세 일치 신조를 따라 그리스도를 고백하며, 세대와 세대를 이어 신실한 교회를 세우시는 그리스도 안에서 살아갑니다.</p>
-            <Link className="button primary home-bulletin-cta" href="/worship/bulletin">이번 주 주보 보기</Link>
             <aside className="visitor-card"><strong>처음 오시는 분</strong>{worshipTimes.map(item => <p key={item.label}>{item.label} {item.time}</p>)}<p>{address}</p><p>문의 <a href={contact.phoneHref}>{contact.phone}</a> · <a href={contact.phone2Href}>{contact.phone2}</a> · <a href={`mailto:${contact.email}`}>{contact.email}</a></p><a className="button secondary" href="/newcomers">새가족 안내</a><a className="button secondary" href="/location">오시는 길</a><a className="button secondary" href="/worship/order">예배순서 보기</a></aside>
           </div>
           <div className="hero-media">
