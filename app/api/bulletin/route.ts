@@ -46,9 +46,15 @@ async function notifyBulletinAdmin(date: string, id: string, token: string, page
   } catch (error) { console.error("[bulletin-alert] email request failed", error instanceof Error ? error.message : error); }
 }
 
+// 몇 주 앞선 날짜는 입력 실수로 보고 공개 목록에서 뺍니다. (관리 링크로는 여전히 찾아서 지울 수 있습니다.)
+async function visibleBulletins() {
+  const limit = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  return (await listBulletins()).filter(item => item.date <= limit);
+}
+
 export async function GET() {
   if (!storageReady()) return Response.json({ bulletins: [], ready: false });
-  return Response.json({ bulletins: await listBulletins(), ready: true });
+  return Response.json({ bulletins: await visibleBulletins(), ready: true });
 }
 
 async function saveBulletin(form: FormData): Promise<Response> {
@@ -88,7 +94,7 @@ async function saveBulletin(form: FormData): Promise<Response> {
     return Response.json({ error: "삭제 권한을 준비하지 못했습니다." }, { status: 503 });
   }
   await notifyBulletinAdmin(date, id, manageToken, pdfPages ?? files.length);
-  return Response.json({ ok: true, id, manageToken, bulletins: await listBulletins() });
+  return Response.json({ ok: true, id, manageToken, bulletins: await visibleBulletins() });
 }
 
 export async function POST(request: Request) {
@@ -107,14 +113,14 @@ export async function PUT(request: Request) {
   try { form = await request.formData(); } catch { return Response.json({ error: "파일을 읽지 못했습니다." }, { status: 400 }); }
   const oldId = String(form.get("id") ?? "");
   const token = String(form.get("token") ?? "");
-  if (!/^[da-f-]{36}$/i.test(oldId) || !verifyBulletinManage(oldId, token)) return Response.json({ error: "이 주보를 수정할 권한이 없습니다." }, { status: 403 });
+  if (!/^[\da-f-]{36}$/i.test(oldId) || !verifyBulletinManage(oldId, token)) return Response.json({ error: "이 주보를 수정할 권한이 없습니다." }, { status: 403 });
   const old = (await listBulletins()).find(item => item.id === oldId);
   if (!old) return Response.json({ error: "이미 삭제되었거나 주보를 찾을 수 없습니다." }, { status: 404 });
   const saved = await saveBulletin(form);
   if (!saved.ok) return saved;
   const data = await saved.json() as { id: string; manageToken: string };
   await Promise.all(old.pages.map(page => deleteBulletinObject(page.name)));
-  return Response.json({ ok: true, id: data.id, manageToken: data.manageToken, bulletins: await listBulletins() });
+  return Response.json({ ok: true, id: data.id, manageToken: data.manageToken, bulletins: await visibleBulletins() });
 }
 
 export async function DELETE(request: Request) {
@@ -126,5 +132,5 @@ export async function DELETE(request: Request) {
   if (!bulletin) return Response.json({ error: "이미 삭제되었거나 주보를 찾을 수 없습니다." }, { status: 404 });
   const results = await Promise.all(bulletin.pages.map(page => deleteBulletinObject(page.name)));
   if (results.some(result => !result)) return Response.json({ error: "일부 파일을 삭제하지 못했습니다. 다시 시도해 주세요." }, { status: 502 });
-  return Response.json({ ok: true, bulletins: await listBulletins() });
+  return Response.json({ ok: true, bulletins: await visibleBulletins() });
 }
