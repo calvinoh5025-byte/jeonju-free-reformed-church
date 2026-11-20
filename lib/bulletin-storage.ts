@@ -57,7 +57,8 @@ export async function listBulletins(): Promise<Bulletin[]> {
     const legacy = row.name.match(/^(\d{4}-\d{2}-\d{2})-(.+)\.[a-z0-9]+$/i);
     if (!batch && !legacy) continue;
     const date = (batch ?? legacy)![1];
-    const id = batch ? batch[2] : row.name;
+    // 예전 방식(날짜-타임스탬프)으로 따로 올라간 파일은 같은 날짜끼리 한 주보로 묶습니다.
+    const id = batch ? batch[2] : `legacy-${date}`;
     const item = groups.get(id) ?? { id, date, pages: [] };
     item.pages.push({ name: row.name, url: publicUrl(row.name), size: row.metadata?.size ?? 0 });
     groups.set(id, item);

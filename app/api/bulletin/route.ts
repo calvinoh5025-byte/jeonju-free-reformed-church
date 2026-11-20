@@ -51,11 +51,7 @@ export async function GET() {
   return Response.json({ bulletins: await listBulletins(), ready: true });
 }
 
-export async function POST(request: Request) {
-  if (!storageReady()) return Response.json({ error: "주보 저장소가 아직 준비되지 않았습니다. 관리자에게 알려 주세요." }, { status: 503 });
-  if (tooMany(request)) return Response.json({ error: "잠시 뒤에 다시 올려 주세요." }, { status: 429 });
-  let form: FormData;
-  try { form = await request.formData(); } catch { return Response.json({ error: "파일을 읽지 못했습니다." }, { status: 400 }); }
+async function saveBulletin(form: FormData): Promise<Response> {
   const files = [...form.getAll("files"), ...form.getAll("file")].filter((value): value is File => value instanceof File);
   const date = String(form.get("date") ?? "");
   if (files.length < 1 || files.length > 2) return Response.json({ error: "주보는 최대 2페이지까지 올릴 수 있습니다." }, { status: 400 });
@@ -93,6 +89,32 @@ export async function POST(request: Request) {
   }
   await notifyBulletinAdmin(date, id, manageToken, pdfPages ?? files.length);
   return Response.json({ ok: true, id, manageToken, bulletins: await listBulletins() });
+}
+
+export async function POST(request: Request) {
+  if (!storageReady()) return Response.json({ error: "주보 저장소가 아직 준비되지 않았습니다. 관리자에게 알려 주세요." }, { status: 503 });
+  if (tooMany(request)) return Response.json({ error: "잠시 뒤에 다시 올려 주세요." }, { status: 429 });
+  let form: FormData;
+  try { form = await request.formData(); } catch { return Response.json({ error: "파일을 읽지 못했습니다." }, { status: 400 }); }
+  return saveBulletin(form);
+}
+
+// 수정: 새 파일을 먼저 올려 두고, 성공하면 예전 파일을 지웁니다. 중간에 실패해도 예전 주보는 그대로 남습니다.
+export async function PUT(request: Request) {
+  if (!storageReady()) return Response.json({ error: "주보 저장소가 아직 준비되지 않았습니다. 관리자에게 알려 주세요." }, { status: 503 });
+  if (tooMany(request)) return Response.json({ error: "잠시 뒤에 다시 수정해 주세요." }, { status: 429 });
+  let form: FormData;
+  try { form = await request.formData(); } catch { return Response.json({ error: "파일을 읽지 못했습니다." }, { status: 400 }); }
+  const oldId = String(form.get("id") ?? "");
+  const token = String(form.get("token") ?? "");
+  if (!/^[da-f-]{36}$/i.test(oldId) || !verifyBulletinManage(oldId, token)) return Response.json({ error: "이 주보를 수정할 권한이 없습니다." }, { status: 403 });
+  const old = (await listBulletins()).find(item => item.id === oldId);
+  if (!old) return Response.json({ error: "이미 삭제되었거나 주보를 찾을 수 없습니다." }, { status: 404 });
+  const saved = await saveBulletin(form);
+  if (!saved.ok) return saved;
+  const data = await saved.json() as { id: string; manageToken: string };
+  await Promise.all(old.pages.map(page => deleteBulletinObject(page.name)));
+  return Response.json({ ok: true, id: data.id, manageToken: data.manageToken, bulletins: await listBulletins() });
 }
 
 export async function DELETE(request: Request) {
