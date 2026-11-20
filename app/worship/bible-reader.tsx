@@ -13,14 +13,35 @@ export function BibleReader({ book, previous, next }: { book: BookMeta; previous
   const [fontSize, setFontSize] = useState(20);
   const [jump, setJump] = useState("");
   const [pickerOpen, setPickerOpen] = useState(true);
+  const [wanted, setWanted] = useState<number | null>(null);
   const textTop = useRef<HTMLDivElement | null>(null);
   const scrollNext = useRef(false);
 
   useEffect(() => {
     try { const saved = Number(localStorage.getItem("worship-font-size")); if (saved >= 16 && saved <= 32) setFontSize(saved); } catch {}
-    const asked = Number(new URLSearchParams(window.location.search).get("c"));
-    if (Number.isInteger(asked) && asked >= 1 && asked <= book.chapters) { setChapter(asked); setPickerOpen(false); }
-  }, [book.chapters]);
+  }, []);
+
+  useEffect(() => {
+    const search = new URLSearchParams(window.location.search);
+    const asked = Number(search.get("c"));
+    const verse = Number(search.get("v"));
+    if (!Number.isInteger(asked) || asked < 1 || asked > book.chapters) return;
+    setChapter(asked);
+    setPickerOpen(false);
+    setWanted(Number.isInteger(verse) && verse >= 1 ? verse : null);
+  }, [book.slug, book.chapters]);
+
+  useEffect(() => {
+    const open = (event: Event) => {
+      const detail = (event as CustomEvent<{ slug: string; chapter: number; verse: number }>).detail;
+      if (!detail || detail.slug !== book.slug) return;
+      setChapter(detail.chapter);
+      setPickerOpen(false);
+      setWanted(detail.verse);
+    };
+    window.addEventListener("bible-goto", open);
+    return () => window.removeEventListener("bible-goto", open);
+  }, [book.slug]);
 
   useEffect(() => {
     let live = true;
@@ -43,6 +64,7 @@ export function BibleReader({ book, previous, next }: { book: BookMeta; previous
   const openChapter = useCallback((n: number) => {
     setChapter(n);
     setPickerOpen(false);
+    setWanted(null);
     scrollNext.current = true;
     try { window.history.replaceState(null, "", `?c=${n}`); } catch {}
   }, []);
@@ -60,6 +82,17 @@ export function BibleReader({ book, previous, next }: { book: BookMeta; previous
   };
 
   const verses = chapter && text ? text.chapters[chapter - 1] : null;
+
+  useEffect(() => {
+    if (!verses || !wanted) return;
+    const found = document.getElementById(`v${wanted}`);
+    if (!found) return;
+    scrollNext.current = false;
+    found.scrollIntoView({ block: "center" });
+    found.classList.add("bible-verse-found");
+    const timer = window.setTimeout(() => found.classList.remove("bible-verse-found"), 5000);
+    return () => window.clearTimeout(timer);
+  }, [verses, wanted]);
 
   return <>
     <div className="worship-reader-tools"><button type="button" onClick={() => changeSize(-2)}>가−</button><button type="button" onClick={() => changeSize(2)}>가+</button></div>
@@ -80,7 +113,7 @@ export function BibleReader({ book, previous, next }: { book: BookMeta; previous
     {chapter && verses && <>
       <header className="worship-reader-title"><div><h2>{book.ko} {chapter}장</h2></div><small>{verses.length}절</small></header>
       <div className="bible-verses" style={{ fontSize }}>
-        {verses.map((verse, index) => <p key={index}><b>{index + 1}</b><span>{verse}</span></p>)}
+        {verses.map((verse, index) => <p id={`v${index + 1}`} key={index}><b>{index + 1}</b><span>{verse}</span></p>)}
       </div>
       <nav className="worship-reader-nav" aria-label="장 이동">
         {chapter > 1
