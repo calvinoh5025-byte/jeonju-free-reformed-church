@@ -670,3 +670,11 @@ a.featured-sermon:focus-visible,.external-resource-cards a:focus-visible{outline
 .bible-chapters[open]>summary::after{content:"▴"}
 .bible-chapters>summary:focus-visible{outline:3px solid #29463f;outline-offset:3px}
 .bible-anchor{scroll-margin-top:72px}
+
+/* The three foundation rows on the home page now lead somewhere. */
+.pillars article{position:relative}
+.pillars article h3 a{color:inherit;touch-action:manipulation;-webkit-tap-highlight-color:rgba(213,174,103,.3);border-bottom:1px solid rgba(213,174,103,.45);padding-bottom:3px}
+.pillars article h3 a::after{content:"";position:absolute;inset:0}
+.pillars article h3 a:focus-visible::after{outline:2px solid #d5ae67;outline-offset:3px}
+.pillars article h3 a:active{color:#e5c17f}
+@media(hover:hover){.pillars article:hover h3 a{color:#e5c17f;border-bottom-color:#e5c17f}}
