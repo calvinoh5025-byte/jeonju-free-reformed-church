@@ -29,7 +29,7 @@ export default function Home() {
         <div className="hero-grid">
           <div className="hero-copy">
             <p className="eyebrow">FREE REFORMED CHURCH IN KOREA</p>
-            <h1>말씀 위에 서는 교회,<br />언약 안에서 함께 걷는 공동체</h1>
+            <h1 className="home-hero-title"><span>말씀 위에 서는 교회,</span><span>언약 안에서 함께 걷는 공동체</span></h1>
             <div className="gold-rule" />
             <p className="lead">성경과 세 일치 신조를 따라 그리스도를 고백하며, 세대와 세대를 이어 신실한 교회를 세우시는 그리스도 안에서 살아갑니다.</p>
             <aside className="visitor-card"><strong>처음 오시는 분</strong>{worshipTimes.map(item => <p key={item.label}>{item.label} {item.time}</p>)}<p>{address}</p><p>문의 <a href={contact.phoneHref}>{contact.phone}</a> · <a href={contact.phone2Href}>{contact.phone2}</a> · <a href={`mailto:${contact.email}`}>{contact.email}</a></p><a className="button secondary" href="/newcomers">새가족 안내</a><a className="button secondary" href="/location">오시는 길</a><a className="button secondary" href="/worship/order">예배순서 보기</a></aside>

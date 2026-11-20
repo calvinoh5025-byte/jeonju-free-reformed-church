@@ -334,6 +334,8 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--gold);outline-offse
   .home-page .site-header{height:72px}
   .home-page .hero-copy{padding:28px 20px 24px}
   .home-page .hero h1{font-size:30px;margin:9px 0 12px}
+  .home-page .home-hero-title{font-size:clamp(24px,7.5vw,29px);word-break:keep-all;text-wrap:balance}
+  .home-page .home-hero-title span{display:block}
   .home-page .lead{font-size:13px;line-height:1.5}
   .home-page .hero-facebook-link{padding-top:11px;padding-bottom:11px}
   .home-page .identity,.home-page .confessions,.home-page .directions{padding:26px 18px}
