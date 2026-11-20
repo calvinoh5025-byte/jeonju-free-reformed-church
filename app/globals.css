@@ -709,3 +709,10 @@ a.featured-sermon:focus-visible,.external-resource-cards a:focus-visible{outline
 .bible-verses p{scroll-margin-top:84px}
 .bible-verse-found span{background:#ffe9a8;border-radius:3px;box-shadow:0 0 0 4px #ffe9a8}
 @media(max-width:620px){.bible-search{padding:14px;border-radius:12px}.bible-search h2{font-size:18px}.bible-hits{max-height:340px}}
+
+/* Phones: the round sign photo sat on top of the sub-page intro text. */
+@media(max-width:620px){
+  .sub-hero:after{display:none}
+  .sub-hero h1,.sub-hero>p{max-width:100%}
+  .sub-hero h1{word-break:keep-all}
+}
