@@ -737,3 +737,25 @@ a.featured-sermon:focus-visible,.external-resource-cards a:focus-visible{outline
 /* Footer contact links: a full-width row that wraps between links, never inside one. */
 footer>div{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:10px 28px;align-items:center}
 footer>div a{white-space:nowrap}
+
+/* 성도 자료 나눔 */
+.share-wrap{max-width:960px;margin:0 auto}
+.share-card-section{padding-top:0}
+.share-card-section .share-card{max-width:none}
+.share-upload,.share-list{margin-top:20px}
+.share-upload h2,.share-list h2{font:500 22px "Noto Serif KR",serif;margin:0 0 14px;color:var(--navy)}
+.share-upload{padding:18px;border:1px solid #e5dccb;border-radius:14px;background:#fffcf5}
+.share-upload form{display:grid;gap:8px}
+.share-upload label{font-weight:700;font-size:14px;color:#263530;margin-top:6px}
+.share-upload input[type=text],.share-upload textarea{width:100%;border:1px solid #c9c0b0;border-radius:10px;background:#fff;padding:12px;font:inherit;font-size:16px;color:var(--ink)}
+.share-upload input[type=file]{font:inherit;font-size:15px;padding:8px 0;max-width:100%}
+.share-buttons{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+.share-note{margin:12px 0 0;color:var(--muted);font-size:13px;line-height:1.6}
+.share-error{color:#a12d2d}
+.share-list ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.share-list li{display:flex;gap:14px;justify-content:space-between;align-items:center;padding:16px 18px;border:1px solid #e5dccb;border-radius:14px;background:#fffcf5}
+.share-list h3{font:500 18px "Noto Serif KR",serif;margin:0 0 4px;word-break:keep-all}
+.share-list li p{margin:0 0 6px;color:#46504c;font-size:14px;line-height:1.6}
+.share-list small{color:var(--muted);font-size:12px;overflow-wrap:anywhere}
+.share-item-buttons{display:flex;gap:8px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
+@media(max-width:620px){.share-list li{flex-direction:column;align-items:stretch}.share-item-buttons{justify-content:stretch}.share-item-buttons>*{flex:1}.share-upload{padding:14px}}
