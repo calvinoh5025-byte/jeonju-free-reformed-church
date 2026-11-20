@@ -14,9 +14,20 @@ export function signFreeBoardDelete(id: number) {
   return createHmac("sha256", config.key).update(`frck-free-board:${id}:delete`).digest("hex");
 }
 
+export function signFreeBoardManage(id: number) {
+  const config = getConfig();
+  if (!config) return null;
+  return createHmac("sha256", config.key).update(`frck-free-board:${id}:manage`).digest("hex");
+}
+
+export function verifyFreeBoardManage(id: number, signature: string) {
+  const expected = signFreeBoardManage(id);
+  return !!expected && /^[a-f0-9]{64}$/.test(signature) && timingSafeEqual(Buffer.from(expected), Buffer.from(signature));
+}
+
 export function verifyFreeBoardDelete(id: number, signature: string) {
   const expected = signFreeBoardDelete(id);
-  if (!expected || signature.length !== expected.length) return false;
+  if (!expected || !/^[a-f0-9]{64}$/.test(signature)) return false;
   return timingSafeEqual(Buffer.from(expected), Buffer.from(signature));
 }
 

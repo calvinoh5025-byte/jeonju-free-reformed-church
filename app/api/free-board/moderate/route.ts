@@ -1,4 +1,4 @@
-import { freeBoardServiceRest, verifyFreeBoardDelete } from "../../../../lib/free-board-moderation";
+import { freeBoardServiceRest, verifyFreeBoardDelete, verifyFreeBoardManage } from "../../../../lib/free-board-moderation";
 
 type Post = { id: number; author: string; title: string; content: string };
 const escapeHtml = (value: string) => value.replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char] ?? char);
@@ -15,8 +15,8 @@ function fail(message: string, status = 400) { return page("자유게시판 글 
 function validParams(params: URLSearchParams) {
   const id = Number(params.get("id"));
   const signature = params.get("sig") ?? "";
-  if (!Number.isInteger(id) || id <= 0 || !verifyFreeBoardDelete(id, signature)) return null;
-  return { id, signature };
+  if (!Number.isSafeInteger(id) || id <= 0 || (!verifyFreeBoardDelete(id, signature) && !verifyFreeBoardManage(id, signature))) return null;
+  return { id, signature, canEdit: verifyFreeBoardManage(id, signature) };
 }
 
 async function loadPost(id: number) {
@@ -32,7 +32,11 @@ export async function GET(request: Request) {
   try {
     const post = await loadPost(params.id);
     if (!post) return fail("이미 삭제된 글입니다.", 404);
-    return page("자유게시판 글 삭제 확인", `<h1>이 글을 자유게시판에서 삭제할까요?</h1><div class="card"><p>작성자: ${escapeHtml(post.author)}</p><strong>${escapeHtml(post.title)}</strong><p class="content">${escapeHtml(post.content)}</p></div><form method="post"><input type="hidden" name="id" value="${post.id}"><input type="hidden" name="sig" value="${params.signature}"><button class="delete" type="submit">글 삭제하기</button></form><a class="home" href="/free-board">삭제하지 않고 돌아가기</a>`);
+    const content = params.canEdit
+      ? `<form method="post"><input type="hidden" name="id" value="${post.id}"><input type="hidden" name="sig" value="${params.signature}"><input type="hidden" name="action" value="update"><label>작성자<input name="author" maxlength="30" required value="${escapeHtml(post.author)}"></label><label>제목<input name="title" maxlength="100" required value="${escapeHtml(post.title)}"></label><label>내용<textarea name="content" maxlength="3000" required>${escapeHtml(post.content)}</textarea></label><button type="submit">수정 저장</button></form>`
+      : `<div class="card"><p>작성자: ${escapeHtml(post.author)}</p><strong>${escapeHtml(post.title)}</strong><p class="content">${escapeHtml(post.content)}</p></div>`;
+    const deleteForm = `<form method="post"><input type="hidden" name="id" value="${post.id}"><input type="hidden" name="sig" value="${params.signature}"><input type="hidden" name="action" value="delete"><button class="delete" type="submit">글 삭제하기</button></form>`;
+    return page("자유게시판 글 관리", `<h1>자유게시판 글 관리</h1><div class="card">${content}</div>${deleteForm}<a class="home" href="/free-board">돌아가기</a>`);
   } catch (error) {
     console.error("[free-board-moderate] lookup failed", error instanceof Error ? error.message : error);
     return fail("글을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.", 503);
@@ -43,7 +47,21 @@ export async function POST(request: Request) {
   const form = await request.formData();
   const params = validParams(new URLSearchParams({ id: String(form.get("id") ?? ""), sig: String(form.get("sig") ?? "") }));
   if (!params) return fail("링크가 올바르지 않습니다. 알림 메일의 삭제 링크를 다시 확인해 주세요.");
+  const action = String(form.get("action") ?? "delete");
   try {
+    if (action === "update") {
+      if (!params.canEdit) return fail("이 링크로는 글을 수정할 수 없습니다.", 403);
+      const author = String(form.get("author") ?? "").trim().slice(0, 30);
+      const title = String(form.get("title") ?? "").trim().slice(0, 100);
+      const content = String(form.get("content") ?? "").trim().slice(0, 3000);
+      if (!author || !title || content.length < 2) return fail("이름, 제목, 내용을 확인해 주세요.");
+      const response = await freeBoardServiceRest(`frck_free_posts?id=eq.${params.id}`, { method: "PATCH", headers: { "content-type": "application/json", Prefer: "return=representation" }, body: JSON.stringify({ author, title, content }) });
+      if (!response.ok) throw new Error(await response.text());
+      const updated = await response.json() as Post[];
+      if (!updated.length) return fail("이미 삭제된 글입니다.", 404);
+      return page("수정 완료", `<h1>글을 수정했습니다.</h1><a class="home" href="/free-board">자유게시판으로 돌아가기</a>`);
+    }
+    if (action !== "delete") return fail("요청 내용을 확인해 주세요.");
     const response = await freeBoardServiceRest(`frck_free_posts?id=eq.${params.id}`, { method: "DELETE", headers: { Prefer: "return=representation" } });
     if (!response.ok) throw new Error(await response.text());
     const deleted = await response.json() as Post[];
