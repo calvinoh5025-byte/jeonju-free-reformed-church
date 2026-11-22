@@ -25,7 +25,9 @@
 
 .group a,
 .allMenu a {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   color: #29463f;
   font-size: 16px;
   line-height: 1.5;

@@ -44,7 +44,12 @@ export function DesktopMenu() {
   }, [openGroup]);
 
   return (
-    <nav ref={rootRef} className={`desktop-nav ${styles.navigation}`} aria-label="주요 메뉴">
+    <nav ref={rootRef} className={`desktop-nav ${styles.navigation}`} aria-label="주요 메뉴" onBlur={event => {
+      if (event.relatedTarget && !event.currentTarget.contains(event.relatedTarget as Node | null)) {
+        setOpenGroup(null);
+        if (hoverCloseTimer.current) clearTimeout(hoverCloseTimer.current);
+      }
+    }}>
       {siteNav.map(group => {
         const expanded = openGroup === group.id;
         const current = isSiteNavGroupCurrent(pathname, group);

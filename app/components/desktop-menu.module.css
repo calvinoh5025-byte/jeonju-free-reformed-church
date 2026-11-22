@@ -82,3 +82,9 @@
   outline: 3px solid #29463f;
   outline-offset: 2px;
 }
+
+
+.group:last-child .panel {
+  right: 0;
+  left: auto;
+}
