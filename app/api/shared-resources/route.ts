@@ -1,4 +1,5 @@
 import { MAX_SHARE_BYTES, SHARE_TYPES, deleteObject, listShared, saveShared, shareReady, signShareManage, verifyShareManage } from "../../../lib/shared-resources";
+import { isShareCategory } from "../../../lib/share-categories";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -53,16 +54,18 @@ export async function POST(request: Request) {
   const title = String(form.get("title") ?? "").trim();
   const description = String(form.get("description") ?? "").trim();
   const author = String(form.get("author") ?? "").trim();
+  const category = String(form.get("category") ?? "").trim();
   if (!(file instanceof File)) return Response.json({ error: "자료 파일을 골라 주세요." }, { status: 400 });
   if (title.length < 2 || title.length > 60) return Response.json({ error: "제목은 2자 이상 60자 이하로 적어 주세요." }, { status: 400 });
   if (description.length > 300) return Response.json({ error: "설명은 300자 이하로 적어 주세요." }, { status: 400 });
   if (author.length > 20) return Response.json({ error: "이름은 20자 이하로 적어 주세요." }, { status: 400 });
+  if (!isShareCategory(category)) return Response.json({ error: "자료 종류를 골라 주세요." }, { status: 400 });
   const ext = (file.name.split(".").pop() ?? "").toLowerCase();
   if (!SHARE_TYPES[ext]) return Response.json({ error: "PDF, 사진(JPG·PNG·WEBP), 워드(docx), 한글(hwp·hwpx), 글자 파일(txt)만 올릴 수 있습니다." }, { status: 400 });
   if (file.size === 0) return Response.json({ error: "빈 파일입니다." }, { status: 400 });
   if (file.size > MAX_SHARE_BYTES) return Response.json({ error: "파일은 10MB 이하로 올려 주세요." }, { status: 400 });
 
-  const saved = await saveShared({ title, description, author, filename: file.name.slice(0, 120), ext, bytes: await file.arrayBuffer() });
+  const saved = await saveShared({ title, description, category, author, filename: file.name.slice(0, 120), ext, bytes: await file.arrayBuffer() });
   if (!saved.ok) return Response.json({ error: saved.error }, { status: 500 });
   const manageToken = signShareManage(saved.id);
   await notifyAdmin(saved.id, saved.title, author);
