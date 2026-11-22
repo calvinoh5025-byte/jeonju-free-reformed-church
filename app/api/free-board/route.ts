@@ -1,6 +1,7 @@
 import { freeBoardServiceRest, signFreeBoardManage, verifyFreeBoardManage } from "../../../lib/free-board-moderation";
 
 const siteUrl = "https://freerck.com";
+const DAILY_POST_LIMIT = 30;
 const alertEmail = process.env.BOARD_ALERT_EMAIL;
 const requests = new Map<string, number[]>();
 
@@ -81,6 +82,21 @@ export async function POST(request: Request) {
   // Vercel supplies x-real-ip. Avoid trusting caller-controlled x-forwarded-for values.
   const ip = request.headers.get("x-real-ip")?.trim() || "unknown";
   if (!takeRateLimit(ip)) return Response.json({ error: "10분 동안 등록할 수 있는 횟수를 넘었습니다. 잠시 후 다시 시도해 주세요." }, { status: 429 });
+
+  const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+  try {
+    const response = await freeBoardServiceRest(`frck_free_posts?select=id&created_at=gte.${encodeURIComponent(since)}&limit=${DAILY_POST_LIMIT}`, {
+      headers: { Accept: "application/json" },
+    });
+    if (!response.ok) throw new Error(`status ${response.status}`);
+    const recentPosts = await response.json() as Array<{ id: number }>;
+    if (recentPosts.length >= DAILY_POST_LIMIT) {
+      return Response.json({ error: "오늘은 게시판 등록이 많아 잠시 닫혀 있습니다. 내일 다시 시도해 주세요." }, { status: 429 });
+    }
+  } catch (error) {
+    console.error("[free-board] daily post limit check failed", error instanceof Error ? error.message : error);
+    return Response.json({ error: "글 등록을 확인하지 못했습니다. 잠시 후 다시 시도해 주세요." }, { status: 503 });
+  }
 
   try {
     const response = await freeBoardServiceRest("frck_free_posts?select=id,author,title,content,created_at", {
