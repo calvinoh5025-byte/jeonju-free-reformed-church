@@ -23,7 +23,7 @@ export function SiteFooter() {
       <Link className="brand footer-brand" href="/"><span className="brand-mark">FRCK</span><span>자유개혁교회</span></Link>
       <p>말씀과 신앙고백 위에 세워지는 언약 공동체</p>
       <p>전주자유개혁교회 · {address}</p>
-      <FooterNavigation />
+      <FooterNavigation includeMenuLink />
       <div><a href={contact.phoneHref}>{contact.phone}</a><a href={contact.phone2Href}>{contact.phone2}</a><a href={`mailto:${contact.email}`}>{contact.email}</a></div>
       <small>© 2026 Free Reformed Church in Korea</small>
     </footer>

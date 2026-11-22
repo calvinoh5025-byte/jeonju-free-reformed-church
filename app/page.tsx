@@ -80,7 +80,7 @@ export default function Home() {
         <MapPreview />
       </section>
 
-      <footer><a className="brand footer-brand" href="#home"><span className="brand-mark">FRCK</span><span>자유개혁교회</span></a><p>말씀과 신앙고백 위에 세워지는 언약 공동체</p><p>전주자유개혁교회 · {address}</p><div className="footer-install"><InstallApp /></div><FooterNavigation /><div><a href={youtube} target="_blank" rel="noreferrer">YouTube</a><a href={facebook} target="_blank" rel="noreferrer">Facebook</a><a href={contact.phoneHref}>{contact.phone}</a><a href={contact.phone2Href}>{contact.phone2}</a><a href={`mailto:${contact.email}`}>{contact.email}</a></div><small>© 2026 Free Reformed Church in Korea</small></footer>
+      <footer><a className="brand footer-brand" href="#home"><span className="brand-mark">FRCK</span><span>자유개혁교회</span></a><p>말씀과 신앙고백 위에 세워지는 언약 공동체</p><p>전주자유개혁교회 · {address}</p><div className="footer-install"><InstallApp /></div><FooterNavigation includeMenuLink /><div><a href={youtube} target="_blank" rel="noreferrer">YouTube</a><a href={facebook} target="_blank" rel="noreferrer">Facebook</a><a href={contact.phoneHref}>{contact.phone}</a><a href={contact.phone2Href}>{contact.phone2}</a><a href={`mailto:${contact.email}`}>{contact.email}</a></div><small>© 2026 Free Reformed Church in Korea</small></footer>
     </main>
   );
 }
