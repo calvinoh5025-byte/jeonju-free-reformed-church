@@ -11,8 +11,7 @@ const choices = ["예배 안내", "새가족 안내", "오시는 길", "문의",
 
 const naverMap = "https://map.naver.com/p/search/%EC%A0%84%EC%A3%BC%EC%8B%9C%20%EB%8D%95%EC%A7%84%EA%B5%AC%20%EB%8F%99%EA%B0%80%EC%9E%AC%EB%AF%B81%EA%B8%B8%206-4";
 const phoneLink: Link = { href: contact.phoneHref, label: `전화 걸기 ${contact.phone}` };
-const phone2Link: Link = { href: contact.phone2Href, label: `전화 걸기 ${contact.phone2}` };
-const confirmNote = `구체적인 내용과 일정은 교회에 직접 확인해 주세요. 전화 ${contact.phone} · ${contact.phone2}, 이메일 ${contact.email}으로 문의하실 수 있습니다.`;
+const confirmNote = `구체적인 내용과 일정은 교회에 직접 확인해 주세요. 전화 ${contact.phone}, 이메일 ${contact.email}으로 문의하실 수 있습니다.`;
 
 // 키워드마다 점수를 줍니다. 더 구체적인 말일수록 높은 점수를 주어 먼저 안내합니다.
 const topics: Topic[] = [
@@ -56,8 +55,8 @@ const topics: Topic[] = [
     text: `교회 주소는 ${address} (우편번호 ${postalCode})입니다.\n지도와 자세한 안내는 오시는 길 페이지에서 볼 수 있습니다.`,
     links: [{ href: "/location", label: "오시는 길 보기 →" }, { href: naverMap, label: "네이버 지도에서 보기 ↗" }] },
   { keys: [["문의", 8], ["연락", 8], ["전화", 8], ["이메일", 8], ["메일", 6], ["번호", 5], ["페이스북", 8], ["sns", 5], ["공식", 4]],
-    text: `전화 ${contact.phone} · ${contact.phone2}\n이메일 ${contact.email}\n교회 공식 페이스북 페이지에서도 소식을 볼 수 있습니다.`,
-    links: [phoneLink, phone2Link, { href: contact.facebook, label: "교회 페이스북 ↗" }] },
+    text: `전화 ${contact.phone}\n이메일 ${contact.email}\n교회 공식 페이스북 페이지에서도 소식을 볼 수 있습니다.`,
+    links: [phoneLink, { href: contact.facebook, label: "교회 페이스북 ↗" }] },
   { keys: [["클라리온", 9], ["clarion", 9], ["잡지", 8], ["번역", 7], ["theseed", 9], ["더씨드", 8]],
     text: "자유개혁교회 자료실에서 TheSeed 설교와 Clarion 잡지 PDF를 한국어로 번역해 읽을 수 있습니다.",
     links: [{ href: "/guide/index.html#sermons", label: "설교 번역 읽기 →" }, { href: "/guide/index.html#clarion", label: "Clarion 번역 읽기 →" }] },

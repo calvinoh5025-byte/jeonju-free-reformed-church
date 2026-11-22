@@ -24,7 +24,7 @@ export default function LocationPage() {
           <p className="directions-address">{address}</p>
           <small className="postal-code">우편번호 {postalCode}</small>
           <p>{worshipTimes.map(item => <span key={item.label}>{item.label} {item.time}<br /></span>)}</p>
-          <p>문의 <a href={contact.phoneHref}>{contact.phone}</a> · <a href={contact.phone2Href}>{contact.phone2}</a> · <a href={`mailto:${contact.email}`}>{contact.email}</a> · <a href={contact.facebook} target="_blank" rel="noreferrer">교회 공식 페이스북 ↗</a></p>
+          <p>문의 <a href={contact.phoneHref}>{contact.phone}</a> · <a href={`mailto:${contact.email}`}>{contact.email}</a> · <a href={contact.facebook} target="_blank" rel="noreferrer">교회 공식 페이스북 ↗</a></p>
           <p className="muted">네이버 지도에서 정확한 위치와 이동 경로를 확인할 수 있습니다.</p>
           <div className="address-actions"><AddressCopy address={address} /><a className="naver-map-button" href={naverMap} target="_blank" rel="noreferrer">네이버 지도에서 보기 <span aria-hidden="true">↗</span></a><a className="naver-map-button" href={`https://map.kakao.com/link/search/${encodeURIComponent(address)}`} target="_blank" rel="noreferrer">카카오맵에서 보기 ↗</a></div>
         </div>
