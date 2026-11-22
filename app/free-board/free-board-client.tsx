@@ -16,7 +16,7 @@ export default function FreeBoardClient() {
   const [editFields, setEditFields] = useState<PostFields>({ author: "", title: "", content: "" });
   const [loading, setLoading] = useState(true);
 
-  const load = () => fetch("/api/free-board", { cache: "no-store" })
+  const load = (fresh = false) => fetch(fresh ? `/api/free-board?t=${Date.now()}` : "/api/free-board")
     .then(async response => {
       if (!response.ok) throw new Error("목록을 불러오지 못했습니다.");
       return response.json();
@@ -56,7 +56,7 @@ export default function FreeBoardClient() {
       if (result.post?.id && result.manageToken) rememberToken(result.post.id, result.manageToken);
       form.reset(); setOpen(false);
       setMessage("등록되었습니다. 이 기기에서 글 수정과 삭제를 할 수 있습니다.");
-      await load();
+      await load(true);
     } catch { setMessage("등록하지 못했습니다. 잠시 후 다시 시도해 주세요."); }
   }
 
@@ -66,7 +66,7 @@ export default function FreeBoardClient() {
       const response = await fetch("/api/free-board", { method: "PATCH", headers: { "content-type": "application/json" }, body: JSON.stringify({ id, token: tokens[id], ...editFields }) });
       const result = await response.json();
       if (!response.ok) { setMessage(result.error ?? "수정하지 못했습니다."); return; }
-      setEditing(null); setMessage("글을 수정했습니다."); await load();
+      setEditing(null); setMessage("글을 수정했습니다."); await load(true);
     } catch { setMessage("수정하지 못했습니다. 잠시 후 다시 시도해 주세요."); }
   }
 
@@ -77,7 +77,7 @@ export default function FreeBoardClient() {
       const response = await fetch("/api/free-board", { method: "DELETE", headers: { "content-type": "application/json" }, body: JSON.stringify({ id, token: tokens[id] }) });
       const result = await response.json();
       if (!response.ok) { setMessage(result.error ?? "삭제하지 못했습니다."); return; }
-      forgetToken(id); setEditing(null); setMessage("글을 삭제했습니다."); await load();
+      forgetToken(id); setEditing(null); setMessage("글을 삭제했습니다."); await load(true);
     } catch { setMessage("삭제하지 못했습니다. 잠시 후 다시 시도해 주세요."); }
   }
 
