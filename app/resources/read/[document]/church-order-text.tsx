@@ -23,7 +23,7 @@ export function ChurchOrderText() {
     <div style={{ fontSize, lineHeight: 1.9 }}>
       <section aria-labelledby="church-order-preface">
         <h2 id="church-order-preface" style={{ font: '500 24px "Noto Serif KR", serif', margin: "10px 0" }}>총강</h2>
-        <p style={{ whiteSpace: "pre-wrap", margin: "0 0 32px" }}>{data.preface.replace(/^총강\n/, "")}</p>
+        <div style={{ margin: "0 0 32px", whiteSpace: "normal" }}>{data.prefaceParagraphs.map((paragraph, index) => <p key={index} style={{ margin: "0 0 1em" }}>{paragraph}</p>)}</div>
       </section>
       <nav aria-label="교회질서 조 목록" style={{ margin: "0 0 36px", padding: 20, border: "1px solid #e5dccb", borderRadius: 14, background: "#fffcf5" }}>
         <h2 style={{ font: '500 24px "Noto Serif KR", serif', margin: "0 0 16px" }}>조 목록</h2>
@@ -42,7 +42,7 @@ export function ChurchOrderText() {
         <h2 id={`chapter-${chapter.number}`} style={{ font: '500 25px "Noto Serif KR", serif', margin: "0 0 18px", color: "var(--forest, #29463f)" }}>{chapter.number}. {chapter.title}</h2>
         {data.articles.filter(article => article.number >= chapter.first && article.number <= chapter.last).map(article => <article id={`art-${article.number}`} key={article.number} tabIndex={-1} style={{ scrollMarginTop: 24, padding: "18px 0", borderTop: "1px solid #e5dccb" }}>
           <h3 style={{ font: '500 21px "Noto Serif KR", serif', margin: "0 0 8px" }}>제{article.number}조　{article.title}</h3>
-          <p style={{ whiteSpace: "pre-wrap", margin: 0 }}>{article.text}</p>
+          <div style={{ whiteSpace: "normal" }}>{article.paragraphs.map((paragraph, index) => <p key={index} style={{ margin: "0 0 0.8em" }}>{paragraph}</p>)}</div>
           <small style={{ display: "block", marginTop: 10, color: "#65716b" }}>PDF {article.page}쪽</small>
         </article>)}
       </section>)}
