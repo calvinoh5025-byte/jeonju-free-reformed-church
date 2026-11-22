@@ -13,7 +13,7 @@ import "./history.css";
 
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://jeonju-free-reformed-church.vercel.app"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://freerck.com"),
   title: { default: "전주자유개혁교회 | 자유개혁교회", template: "%s | 전주자유개혁교회" },
   description: "전주시 덕진구에 있는 전주자유개혁교회입니다. 성경과 세 일치 신조를 따라 그리스도를 고백하며, 신실한 교회를 세우시는 그리스도 안에서 살아가는 자유개혁교회입니다.",
   applicationName: "자유개혁교회",

@@ -1,6 +1,6 @@
 import { freeBoardServiceRest, signFreeBoardManage, verifyFreeBoardManage } from "../../../lib/free-board-moderation";
 
-const siteUrl = "https://jeonju-free-reformed-church.vercel.app";
+const siteUrl = "https://freerck.com";
 const alertEmail = process.env.BOARD_ALERT_EMAIL;
 const requests = new Map<string, number[]>();
 

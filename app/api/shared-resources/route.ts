@@ -3,7 +3,7 @@ import { MAX_SHARE_BYTES, SHARE_TYPES, deleteObject, listShared, saveShared, sha
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-const siteUrl = "https://jeonju-free-reformed-church.vercel.app";
+const siteUrl = "https://freerck.com";
 const recent = new Map<string, number[]>();
 const WINDOW = 60 * 60 * 1000;
 const LIMIT = 6;
