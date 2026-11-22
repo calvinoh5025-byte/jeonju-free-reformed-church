@@ -2,6 +2,8 @@ import "./home-contrast.css";
 import Link from "next/link";
 import styles from "./motto.module.css";
 import { MobileMenu } from "./components/mobile-menu";
+import { DesktopMenu } from "./components/desktop-menu";
+import { FooterNavigation } from "./components/footer-navigation";
 import { MapPreview } from "./components/map-preview";
 import { InstallApp } from "./components/install-app";
 import { AddressCopy } from "./components/address-copy";
@@ -20,10 +22,7 @@ export default function Home() {
             <span className="brand-mark">FRCK</span>
             <span>자유개혁교회</span>
           </a>
-          <nav className="desktop-nav" aria-label="주요 메뉴">
-            <a href="/about">교회소개</a><a href="/newcomers">새가족 안내</a><a href="/church">개혁교회 신앙고백서</a><a href="/worship">예배생활</a><a href="/sermons">설교</a>
-            <a href="/board">공지게시판</a><a href="/free-board">자유게시판</a><a href="/resources">자료실</a><a href="/location">오시는 길</a>
-          </nav>
+          <DesktopMenu />
           <MobileMenu />
         </header>
 
@@ -81,7 +80,7 @@ export default function Home() {
         <MapPreview />
       </section>
 
-      <footer><a className="brand footer-brand" href="#home"><span className="brand-mark">FRCK</span><span>자유개혁교회</span></a><p>말씀과 신앙고백 위에 세워지는 언약 공동체</p><p>전주자유개혁교회 · {address}</p><div className="footer-install"><InstallApp /></div><div><a href={youtube} target="_blank" rel="noreferrer">YouTube</a><a href={facebook} target="_blank" rel="noreferrer">Facebook</a><a href={contact.phoneHref}>{contact.phone}</a><a href={contact.phone2Href}>{contact.phone2}</a><a href={`mailto:${contact.email}`}>{contact.email}</a></div><small>© 2026 Free Reformed Church in Korea</small></footer>
+      <footer><a className="brand footer-brand" href="#home"><span className="brand-mark">FRCK</span><span>자유개혁교회</span></a><p>말씀과 신앙고백 위에 세워지는 언약 공동체</p><p>전주자유개혁교회 · {address}</p><div className="footer-install"><InstallApp /></div><FooterNavigation /><div><a href={youtube} target="_blank" rel="noreferrer">YouTube</a><a href={facebook} target="_blank" rel="noreferrer">Facebook</a><a href={contact.phoneHref}>{contact.phone}</a><a href={contact.phone2Href}>{contact.phone2}</a><a href={`mailto:${contact.email}`}>{contact.email}</a></div><small>© 2026 Free Reformed Church in Korea</small></footer>
     </main>
   );
 }

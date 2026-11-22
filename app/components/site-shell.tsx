@@ -1,19 +1,9 @@
 import Link from "next/link";
 import { MobileMenu } from "./mobile-menu";
+import { DesktopMenu } from "./desktop-menu";
+import { FooterNavigation } from "./footer-navigation";
 import styles from "./site-shell.module.css";
 import { address, contact } from "../church-info";
-
-const nav = [
-  ["교회소개", "/about"],
-  ["새가족 안내", "/newcomers"],
-  ["개혁교회 신앙고백서", "/church"],
-  ["예배생활", "/worship"],
-  ["설교", "/sermons"],
-  ["공지게시판", "/board"],
-  ["자유게시판", "/free-board"],
-  ["자료실", "/resources"],
-  ["오시는 길", "/location"],
-];
 
 export function SiteHeader() {
   return (
@@ -21,9 +11,7 @@ export function SiteHeader() {
       <Link className="brand" href="/" aria-label="자유개혁교회 홈">
         <span className="brand-mark">FRCK</span><span>자유개혁교회</span>
       </Link>
-      <nav className="desktop-nav" aria-label="주요 메뉴">
-        {nav.map(([label, href]) => <Link key={href} href={href}>{label}</Link>)}
-      </nav>
+      <DesktopMenu />
       <MobileMenu />
     </header>
   );
@@ -35,7 +23,8 @@ export function SiteFooter() {
       <Link className="brand footer-brand" href="/"><span className="brand-mark">FRCK</span><span>자유개혁교회</span></Link>
       <p>말씀과 신앙고백 위에 세워지는 언약 공동체</p>
       <p>전주자유개혁교회 · {address}</p>
-      <div><a href="/sermons">설교</a><a href="/resources">자료실</a><a href={contact.phoneHref}>{contact.phone}</a><a href={contact.phone2Href}>{contact.phone2}</a><a href={`mailto:${contact.email}`}>{contact.email}</a></div>
+      <FooterNavigation />
+      <div><a href={contact.phoneHref}>{contact.phone}</a><a href={contact.phone2Href}>{contact.phone2}</a><a href={`mailto:${contact.email}`}>{contact.email}</a></div>
       <small>© 2026 Free Reformed Church in Korea</small>
     </footer>
   );

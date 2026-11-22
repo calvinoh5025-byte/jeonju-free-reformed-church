@@ -1,0 +1,84 @@
+:global(.desktop-nav).navigation {
+  align-items: center;
+  gap: clamp(2px, 0.6vw, 10px);
+}
+
+.group {
+  position: relative;
+}
+
+.groupButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 17px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.groupButton:hover,
+.groupButton[aria-expanded="true"] {
+  background: #e8efe7;
+  color: #29463f;
+}
+
+.currentGroup {
+  color: #29463f;
+  box-shadow: inset 0 -2px #617c69;
+}
+
+.chevron {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.panel {
+  position: absolute;
+  z-index: 120;
+  top: calc(100% + 8px);
+  left: 0;
+  display: grid;
+  min-width: 230px;
+  max-height: min(72vh, 560px);
+  overflow-y: auto;
+  padding: 8px;
+  border: 1px solid #d8dfd5;
+  border-radius: 12px;
+  background: #fffcf5;
+  box-shadow: 0 14px 32px #26353024;
+  color: #263530;
+}
+
+.panel[hidden] {
+  display: none;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  min-height: 52px;
+  padding: 12px;
+  border-radius: 8px;
+  color: #263530;
+  font-size: 17px;
+}
+
+.item:hover,
+.item[aria-current="page"] {
+  background: #e8efe7;
+  color: #29463f;
+}
+
+.groupButton:focus-visible,
+.item:focus-visible {
+  outline: 3px solid #29463f;
+  outline-offset: 2px;
+}
