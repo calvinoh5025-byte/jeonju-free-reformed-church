@@ -506,7 +506,7 @@ body{background:#f7f2e8;color:#263530}
 footer{background:#243b35;color:#efe9dc}
 @media(max-width:900px){.sub-hero:after{right:24px}.sub-hero h1{max-width:calc(100% - 130px)}}
 @media(max-width:620px){.hero-image{border-radius:72px 0 0 0}.sub-hero{background-position:center,58% center}.sub-hero:after{width:76px;height:76px;right:18px;top:auto;bottom:18px;transform:none;border-width:3px}.sub-hero h1{max-width:calc(100% - 74px)}.confession-content{border-radius:0 0 18px 18px}}
-@media(min-width:901px) and (max-width:1350px){.site-header .desktop-nav,.sub-header .desktop-nav{display:none}.site-header .mobile-menu,.sub-header .mobile-menu{display:block}}
+@media(min-width:901px) and (max-width:1100px){.site-header .desktop-nav,.sub-header .desktop-nav{display:none}.site-header .mobile-menu,.sub-header .mobile-menu{display:block}}
 .universal-creed-choices{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px}
 .universal-creed-choice,.universal-creed-pages button{min-height:46px;padding:10px 16px;border:1px solid #cfc6b4;border-radius:12px;background:#fffcf5;color:#29463f;font:inherit;font-weight:700;cursor:pointer}
 .universal-creed-choice[aria-pressed="true"]{background:#29463f;border-color:#29463f;color:#fffcf5}
