@@ -1,4 +1,5 @@
 import { createHmac, timingSafeEqual } from "crypto";
+import { DEFAULT_SHARE_CATEGORY, isShareCategory } from "./share-categories";
 
 // 성도 자료 나눔: 누구나 올리는 자료는 Supabase Storage의 공개 버킷에 둡니다.
 // 자료마다 파일 하나와, 제목·설명을 담은 작은 JSON 파일(메타)이 한 쌍입니다.
@@ -23,6 +24,7 @@ export type SharedResource = {
   id: string;
   title: string;
   description: string;
+  category: string;
   author: string;
   filename: string;
   size: number;
@@ -105,13 +107,13 @@ export async function listShared(): Promise<SharedResource[]> {
       const meta = await fetch(publicUrl(metaKey), { cache: "no-store" });
       if (!meta.ok) return null;
       const data = (await meta.json()) as Omit<SharedResource, "url" | "metaKey">;
-      return { ...data, metaKey, url: publicUrl(data.fileKey) } as SharedResource;
+      return { ...data, category: isShareCategory(String(data.category ?? "")) ? data.category : DEFAULT_SHARE_CATEGORY, metaKey, url: publicUrl(data.fileKey) } as SharedResource;
     } catch { return null; }
   }));
   return loaded.filter((item): item is SharedResource => item !== null);
 }
 
-export async function saveShared(input: { title: string; description: string; author: string; filename: string; ext: string; bytes: ArrayBuffer }) {
+export async function saveShared(input: { title: string; description: string; category: string; author: string; filename: string; ext: string; bytes: ArrayBuffer }) {
   const setup = config();
   if (!setup) return { ok: false as const, error: "자료 저장소가 아직 준비되지 않았습니다." };
   if (!(await ensureBucket(setup.url, setup.key))) return { ok: false as const, error: "저장소를 준비하지 못했습니다." };
@@ -120,7 +122,7 @@ export async function saveShared(input: { title: string; description: string; au
   const fileKey = `${stamp}-${id}-file.${input.ext}`;
   const metaKey = `${stamp}-${id}.json`;
   if (!(await putObject(fileKey, input.bytes, SHARE_TYPES[input.ext]))) return { ok: false as const, error: "파일을 올리지 못했습니다." };
-  const meta = { id, title: input.title, description: input.description, author: input.author, filename: input.filename, size: input.bytes.byteLength, createdAt: new Date().toISOString(), fileKey };
+  const meta = { id, title: input.title, description: input.description, category: input.category, author: input.author, filename: input.filename, size: input.bytes.byteLength, createdAt: new Date().toISOString(), fileKey };
   if (!(await putObject(metaKey, JSON.stringify(meta), "application/json"))) {
     await deleteObject(fileKey);
     return { ok: false as const, error: "자료 정보를 저장하지 못했습니다." };
