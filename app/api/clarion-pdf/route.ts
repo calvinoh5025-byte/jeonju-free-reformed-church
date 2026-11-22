@@ -1,5 +1,19 @@
 const MAX_BYTES = 20 * 1024 * 1024;
+const requests = new Map<string, number[]>();
+const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
+const RATE_LIMIT_MAX_REQUESTS = 10;
+
 export async function GET(request: Request) {
+  // 인스턴스 메모리 제한이므로 서버리스 인스턴스별로 횟수가 분리될 수 있습니다.
+  const ip = request.headers.get("x-real-ip")?.trim() || "unknown";
+  const now = Date.now();
+  const recent = (requests.get(ip) ?? []).filter(timestamp => now - timestamp < RATE_LIMIT_WINDOW_MS);
+  if (recent.length >= RATE_LIMIT_MAX_REQUESTS) {
+    return new Response('요청이 너무 많습니다. 잠시 후 다시 시도해 주세요.', { status: 429 });
+  }
+  recent.push(now);
+  requests.set(ip, recent);
+
   const value = new URL(request.url).searchParams.get('url');
   let url: URL;
   try { url = new URL(value ?? ''); } catch { return new Response('잘못된 PDF 주소입니다.', { status: 400 }); }

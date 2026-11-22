@@ -83,7 +83,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+    const ip = request.headers.get("x-real-ip")?.trim() || "unknown";
     const now = Date.now();
     // Serverless 인스턴스마다 메모리가 분리되므로 완전한 전역 제한은 아닙니다.
     for (const [key, timestamps] of requests) {

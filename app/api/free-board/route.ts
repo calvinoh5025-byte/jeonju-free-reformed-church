@@ -1,6 +1,7 @@
 import { freeBoardServiceRest, signFreeBoardManage, verifyFreeBoardManage } from "../../../lib/free-board-moderation";
 
 const siteUrl = "https://freerck.com";
+const DAILY_POST_LIMIT = 30;
 const alertEmail = process.env.BOARD_ALERT_EMAIL;
 const requests = new Map<string, number[]>();
 
@@ -77,6 +78,21 @@ export async function POST(request: Request) {
   const title = data.title.trim().slice(0, 100);
   const content = data.content.trim().slice(0, 3000);
   if (!author || !title || content.length < 2) return Response.json({ error: "이름, 제목, 내용을 모두 입력해 주세요." }, { status: 400 });
+
+  const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+  try {
+    const response = await freeBoardServiceRest(`frck_free_posts?select=id&created_at=gte.${encodeURIComponent(since)}&limit=${DAILY_POST_LIMIT}`, {
+      headers: { Accept: "application/json" },
+    });
+    if (!response.ok) throw new Error(`status ${response.status}`);
+    const recentPosts = await response.json() as Array<{ id: number }>;
+    if (recentPosts.length >= DAILY_POST_LIMIT) {
+      return Response.json({ error: "오늘 등록할 수 있는 글이 가득 찼습니다. 내일 다시 시도해 주세요." }, { status: 429 });
+    }
+  } catch (error) {
+    console.error("[free-board] daily post limit check failed", error instanceof Error ? error.message : error);
+    return Response.json({ error: "글 등록을 확인하지 못했습니다. 잠시 후 다시 시도해 주세요." }, { status: 503 });
+  }
 
   // Vercel supplies x-real-ip. Avoid trusting caller-controlled x-forwarded-for values.
   const ip = request.headers.get("x-real-ip")?.trim() || "unknown";
