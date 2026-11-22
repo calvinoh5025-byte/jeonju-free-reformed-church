@@ -78,7 +78,7 @@ export default function Home() {
         <MapPreview />
       </section>
 
-      <SiteFooter />
+      <SiteFooter showNavigation={false} />
     </main>
   );
 }
