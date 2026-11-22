@@ -45,7 +45,7 @@ export function DesktopMenu() {
 
   return (
     <nav ref={rootRef} className={`desktop-nav ${styles.navigation}`} aria-label="주요 메뉴" onBlur={event => {
-      if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+      if (event.relatedTarget && !event.currentTarget.contains(event.relatedTarget as Node | null)) {
         setOpenGroup(null);
         if (hoverCloseTimer.current) clearTimeout(hoverCloseTimer.current);
       }
