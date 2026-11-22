@@ -2,12 +2,12 @@
   "source": "public/resources/church-order.pdf",
   "extraction": "PDF.js getTextContent; original text lines are retained with page, column, x/y, right edge, PDF.js line text and hasEOL.",
   "counts": {
-    "attached": 294,
-    "spaced": 311,
+    "attached": 295,
+    "spaced": 310,
     "paragraphBoundaries": 66,
-    "lowConfidence": 12,
+    "lowConfidence": 10,
     "mediumConfidence": 1,
-    "highConfidence": 592,
+    "highConfidence": 594,
     "unmappedLines": 0
   },
   "decisions": [
@@ -2971,9 +2971,9 @@
       "afterLine": 21,
       "beforeEnd8": "노회 안에 남아",
       "afterStart8": "있다면 다만 그",
-      "join": "띄움",
-      "reason": "문맥상 새 어절로 분리",
-      "confidence": "낮음",
+      "join": "붙임",
+      "reason": "문맥/문서 내부 반복에서 한 어절로 확인",
+      "confidence": "높음",
       "paragraphStart": false,
       "paragraphReason": null,
       "page": 4,
@@ -7398,7 +7398,7 @@
       "afterStart8": "시에, 말씀의 ",
       "join": "띄움",
       "reason": "문맥상 새 어절로 분리",
-      "confidence": "낮음",
+      "confidence": "높음",
       "paragraphStart": false,
       "paragraphReason": null,
       "page": 10,
@@ -9164,21 +9164,6 @@
       "rightX": 394.0282811625002
     },
     {
-      "section": "제5조",
-      "afterLine": 21,
-      "beforeEnd8": "노회 안에 남아",
-      "afterStart8": "있다면 다만 그",
-      "join": "띄움",
-      "reason": "문맥상 새 어절로 분리",
-      "confidence": "낮음",
-      "paragraphStart": false,
-      "paragraphReason": null,
-      "page": 4,
-      "x": 57.1,
-      "y": 564.13,
-      "rightX": 393.8882426970001
-    },
-    {
       "section": "제26조",
       "afterLine": 1,
       "beforeEnd8": " 집사들과 신학",
@@ -9237,21 +9222,6 @@
       "x": 36.84969,
       "y": 369.13,
       "rightX": 210.05847000930004
-    },
-    {
-      "section": "제56조",
-      "afterLine": 1,
-      "beforeEnd8": ", 공적인 예배",
-      "afterStart8": "시에, 말씀의 ",
-      "join": "띄움",
-      "reason": "문맥상 새 어절로 분리",
-      "confidence": "낮음",
-      "paragraphStart": false,
-      "paragraphReason": null,
-      "page": 10,
-      "x": 220.81969,
-      "y": 304.13,
-      "rightX": 394.02940006510016
     },
     {
       "section": "제68조",
