@@ -21,7 +21,7 @@ export function SiteHeader() {
   );
 }
 
-export function SiteFooter({ showNavigation = true, includeMenuLink = true }: { showNavigation?: boolean; includeMenuLink?: boolean }) {
+export function SiteFooter({ showNavigation = false, includeMenuLink = true }: { showNavigation?: boolean; includeMenuLink?: boolean }) {
   return (
     <footer>
       <Link className="brand footer-brand" href="/"><span className="brand-mark">FRCK</span><span>자유개혁교회</span></Link>
