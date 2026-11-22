@@ -30,7 +30,7 @@ export function SiteFooter({ showNavigation = false, includeMenuLink = true }: {
       <div className="footer-install"><InstallApp /></div>
       {showNavigation && <FooterNavigation includeMenuLink={includeMenuLink} />}
       <div><a href={footerYoutube} target="_blank" rel="noreferrer">YouTube</a><a href={contact.facebook} target="_blank" rel="noreferrer">Facebook</a><a href={footerContact.phoneHref}>{footerContact.phone}</a><a href={`mailto:${footerContact.email}`}>{footerContact.email}</a></div>
-      <small>© 2026 Free Reformed Church in Korea</small>
+      <small>© 2026 Free Reformed Churches in Korea</small>
     </footer>
   );
 }
