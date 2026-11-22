@@ -2,7 +2,7 @@ import { supabaseRest } from "../../../lib/supabase-rest";
 import { keyKind, moderationReady, serviceRest, signModeration } from "../../../lib/board-moderation";
 
 const alertEmail = process.env.BOARD_ALERT_EMAIL;
-const siteUrl = "https://jeonju-free-reformed-church.vercel.app";
+const siteUrl = "https://freerck.com";
 const requests = new Map<string, number[]>();
 
 const escapeHtml = (value: string) => value.replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char] ?? char);

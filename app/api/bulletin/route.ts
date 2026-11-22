@@ -5,7 +5,7 @@ export const runtime = "nodejs";
 const recent = new Map<string, number[]>();
 const WINDOW = 60 * 60 * 1000;
 const LIMIT = 5;
-const siteUrl = "https://jeonju-free-reformed-church.vercel.app";
+const siteUrl = "https://freerck.com";
 function tooMany(request: Request) {
   const who = request.headers.get("x-real-ip")?.trim() || "unknown";
   const now = Date.now();
