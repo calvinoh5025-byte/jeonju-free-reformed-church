@@ -3,13 +3,11 @@ import Link from "next/link";
 import styles from "./motto.module.css";
 import { MobileMenu } from "./components/mobile-menu";
 import { DesktopMenu } from "./components/desktop-menu";
-import { FooterNavigation } from "./components/footer-navigation";
+import { SiteFooter } from "./components/site-shell";
 import { MapPreview } from "./components/map-preview";
-import { InstallApp } from "./components/install-app";
 import { AddressCopy } from "./components/address-copy";
 import { address, contact, postalCode, worshipTimes } from "./church-info";
 
-const youtube = "https://www.youtube.com/channel/UCF7kK_6xtj2aFUm3V0P91gA";
 const facebook = "https://www.facebook.com/DongSupSong/";
 const naverMap = "https://map.naver.com/p/search/%EC%A0%84%EB%B6%81%ED%8A%B9%EB%B3%84%EC%9E%90%EC%B9%98%EB%8F%84%20%EC%A0%84%EC%A3%BC%EC%8B%9C%20%EB%8D%95%EC%A7%84%EA%B5%AC%20%EB%8F%99%EA%B0%80%EC%9E%AC%EB%AF%B81%EA%B8%B8%206-4";
 
@@ -80,7 +78,7 @@ export default function Home() {
         <MapPreview />
       </section>
 
-      <footer><a className="brand footer-brand" href="#home"><span className="brand-mark">FRCK</span><span>자유개혁교회</span></a><p>말씀과 신앙고백 위에 세워지는 언약 공동체</p><p>전주자유개혁교회 · {address}</p><div className="footer-install"><InstallApp /></div><FooterNavigation /><div><a href={youtube} target="_blank" rel="noreferrer">YouTube</a><a href={facebook} target="_blank" rel="noreferrer">Facebook</a><a href={contact.phoneHref}>{contact.phone}</a><a href={contact.phone2Href}>{contact.phone2}</a><a href={`mailto:${contact.email}`}>{contact.email}</a></div><small>© 2026 Free Reformed Church in Korea</small></footer>
+      <SiteFooter />
     </main>
   );
 }
