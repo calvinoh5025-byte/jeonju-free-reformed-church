@@ -26,7 +26,7 @@ export default function Home() {
 
         <div className="hero-grid">
           <div className="hero-copy">
-            <p className="eyebrow">FREE REFORMED CHURCH IN KOREA</p>
+            <p className="eyebrow">FREE REFORMED CHURCHES IN KOREA</p>
             <h1 className="home-hero-title"><span>말씀 위에 서는 교회,</span><span>언약 안에서 함께 걷는 공동체</span></h1>
             <div className="gold-rule" />
             <p className="lead">성경과 세 일치 신조를 따라 그리스도를 고백하며, 세대와 세대를 이어 신실한 교회를 세우시는 그리스도 안에서 살아갑니다.</p>
