@@ -51,12 +51,12 @@ async function sendDeleteAlert(post: { id: number; author: string; title: string
 
 export async function GET() {
   try {
-    const response = await freeBoardServiceRest("frck_free_posts?select=id,author,title,content,created_at&order=created_at.desc,id.desc&limit=100", {
+    const response = await freeBoardServiceRest("frck_free_posts?select=id,author,title,content,created_at&order=created_at.desc,id.desc&limit=50", {
       headers: { Accept: "application/json" },
     });
     if (!response.ok) throw new Error(await response.text());
     const rows = await response.json() as Array<{ id: number; author: string; title: string; content: string; created_at: string }>;
-    return Response.json({ posts: rows.map(row => ({ id: row.id, author: row.author, title: row.title, content: row.content, createdAt: row.created_at })) }, { headers: { "Cache-Control": "no-store" } });
+    return Response.json({ posts: rows.map(row => ({ id: row.id, author: row.author, title: row.title, content: row.content, createdAt: row.created_at })) }, { headers: { "Cache-Control": "public, s-maxage=20, stale-while-revalidate=40" } });
   } catch (error) {
     console.error("[free-board] list failed", error instanceof Error ? error.message : error);
     return Response.json({ posts: [], error: "게시글을 불러오지 못했습니다." }, { status: 503 });

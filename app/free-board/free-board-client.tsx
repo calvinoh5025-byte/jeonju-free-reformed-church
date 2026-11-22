@@ -16,7 +16,7 @@ export default function FreeBoardClient() {
   const [editFields, setEditFields] = useState<PostFields>({ author: "", title: "", content: "" });
   const [loading, setLoading] = useState(true);
 
-  const load = () => fetch("/api/free-board", { cache: "no-store" })
+  const load = (fresh = false) => fetch(fresh ? `/api/free-board?t=${Date.now()}` : "/api/free-board")
     .then(async response => {
       if (!response.ok) throw new Error("목록을 불러오지 못했습니다.");
       return response.json();
@@ -56,7 +56,7 @@ export default function FreeBoardClient() {
       if (result.post?.id && result.manageToken) rememberToken(result.post.id, result.manageToken);
       form.reset(); setOpen(false);
       setMessage("등록되었습니다. 이 기기에서 글 수정과 삭제를 할 수 있습니다.");
-      await load();
+      await load(true);
     } catch { setMessage("등록하지 못했습니다. 잠시 후 다시 시도해 주세요."); }
   }
 
