@@ -22,7 +22,7 @@ export function WorshipReader({ item, kind, maximum }: { item: Item; kind: "psal
     {audioOpen && <div className="worship-audio">
       {audioMissing
         ? <p>이 곡의 음원은 아직 준비 중입니다.</p>
-        : <audio key={audioSrc} controls autoPlay preload="none" src={audioSrc} onError={() => setAudioMissing(true)}>오디오 재생을 지원하지 않는 브라우저입니다.</audio>}
+        : <audio key={audioSrc} controls controlsList="nodownload" onContextMenu={event => event.preventDefault()} autoPlay preload="none" src={audioSrc} onError={() => setAudioMissing(true)}>오디오 재생을 지원하지 않는 브라우저입니다.</audio>}
       {hasAlt && !audioMissing && <button type="button" onClick={() => setUseAlt(!useAlt)}>{useAlt ? "기본 버전 듣기" : "다른 버전 듣기"}</button>}
       <small>1절 음원입니다.</small>
     </div>}
