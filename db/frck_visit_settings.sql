@@ -1,4 +1,4 @@
--- 심방 일정 설정 테이블(직분자 공용 비밀번호의 암호화된 값 저장). Supabase SQL Editor에서 한 번만 실행합니다.
+﻿-- 심방 일정 설정 테이블(직분자 공용 비밀번호의 암호화된 값 저장). Supabase SQL Editor에서 한 번만 실행합니다.
 -- 비밀번호 원문은 저장하지 않습니다. 서버(service_role)만 접근하고, 성도·로그인 사용자는 DB에 직접 접근할 수 없습니다.
 begin;
 
@@ -28,3 +28,7 @@ grant select, insert, update, delete on table public.frck_visit_logins to servic
 grant usage, select on sequence public.frck_visit_logins_id_seq to service_role;
 
 commit;
+
+-- 새 테이블을 바로 쓸 수 있게 Supabase에 알립니다.
+notify pgrst, 'reload schema';
+

@@ -104,14 +104,3 @@ commit;
 -- insert into public.frck_visits (starts_at, kind, pastor) values ('2026-12-03 19:30+09', 'elder', false);
 -- insert into public.frck_visits (starts_at, kind, pastor) values ('2026-12-05 14:00+09', 'deacon', false);
 
-
-
-
-
-
-
-
-
-
-
-
