@@ -120,7 +120,7 @@ function Panel({ user, onLogout }: { user: User; onLogout: () => void }) {
       <div className={styles.bar}><span>{user.name}{user.role === "admin" ? " · 관리자" : ""}</span><span><Link href="/visits">달력 보기</Link> <button onClick={onLogout}>로그아웃</button></span></div>
       <div className={styles.tabs} role="tablist">{tabs.map(([key, label]) => <button key={key} role="tab" aria-selected={tab === key} className={tab === key ? styles.tabOn : ""} onClick={() => setTab(key)}>{label}</button>)}</div>
       {error && <p className={styles.error} role="alert">{error}</p>}
-      {tab === "visits" && <VisitsTab roster={roster} members={members} importMembers={importMembers} importAll={importAllMembers} />}
+      {tab === "visits" && <VisitsTab roster={roster} members={members} rounds={rounds} importMembers={importMembers} importAll={importAllMembers} />}
       {tab === "progress" && <ProgressTab roster={roster} members={members} importMembers={importMembers} importAll={importAllMembers} rounds={rounds} reloadRounds={loadRounds} />}
       {tab === "roster" && <><ImportFromMembers members={members} onDone={loadRoster} /><RosterTab roster={roster} reload={loadRoster} api="/api/visit-targets" label="심방 대상자 명단" /></>}
       {tab === "members" && <RosterTab roster={members} reload={loadMembers} api="/api/visit-members" label="전체 교우명단" targetNames={new Set(roster.map(t => t.name))} onMakeTarget={async m => { const id = await importMember(m); if (id) await loadMembers(); }} />}
@@ -129,9 +129,56 @@ function Panel({ user, onLogout }: { user: User; onLogout: () => void }) {
   );
 }
 
+// 이번 심방 시기(심방 현황)의 명단에서, 아직 심방하지 못한 분(또는 일정만 잡힌 분)을 일정의 대상자로 불러옵니다.
+// 가족은 가능하면 함께 불러오고, 한 번에 담을 수 있는 인원을 넘으면 나머지는 일정을 저장한 뒤 다시 불러오면 됩니다.
+function RoundLoader({ rounds, roster, max, value, onChange, onMessage }: { rounds: Round[]; roster: Target[]; max: number; value: number[]; onChange: (ids: number[]) => void; onMessage: (text: string) => void }) {
+  const today = kstDay.format(new Date());
+  const initial = rounds.find(r => r.starts_on <= today && today <= r.ends_on) ?? rounds[0];
+  const [roundId, setRoundId] = useState<number>(initial.id);
+  const [which, setWhich] = useState<"todo" | "planned" | "notdone">("todo");
+  const [busy, setBusy] = useState(false);
+  async function load() {
+    const round = rounds.find(r => r.id === roundId);
+    if (!round) return;
+    setBusy(true); onMessage("");
+    try {
+      const from = `${round.starts_on}T00:00:00+09:00`, to = `${round.ends_on}T23:59:59+09:00`;
+      const [m, v] = await Promise.all([call(`/api/visit-round-members?round_ids=${round.id}`, "GET"), call(`/api/visits?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`, "GET")]);
+      const members = m.members as Member[];
+      if (!members.length) { onMessage(`'${round.title}'에는 아직 명단이 없습니다. 심방 현황 탭에서 명단을 먼저 만들어 주세요.`); return; }
+      const g = calcGroups(round, v.visits as Visit[], members, new Map(roster.map(t => [t.id, t])));
+      const rows = which === "todo" ? g.todo : which === "planned" ? g.planned : [...g.todo, ...g.planned];
+      const fresh = rows.map(r => r.t).filter(t => t.active && !value.includes(t.id));
+      if (!fresh.length) { onMessage(which === "todo" ? "아직 심방하지 못한 분이 없습니다. (모두 일정이 잡혔거나 완료되었습니다.)" : "불러올 분이 없습니다."); return; }
+      // 가족 단위로 묶어서(가족 이름 순) 가능한 만큼 한 번에 담습니다. 가족이 없는 분은 한 명씩입니다.
+      const groups = new Map<string, Target[]>();
+      for (const t of fresh) { const key = t.family ? `f:${t.family}` : `p:${t.id}`; groups.set(key, [...(groups.get(key) ?? []), t]); }
+      const ordered = Array.from(groups.values()).sort((a, b) => (a[0].family ?? a[0].name).localeCompare(b[0].family ?? b[0].name, "ko"));
+      let room = Math.max(0, max - value.length);
+      const take: number[] = [];
+      for (const group of ordered) { if (group.length <= room) { take.push(...group.map(t => t.id)); room -= group.length; } }
+      if (!take.length) { onMessage(`한 번에 ${max}명까지 고를 수 있어 더 담을 수 없습니다. 먼저 일정을 저장한 뒤 다시 불러오세요.`); return; }
+      onChange([...value, ...take]);
+      const left = fresh.length - take.length;
+      onMessage(`'${round.title}'에서 ${take.length}명을 불러왔습니다.${left > 0 ? ` 남은 ${left}명은 이 일정을 저장한 뒤 다시 불러오세요.` : ""}`);
+    } catch (e) { onMessage(errText(e, "불러오지 못했습니다.")); }
+    finally { setBusy(false); }
+  }
+  return (
+    <details className={styles.grp}>
+      <summary>심방 현황에서 불러오기 <small>{initial.title}</small></summary>
+      <div className={styles.inner}>
+        <label className={styles.sublabel}>심방 시기<select value={roundId} onChange={e => setRoundId(Number(e.target.value))}>{rounds.map(r => <option key={r.id} value={r.id}>{r.title}</option>)}</select></label>
+        <label className={styles.sublabel}>누구를 불러올까요?<select value={which} onChange={e => setWhich(e.target.value as "todo" | "planned" | "notdone")}><option value="todo">아직 심방하지 못한 분</option><option value="planned">일정만 잡혀 있는 분</option><option value="notdone">완료하지 않은 분 모두</option></select></label>
+        <button type="button" className={styles.primary} onClick={load} disabled={busy}>{busy ? "불러오는 중…" : "불러오기"}</button>
+        <p className={styles.help}>가족은 한꺼번에 불러옵니다. 한 번에 {max}명까지 담기므로, 많으면 일정을 저장한 뒤 다시 불러오면 남은 분이 이어서 나옵니다.</p>
+      </div>
+    </details>
+  );
+}
 type PickResult = { key: string; id: number; name: string; family: string | null; from: "target" | "member" };
 
-function TargetPicker({ roster, members, importMembers, importAll, max = 20, value, onChange }: { roster: Target[]; members: Target[]; importMembers: (ids: number[]) => Promise<number[]>; importAll?: () => Promise<number[]>; max?: number; value: number[]; onChange: (ids: number[]) => void }) {
+function TargetPicker({ roster, members, rounds, importMembers, importAll, max = 20, value, onChange }: { roster: Target[]; members: Target[]; rounds?: Round[]; importMembers: (ids: number[]) => Promise<number[]>; importAll?: () => Promise<number[]>; max?: number; value: number[]; onChange: (ids: number[]) => void }) {
   const [query, setQuery] = useState("");
   const [msg, setMsg] = useState("");
   const [checked, setChecked] = useState<Set<string>>(new Set());
@@ -172,6 +219,7 @@ function TargetPicker({ roster, members, importMembers, importAll, max = 20, val
         const chips = <ul className={styles.chips}>{value.map(id => { const t = byId.get(id); const mates = t?.family ? roster.filter(x => x.active && x.family === t.family && !value.includes(x.id)) : []; return <li key={id}>{t?.name ?? `#${id}`}{mates.length > 0 && <button type="button" className={styles.fam} onClick={() => onChange([...value, ...mates.map(x => x.id)].slice(0, max))}>+가족 {mates.length}명</button>}<button type="button" aria-label={`${t?.name ?? "이 분"} 빼기`} onClick={() => onChange(value.filter(item => item !== id))}>×</button></li>; })}</ul>;
         return value.length > 12 ? <details className={styles.grp} open><summary>고른 분 <small>{value.length}명 · ×를 누르면 뺍니다</small></summary><div className={styles.inner}>{chips}</div></details> : chips;
       })()}
+      {rounds && rounds.length > 0 && <RoundLoader rounds={rounds} roster={roster} max={max} value={value} onChange={onChange} onMessage={setMsg} />}
       <input value={query} onChange={e => { setQuery(e.target.value); setChecked(new Set()); }} placeholder="성이나 이름을 치세요 (예: 김)" aria-label="심방 대상자 찾기" />
       {q && shown.length > 0 && (
         <div className={styles.results}>
@@ -201,7 +249,7 @@ const kstDow = new Intl.DateTimeFormat("ko-KR", { timeZone: "Asia/Seoul", month:
 const kstHM = new Intl.DateTimeFormat("ko-KR", { timeZone: "Asia/Seoul", hour: "2-digit", minute: "2-digit", hour12: false });
 const kindClass = (kind: Visit["kind"]) => (kind === "deacon" ? styles.deacon : kind === "special" ? styles.special : styles.elder);
 
-function VisitsTab({ roster, members, importMembers, importAll }: { roster: Target[]; members: Target[]; importMembers: (ids: number[]) => Promise<number[]>; importAll: () => Promise<number[]> }) {
+function VisitsTab({ roster, members, rounds, importMembers, importAll }: { roster: Target[]; members: Target[]; rounds: Round[]; importMembers: (ids: number[]) => Promise<number[]>; importAll: () => Promise<number[]> }) {
   const [visits, setVisits] = useState<Visit[]>([]);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
@@ -265,7 +313,7 @@ function VisitsTab({ roster, members, importMembers, importAll }: { roster: Targ
           <label>시간<TimeSelect value={formTime} onChange={setFormTime} blocked={blockedTimes} /></label>
           {blockedTimes.length > 0 && <p className={styles.help}>같은 종류의 심방(장로+장로, 집사+집사)이 있는 시간, 목사 동행이 이미 있는 시간, 고른 대상자가 이미 다른 심방에 들어 있는 시간(앞뒤 1시간)은 고를 수 없습니다. 장로 심방과 집사 심방은 대상자와 목사만 겹치지 않으면 같은 시간에 해도 됩니다.</p>}
           <label>심방 종류<select name="kind" value={formKind} onChange={e => setFormKind(e.target.value as Visit["kind"])}><option value="elder">장로 심방 (성찬 심방)</option><option value="deacon">집사 심방</option><option value="special">특별 심방</option></select></label>
-          <TargetPicker roster={roster} members={members} importMembers={importMembers} importAll={importAll} max={20} value={picked} onChange={setPicked} />
+          <TargetPicker roster={roster} members={members} rounds={rounds} importMembers={importMembers} importAll={importAll} max={20} value={picked} onChange={setPicked} />
           <label className={styles.check}><input name="pastor" type="checkbox" checked={formPastor} onChange={e => setFormPastor(e.target.checked)} /> 목사 동행 <small>(성도 화면에도 표시)</small></label>
           <label>메모 <small>(비공개)</small><textarea name="memo" rows={2} maxLength={2000} defaultValue={editing?.memo ?? ""} /></label>
           <div className={styles.row}><button className={styles.primary} type="submit">{editing ? "수정 저장" : "저장"}</button>{editing && <button type="button" onClick={() => { setEditing(null); setFormOpen(false); }}>취소</button>}</div>
@@ -658,6 +706,7 @@ function PasswordAdmin() {
     </div>
   );
 }
+
 
 
 
