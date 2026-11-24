@@ -1,10 +1,10 @@
-import { freeBoardServiceRest } from "../../../lib/free-board-moderation";
+﻿import { freeBoardServiceRest } from "../../../lib/free-board-moderation";
 
 // 공개 API: 성도(비로그인)에게 보여도 되는 정보만 돌려줍니다.
 // 반드시 아래 컬럼만 명시적으로 고릅니다. select=* 를 쓰지 마세요(가정 이름, 담당 장로, 메모는 비공개).
 const PUBLIC_COLUMNS = "id,starts_at,kind,pastor,status";
 
-type Row = { id: number; starts_at: string; kind: "elder" | "deacon"; pastor: boolean; status: "scheduled" | "done" };
+type Row = { id: number; starts_at: string; kind: "elder" | "deacon" | "special"; pastor: boolean; status: "scheduled" | "done" };
 
 export async function GET() {
   const from = new Date(Date.now() - 62 * 24 * 60 * 60 * 1000).toISOString();
@@ -19,7 +19,7 @@ export async function GET() {
     const slots = rows.map(row => ({
       id: String(row.id),
       starts_at: row.starts_at,
-      kind: row.kind === "deacon" ? "deacon" : "elder",
+      kind: row.kind === "deacon" ? "deacon" : row.kind === "special" ? "special" : "elder",
       pastor: row.pastor === true,
       done: row.status === "done",
     }));
@@ -29,3 +29,4 @@ export async function GET() {
     return Response.json({ slots: [], error: "일정을 불러오지 못했습니다." }, { status: 503 });
   }
 }
+

@@ -1,4 +1,4 @@
-import { createHmac, randomBytes, scryptSync, timingSafeEqual } from "crypto";
+﻿import { createHmac, randomBytes, scryptSync, timingSafeEqual } from "crypto";
 import { freeBoardServiceRest } from "./free-board-moderation";
 
 // 심방 일정 로그인.
@@ -9,7 +9,8 @@ export type VisitRole = "admin" | "staff";
 export type VisitUser = { name: string; role: VisitRole };
 
 export const SESSION_COOKIE = "frck_visit_session";
-const SESSION_SECONDS = 90 * 24 * 60 * 60;
+const REMEMBER_SECONDS = 90 * 24 * 60 * 60;
+const SHORT_SECONDS = 12 * 60 * 60;
 
 function secret() {
   const value = process.env.VISIT_SESSION_SECRET || process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -73,10 +74,13 @@ export async function setStaffPassword(password: string) {
 }
 
 // 로그인 쿠키에는 "그때의 비밀번호 지문"이 들어갑니다. 공용 비밀번호를 바꾸면 지문이 달라져 이전 로그인이 모두 무효가 됩니다.
-export function createSessionCookie(user: VisitUser, secretValue: string) {
-  const payload = Buffer.from(JSON.stringify({ n: user.name, r: user.role, v: fingerprint(`${user.role}:${secretValue}`), x: Math.floor(Date.now() / 1000) + SESSION_SECONDS })).toString("base64url");
+// 로그인 유지를 체크하면 90일, 체크하지 않으면 브라우저를 닫을 때(최대 12시간)까지만 유지됩니다.
+export function createSessionCookie(user: VisitUser, secretValue: string, remember = true) {
+  const seconds = remember ? REMEMBER_SECONDS : SHORT_SECONDS;
+  const payload = Buffer.from(JSON.stringify({ n: user.name, r: user.role, v: fingerprint(`${user.role}:${secretValue}`), x: Math.floor(Date.now() / 1000) + seconds })).toString("base64url");
   const secure = process.env.NODE_ENV === "production" ? "; Secure" : "";
-  return `${SESSION_COOKIE}=${payload}.${sign(payload)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${SESSION_SECONDS}${secure}`;
+  const maxAge = remember ? `; Max-Age=${seconds}` : "";
+  return `${SESSION_COOKIE}=${payload}.${sign(payload)}; Path=/; HttpOnly; SameSite=Lax${maxAge}${secure}`;
 }
 
 export function clearSessionCookie() {
@@ -164,3 +168,4 @@ export async function recentLogins(limit = 15) {
 
 export const clientIp =(request: Request) => request.headers.get("x-real-ip")?.trim() || "unknown";
 export { safeEqual, fingerprint };
+

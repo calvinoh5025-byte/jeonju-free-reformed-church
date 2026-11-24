@@ -2,7 +2,13 @@
 import { getSession, sameOrigin } from "../../../lib/visit-auth";
 
 const json = (body: unknown, status = 200) => Response.json(body, { status, headers: { "Cache-Control": "no-store" } });
-const COLUMNS = "id,name,note,tags,active";
+const COLUMNS = "id,name,note,tags,family,active";
+const cleanFamily = (value: unknown) => {
+  if (value === null || value === undefined || value === "") return null;
+  if (typeof value !== "string") return undefined;
+  const family = value.replace(/[\u0000-\u001f\u007f]/g, "").replace(/\s+/g, " ").trim();
+  return family.length <= 50 ? (family || null) : undefined;
+};
 const validId = (value: unknown): value is number => Number.isSafeInteger(value) && (value as number) > 0;
 const cleanName = (value: unknown) => (typeof value === "string" ? value.replace(/[\u0000-\u001f\u007f]/g, "").replace(/\s+/g, " ").trim() : "");
 const cleanNote = (value: unknown) => {
@@ -52,7 +58,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   const a = await auth(request, true);
   if ("response" in a) return a.response;
-  let data: { name?: unknown; names?: unknown; note?: unknown; tags?: unknown };
+  let data: { name?: unknown; names?: unknown; note?: unknown; tags?: unknown; family?: unknown };
   try { data = await request.json(); } catch { return json({ error: "요청 내용을 확인해 주세요." }, 400); }
   const raw = Array.isArray(data?.names) ? data.names : [data?.name];
   if (raw.length > 300) return json({ error: "한 번에 300명까지 추가할 수 있습니다." }, 400);
@@ -66,12 +72,14 @@ export async function POST(request: Request) {
   if (!names.length) return json({ error: "추가할 이름을 입력해 주세요." }, 400);
   const note = cleanNote(data?.note);
   if (note === undefined) return json({ error: "메모는 500자까지 입력할 수 있습니다." }, 400);
+  const family = cleanFamily(data?.family);
+  if (family === undefined) return json({ error: "가족 이름은 50자까지 입력할 수 있습니다." }, 400);
   const tags = cleanTags(data?.tags);
   if (tags === undefined) return json({ error: "분류는 10개까지, 한 개당 20자까지 입력할 수 있습니다." }, 400);
   try {
     const response = await freeBoardServiceRest(`frck_visit_targets?on_conflict=name&select=${COLUMNS}`, {
       method: "POST", headers: { "content-type": "application/json", Prefer: "resolution=ignore-duplicates,return=representation" },
-      body: JSON.stringify(names.map(name => ({ name, note: names.length === 1 ? note : null, tags }))),
+      body: JSON.stringify(names.map(name => ({ name, note: names.length === 1 ? note : null, tags, family }))),
     });
     if (!response.ok) throw new Error(await response.text());
     const added = await response.json() as unknown[];
@@ -91,6 +99,7 @@ export async function PATCH(request: Request) {
   const fields: Record<string, unknown> = { updated_at: new Date().toISOString() };
   if (data.name !== undefined) { const name = cleanName(data.name); if (!name || name.length > 50) return json({ error: "이름을 확인해 주세요." }, 400); fields.name = name; }
   if (data.note !== undefined) { const note = cleanNote(data.note); if (note === undefined) return json({ error: "메모는 500자까지 입력할 수 있습니다." }, 400); fields.note = note; }
+  if (data.family !== undefined) { const family = cleanFamily(data.family); if (family === undefined) return json({ error: "가족 이름은 50자까지 입력할 수 있습니다." }, 400); fields.family = family; }
   if (data.tags !== undefined) { const tags = cleanTags(data.tags); if (tags === undefined) return json({ error: "분류는 10개까지, 한 개당 20자까지 입력할 수 있습니다." }, 400); fields.tags = tags; }
   if (data.active !== undefined) { if (typeof data.active !== "boolean") return json({ error: "상태를 확인해 주세요." }, 400); fields.active = data.active; }
   if (Object.keys(fields).length === 1) return json({ error: "바꿀 내용이 없습니다." }, 400);
@@ -106,4 +115,5 @@ export async function PATCH(request: Request) {
     return json({ error: "수정하지 못했습니다. 같은 이름이 이미 있는지 확인해 주세요." }, 503);
   }
 }
+
 

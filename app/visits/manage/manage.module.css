@@ -1,4 +1,4 @@
-.wrap{max-width:720px;margin:0 auto;padding:28px 16px 80px;color:#243b35}
+﻿.wrap{max-width:720px;margin:0 auto;padding:28px 16px 80px;color:#243b35}
 .card{display:flex;flex-direction:column;gap:14px;background:#fffdf7;border:1px solid #d7cebd;border-radius:12px;padding:18px;margin-bottom:18px}
 .card h2,.listHead h2,.admin h2{margin:0;font:500 22px "Noto Serif KR",serif}
 .card label{display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700}
@@ -20,6 +20,23 @@
 .item{position:relative;background:#fffdf7;border:1px solid #d7cebd;border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
 .dim{opacity:.6}
 .detail{display:flex;flex-direction:column;gap:2px;font-size:15px}
+.special{display:inline-block;margin-left:6px;padding:2px 8px;border-radius:999px;background:#fbefd9;color:#8a540a;font-size:13px;font-weight:700}
+.grp{border:1px solid #d7cebd;border-radius:10px;background:#fffdf7;margin-bottom:8px}
+.grp>summary{cursor:pointer;padding:12px 14px;font-weight:700;list-style:none;display:flex;justify-content:space-between;gap:8px;align-items:center}
+.grp>summary::-webkit-details-marker{display:none}
+.grp>summary::after{content:"+";font-size:20px;color:#6a706b}
+.grp[open]>summary::after{content:"−"}
+.grp>.inner{padding:0 14px 12px;display:flex;flex-direction:column;gap:10px}
+.grp>summary small{font-weight:400;color:#6a706b;font-size:13px}
+.grp .list{margin:0}
+.yr{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none}
+.yr button{min-height:40px!important;text-align:left;border:0!important;background:transparent!important;padding:0 4px!important;font-weight:700;color:#243b35}.yr button[aria-current=true]{color:#236b3d}
+.yr li{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center;font-size:15px}
+.yr .meter{grid-column:1/-1;height:8px;border-radius:999px;background:#ece5d6;overflow:hidden}
+.yr .meter span{display:block;height:100%;background:#2e8b4f}
+.quarters{display:grid;grid-template-columns:1fr;gap:10px}
+.quarters div{display:grid;grid-template-columns:auto 1fr 1fr;gap:8px;align-items:center}
+.quarters label{flex-direction:row!important;align-items:center}
 .chip{display:inline-block;margin-left:6px;padding:2px 8px;border-radius:999px;background:#f0eadf;font-size:13px}
 .elder{display:inline-block;margin-left:6px;padding:2px 8px;border-radius:999px;background:#e6eef8;color:#1f4e86;font-size:13px;font-weight:700}
 .deacon{display:inline-block;margin-left:6px;padding:2px 8px;border-radius:999px;background:#e3f1e6;color:#236b3d;font-size:13px;font-weight:700}
@@ -40,6 +57,7 @@
 .tabs{display:flex;gap:6px;margin:0 0 16px;border-bottom:2px solid #d7cebd;overflow-x:auto}
 .wrap .tabs button{min-height:46px;border:0;border-bottom:3px solid transparent;border-radius:0;background:transparent;font-size:16px;font-weight:700;color:#6a706b;white-space:nowrap;padding:0 14px}
 .wrap .tabs button.tabOn{color:#243b35;border-bottom-color:#243b35}
+.chips .fam{min-height:30px!important;padding:0 8px!important;border-radius:999px!important;font-size:13px!important;background:#dfeadf!important}
 .suggest{display:flex;flex-wrap:wrap;gap:8px}
 .suggest small{color:#6a706b}
 .sum{margin:0;font-size:18px}
@@ -61,3 +79,6 @@
 .admin0 h2 small{font-weight:400;color:#6a706b;font-size:13px}
 .admin{margin-top:36px;padding-top:24px;border-top:2px solid #d7cebd}
 .admin h2{margin-bottom:14px}
+
+
+

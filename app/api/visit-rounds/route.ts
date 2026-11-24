@@ -2,7 +2,7 @@
 import { getSession, sameOrigin } from "../../../lib/visit-auth";
 
 const json = (body: unknown, status = 200) => Response.json(body, { status, headers: { "Cache-Control": "no-store" } });
-const COLUMNS = "id,title,starts_on,ends_on,tag";
+const COLUMNS = "id,title,starts_on,ends_on,tag,include_family";
 const cleanTag = (value: unknown) => {
   if (value === null || value === undefined || value === "") return null;
   if (typeof value !== "string") return undefined;
@@ -46,7 +46,7 @@ export async function POST(request: Request) {
   const tag = cleanTag(data?.tag);
   if (tag === undefined) return json({ error: "대상 분류는 20자까지 입력할 수 있습니다." }, 400);
   try {
-    const response = await freeBoardServiceRest(`frck_visit_rounds?select=${COLUMNS}`, { method: "POST", headers: { "content-type": "application/json", Prefer: "return=representation" }, body: JSON.stringify({ title, starts_on: data.starts_on, ends_on: data.ends_on, tag }) });
+    const response = await freeBoardServiceRest(`frck_visit_rounds?select=${COLUMNS}`, { method: "POST", headers: { "content-type": "application/json", Prefer: "return=representation" }, body: JSON.stringify({ title, starts_on: data.starts_on, ends_on: data.ends_on, tag, include_family: data?.include_family === true }) });
     if (!response.ok) throw new Error(await response.text());
     const [row] = await response.json() as unknown[];
     return json({ ok: true, round: row }, 201);
@@ -67,6 +67,7 @@ export async function PATCH(request: Request) {
   if (data.starts_on !== undefined) { if (!validDate(data.starts_on)) return json({ error: "시작일을 확인해 주세요." }, 400); fields.starts_on = data.starts_on; }
   if (data.ends_on !== undefined) { if (!validDate(data.ends_on)) return json({ error: "종료일을 확인해 주세요." }, 400); fields.ends_on = data.ends_on; }
   if (data.tag !== undefined) { const tag = cleanTag(data.tag); if (tag === undefined) return json({ error: "대상 분류를 확인해 주세요." }, 400); fields.tag = tag; }
+  if (data.include_family !== undefined) fields.include_family = data.include_family === true;
   if (typeof fields.starts_on === "string" && typeof fields.ends_on === "string" && fields.ends_on < fields.starts_on) return json({ error: "종료일은 시작일 이후여야 합니다." }, 400);
   if (!Object.keys(fields).length) return json({ error: "바꿀 내용이 없습니다." }, 400);
   try {
@@ -98,4 +99,5 @@ export async function DELETE(request: Request) {
     return json({ error: "삭제하지 못했습니다." }, 503);
   }
 }
+
 

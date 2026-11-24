@@ -5,7 +5,7 @@ const json = (body: unknown, status = 200) => Response.json(body, { status, head
 const COLUMNS = "id,starts_at,kind,pastor,status,target_ids,memo,created_by";
 const EDIT_LIMIT = 10;
 
-type Row = { id: number; starts_at: string; kind: "elder" | "deacon"; pastor: boolean; status: "scheduled" | "done" | "cancelled"; target_ids: number[] | null; memo: string | null; created_by: string | null };
+type Row = { id: number; starts_at: string; kind: "elder" | "deacon" | "special"; pastor: boolean; status: "scheduled" | "done" | "cancelled"; target_ids: number[] | null; memo: string | null; created_by: string | null };
 type Edit = { visit_id: number; editor_name: string; action: string; created_at: string };
 
 // 로그인한 직분자는 모두 같은 권한입니다(모든 일정을 보고 고칠 수 있음). 누가 고쳤는지는 수정 기록에 남습니다.
@@ -51,7 +51,7 @@ function parseFields(data: Record<string, unknown>, partial: boolean) {
     out.starts_at = time.toISOString();
   }
   if (!partial || data.kind !== undefined) {
-    if (data.kind !== "elder" && data.kind !== "deacon") return { error: "심방 종류를 확인해 주세요." };
+    if (data.kind !== "elder" && data.kind !== "deacon" && data.kind !== "special") return { error: "심방 종류를 확인해 주세요." };
     out.kind = data.kind;
   }
   if (!partial || data.pastor !== undefined) out.pastor = data.pastor === true;
@@ -201,5 +201,6 @@ export async function DELETE(request: Request) {
     return json({ error: "일정을 삭제하지 못했습니다. 잠시 후 다시 시도해 주세요." }, 503);
   }
 }
+
 
 
