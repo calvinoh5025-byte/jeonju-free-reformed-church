@@ -1,0 +1,158 @@
+﻿.wrap{max-width:720px;margin:0 auto;padding:28px 16px 80px;color:#243b35}
+.card{display:flex;flex-direction:column;gap:14px;background:#fffdf7;border:1px solid #d7cebd;border-radius:12px;padding:18px;margin-bottom:18px}
+.card h2,.listHead h2,.admin h2{margin:0;font:500 22px "Noto Serif KR",serif}
+.card label{display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700}
+.card small,.admin h2 small{font-weight:400;color:#6a706b;font-size:13px}
+.card input:not([type=checkbox]),.card select,.card textarea{min-height:48px;padding:10px 12px;border:1px solid #bfb6a5;border-radius:8px;background:#fff;font:inherit;font-weight:400;color:#243b35}
+.card textarea{min-height:84px}
+.check{display:flex!important;flex-direction:row!important;align-items:center;gap:10px!important;font-weight:700}
+.check input{width:22px;height:22px}
+.row{display:flex;flex-wrap:wrap;gap:8px}
+.wrap button{min-height:44px;padding:0 16px;border:1px solid #bfb6a5;background:#fffdf7;color:#243b35;border-radius:8px;font-size:15px;cursor:pointer}
+.wrap button.primary,.primary{background:#243b35;color:#fff;border-color:#243b35;font-weight:700}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:16px;font-weight:700}
+.bar a{margin-right:10px;color:#243b35}
+.help{color:#6a706b;font-size:14px;margin:0;line-height:1.6}
+.error{color:#a63d39;background:#fbeceb;border-radius:8px;padding:10px 12px;margin:0 0 14px}
+.ok{color:#27500a;background:#eaf3de;border-radius:8px;padding:10px 12px;margin:0 0 14px}
+.listHead{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:8px 0 12px}
+.list{list-style:none;margin:0 0 24px;padding:0;display:flex;flex-direction:column;gap:10px}
+.item{position:relative;background:#fffdf7;border:1px solid #d7cebd;border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.dim{opacity:.6}
+.detail{display:flex;flex-direction:column;gap:2px;font-size:15px}
+.special{display:inline-block;margin-left:6px;padding:2px 8px;border-radius:999px;background:#fbefd9;color:#8a540a;font-size:13px;font-weight:700}
+.grp{border:1px solid #d7cebd;border-radius:10px;background:#fffdf7;margin-bottom:8px}
+.grp>summary{cursor:pointer;padding:12px 14px;font-weight:700;list-style:none;display:flex;justify-content:space-between;gap:8px;align-items:center}
+.grp>summary::-webkit-details-marker{display:none}
+.grp>summary::after{content:"+";font-size:20px;color:#6a706b}
+.grp[open]>summary::after{content:"−"}
+.grp>.inner{padding:0 14px 12px;display:flex;flex-direction:column;gap:10px}
+.grp>summary small{font-weight:400;color:#6a706b;font-size:13px}
+.grp .list{margin:0}
+.yr{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none}
+.yr button{min-height:40px!important;text-align:left;border:0!important;background:transparent!important;padding:0 4px!important;font-weight:700;color:#243b35}.yr button[aria-current=true]{color:#236b3d}
+.yr li{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center;font-size:15px}
+.yr .meter{grid-column:1/-1;height:8px;border-radius:999px;background:#ece5d6;overflow:hidden}
+.yr .meter span{display:block;height:100%;background:#2e8b4f}
+.quarters{display:grid;grid-template-columns:1fr;gap:10px}
+.quarters div{display:grid;grid-template-columns:auto 1fr 1fr;gap:8px;align-items:center}
+.quarters label{flex-direction:row!important;align-items:center}
+.chip{display:inline-block;margin-left:6px;padding:2px 8px;border-radius:999px;background:#f0eadf;font-size:13px}
+.elder{display:inline-block;margin-left:6px;padding:2px 8px;border-radius:999px;background:#e6eef8;color:#1f4e86;font-size:13px;font-weight:700}
+.deacon{display:inline-block;margin-left:6px;padding:2px 8px;border-radius:999px;background:#e3f1e6;color:#236b3d;font-size:13px;font-weight:700}
+.field{display:flex;flex-direction:column;gap:8px}
+.fieldLabel{font-size:16px;font-weight:700}
+.fieldLabel small{font-weight:400;color:#6a706b;font-size:13px}
+.field input{min-height:48px;padding:10px 12px;border:1px solid #bfb6a5;border-radius:8px;background:#fff;font:inherit;color:#243b35}
+.grow{flex:1;min-width:0}
+.chips{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.chips li{display:inline-flex;align-items:center;gap:6px;padding:4px 6px 4px 12px;border-radius:999px;background:#e8eee8;font-size:15px}
+.chips button{min-height:30px!important;min-width:30px;padding:0!important;border-radius:999px!important;font-size:18px!important;line-height:1}
+.hist{display:inline-block}
+.pop{display:none;position:absolute;left:8px;right:8px;top:calc(100% + 4px);z-index:20;padding:12px 14px;border:1px solid #bfb6a5;border-radius:10px;background:#fffdf7;box-shadow:0 6px 20px rgba(0,0,0,.15);font-size:14px;line-height:1.6}
+.pop strong{display:block;margin-bottom:6px}
+.pop ol{margin:0;padding-left:20px}
+.pop em{color:#6a706b;font-style:normal}
+.hist:hover .pop,.hist:focus-within .pop{display:block}
+.tabs{display:flex;gap:6px;margin:0 0 16px;border-bottom:2px solid #d7cebd;overflow-x:auto}
+.wrap .tabs button{min-height:46px;border:0;border-bottom:3px solid transparent;border-radius:0;background:transparent;font-size:16px;font-weight:700;color:#6a706b;white-space:nowrap;padding:0 14px}
+.wrap .tabs button.tabOn{color:#243b35;border-bottom-color:#243b35}
+.chips .fam{min-height:30px!important;padding:0 8px!important;border-radius:999px!important;font-size:13px!important;background:#dfeadf!important}
+.suggest{display:flex;flex-wrap:wrap;gap:8px}
+.suggest small{color:#6a706b}
+.sum{margin:0;font-size:18px}
+.sum small{color:#6a706b;font-size:14px}
+.bar2{height:12px;border-radius:999px;background:#ece5d6;overflow:hidden}
+.bar2 span{display:block;height:100%;background:#2e8b4f}
+.card h3{margin:6px 0 0;font-size:16px}
+.gTodo{color:#a63d39}
+.gPlan{color:#1f4e86}
+.gDone{color:#236b3d}
+.names{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.names li{padding:6px 12px;border-radius:999px;background:#f0eadf;font-size:15px}
+.names small{color:#6a706b}
+.search{display:flex;gap:8px;flex-wrap:wrap}
+.search select{min-height:46px;padding:0 10px;border:1px solid #bfb6a5;border-radius:8px;background:#fff;font:inherit;margin-bottom:12px}
+.search input{flex:1;min-width:0;width:100%;min-height:46px;padding:10px 12px;border:1px solid #bfb6a5;border-radius:8px;background:#fff;font:inherit;margin-bottom:12px;box-sizing:border-box}
+.admin0{margin-top:4px}
+.admin0 h2{margin:0 0 12px;font:500 22px "Noto Serif KR",serif}
+.admin0 h2 small{font-weight:400;color:#6a706b;font-size:13px}
+.admin{margin-top:36px;padding-top:24px;border-top:2px solid #d7cebd}
+.admin h2{margin-bottom:14px}
+
+
+
+.add{border:1px solid #d7cebd;border-radius:12px;background:#fffdf7;margin-bottom:18px}
+.add>summary{cursor:pointer;list-style:none;padding:14px 16px;font-weight:700;font-size:17px}
+.add>summary::-webkit-details-marker{display:none}
+.add>form{display:flex;flex-direction:column;gap:14px;padding:0 16px 16px}
+.add label{display:flex;flex-direction:column;gap:6px;font-size:15px;font-weight:700}
+.add label.check{flex-direction:row;font-weight:700}
+.add small{font-weight:400;color:#6a706b;font-size:13px}
+.add input:not([type=checkbox]),.add select,.add textarea{min-height:46px;padding:9px 12px;border:1px solid #cfc6b4;border-radius:8px;background:#fff;font:inherit;font-weight:400;color:#243b35}
+.vlist{border-top:1px solid #e3dccb;margin-bottom:24px}
+.vi{border-bottom:1px solid #e3dccb}
+.vi>summary{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;padding:14px 4px;cursor:pointer;list-style:none}
+.vi>summary::-webkit-details-marker{display:none}
+.vi .when{font-size:16px;white-space:nowrap}
+.vi .who{flex:1 1 100%;color:#4d5a54;font-size:15px}
+.vi .chip,.vi .elder,.vi .deacon,.vi .special{margin-left:0}
+.vbody{padding:0 4px 14px;display:flex;flex-direction:column;gap:8px;font-size:15px}
+.vbody p{margin:0;line-height:1.6}
+.vbody p b{display:inline-block;min-width:3.2em;color:#6a706b;font-weight:700}
+.vbody .row button{min-height:40px;font-size:14px;padding:0 12px}
+
+/* 어르신도 편하게: 큰 글씨, 큰 버튼, 또렷한 대비 */
+.wrap{font-size:19px;line-height:1.6;max-width:760px}
+.wrap h2{font-size:26px!important}
+.wrap small,.card small,.add small,.help{font-size:16px!important;color:#4d5a54}
+.help{line-height:1.7}
+.wrap button{min-height:54px;font-size:18px;padding:0 20px;border-width:2px}
+.wrap .tabs button{min-height:56px;font-size:19px;padding:0 16px}
+.wrap input:not([type=checkbox]):not([type=radio]),.wrap select,.wrap textarea{min-height:54px;font-size:19px;padding:10px 14px;border:2px solid #b9ae98;border-radius:10px}
+.wrap textarea{min-height:100px}
+.wrap input[type=checkbox]{width:28px;height:28px;flex:none}
+.card label,.add label{font-size:19px!important}
+.add>summary{font-size:21px;padding:18px 18px;min-height:60px;display:flex;align-items:center}
+.vi>summary{padding:18px 6px}
+.vi .when{font-size:21px}
+.vi .who{font-size:19px;color:#243b35}
+.vbody{font-size:18px}
+.vbody .row button{min-height:52px;font-size:17px;padding:0 16px}
+.chip,.elder,.deacon,.special{font-size:16px!important;padding:3px 10px!important}
+.row{gap:10px}
+.error,.ok{font-size:18px;padding:14px 16px}
+.grp>summary{padding:16px 16px;font-size:20px;min-height:60px}
+.names li{font-size:18px;padding:8px 14px}
+.chips li{font-size:18px}
+.suggest button{min-height:50px}
+.sum{font-size:21px}
+.pop{font-size:17px}
+.bar{font-size:18px}
+
+.fieldLabel{font-size:19px!important}
+.fieldLabel small{font-size:16px!important}
+
+
+.plist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.prow{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid #e9e2d2}
+.prow:last-child{border-bottom:0}
+.pname{flex:1;min-width:0;font-size:19px}
+.pname small{color:#4d5a54}
+.sub{display:flex;flex-direction:column;gap:12px;padding:12px 0;border-top:1px solid #e3dccb}
+.sub:first-child{border-top:0}
+.sub h3{margin:0;font-size:19px}
+.sub label{display:flex;flex-direction:column;gap:6px;font-weight:700}
+.sub label.check{flex-direction:row}
+
+.sublabel{display:flex;flex-direction:column;gap:6px;font-weight:700}
+
+
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+.wrap .filters button{flex:1 1 calc(50% - 8px);min-height:50px;border:2px solid #b9ae98;border-radius:10px;background:#fffdf7;color:#243b35;font-size:17px;padding:0 8px}
+.wrap .filters button.tabOn{background:#243b35;color:#fff;border-color:#243b35}
+/* 탭이 많아도 잘리지 않게 줄바꿈, 누르기 쉬운 큰 버튼 모양 */
+.wrap .tabs{flex-wrap:wrap;overflow:visible;border-bottom:0;gap:8px;margin-bottom:18px}
+.wrap .tabs button{flex:1 1 calc(50% - 8px);min-width:120px;border:2px solid #b9ae98;border-radius:10px;background:#fffdf7;color:#243b35;min-height:54px;padding:0 10px}
+.wrap .tabs button.tabOn{background:#243b35;color:#fff;border-color:#243b35}
+
