@@ -156,3 +156,10 @@
 .wrap .tabs button{flex:1 1 calc(50% - 8px);min-width:120px;border:2px solid #b9ae98;border-radius:10px;background:#fffdf7;color:#243b35;min-height:54px;padding:0 10px}
 .wrap .tabs button.tabOn{background:#243b35;color:#fff;border-color:#243b35}
 
+
+.results{border:2px solid #cfc6b4;border-radius:12px;background:#fffdf7;padding:12px;display:flex;flex-direction:column;gap:10px}
+.pick{list-style:none;margin:0;padding:0;max-height:340px;overflow:auto;display:flex;flex-direction:column}
+.pick li{border-bottom:1px solid #e9e2d2}
+.pick li:last-child{border-bottom:0}
+.pick label{display:flex!important;flex-direction:row!important;align-items:center;gap:12px!important;padding:10px 4px;font-weight:700;font-size:19px;cursor:pointer}
+.pick small{color:#4d5a54;font-weight:400;font-size:15px}
