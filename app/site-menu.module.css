@@ -37,6 +37,13 @@
   border-bottom: 0;
 }
 
+.subheading {
+  margin: 0 0 8px;
+  color: #5b6b63;
+  font-size: 16px;
+  font-weight: 700;
+}
+
 .group a {
   color: #29463f;
   font-size: 18px;

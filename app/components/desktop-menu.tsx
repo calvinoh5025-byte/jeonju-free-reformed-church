@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { isSiteNavGroupCurrent, isSiteNavItemCurrent, siteNav } from "../site-nav";
+import { NavLink } from "./nav-link";
 import styles from "./desktop-menu.module.css";
 
 export function DesktopMenu() {
@@ -84,7 +84,12 @@ export function DesktopMenu() {
             <div className={styles.panel} id={panelId} hidden={!expanded}>
                 {group.items.map(item => {
                   const itemCurrent = isSiteNavItemCurrent(pathname, item.href);
-                  return <Link key={item.href} href={item.href} className={styles.item} aria-current={itemCurrent ? "page" : undefined} onClick={() => setOpenGroup(null)}>{item.label}</Link>;
+                  return (
+                    <div key={item.href} className={styles.entry}>
+                      {item.section && <p className={styles.subheading}>{item.section}</p>}
+                      <NavLink item={item} className={styles.item} current={itemCurrent} onClick={() => setOpenGroup(null)} />
+                    </div>
+                  );
                 })}
             </div>
           </div>

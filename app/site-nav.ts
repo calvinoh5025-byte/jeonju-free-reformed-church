@@ -2,6 +2,10 @@ export type SiteNavItem = {
   label: string;
   href: string;
   description?: string;
+  /** 교회 사이트 밖으로 나가는 주소입니다. 새 창으로 열고 ↗ 표시를 붙입니다. */
+  external?: boolean;
+  /** 이 항목 위에 작은 소제목을 한 번 보여 줍니다. (예: 관련사이트, 이웃교회) */
+  section?: string;
 };
 
 export type SiteNavGroup = {
@@ -21,20 +25,10 @@ export const siteNav: SiteNavGroup[] = [
     ],
   },
   {
-    id: "worship",
-    label: "예배와 설교",
-    items: [
-      { label: "주보", href: "/worship/bulletin" },
-      { label: "예배순서", href: "/worship/order" },
-      { label: "설교", href: "/sermons", description: "주일 오전·오후예배 설교를 공식 유튜브 채널에서 다시 들을 수 있습니다." },
-      { label: "설교 번역", href: "/guide/index.html#sermons", description: "자유개혁교회 자료실에서 TheSeed 설교를 한국어로 번역해 읽을 수 있습니다." },
-    ],
-  },
-  {
     id: "worship-materials",
-    label: "예배 자료",
+    label: "예배",
     items: [
-      { label: "예배생활 전체 보기", href: "/worship" },
+      { label: "예배순서", href: "/worship/order" },
       { label: "시편", href: "/worship/psalms" },
       { label: "찬송", href: "/worship/hymns" },
       { label: "기도문", href: "/worship/prayers" },
@@ -59,14 +53,21 @@ export const siteNav: SiteNavGroup[] = [
     id: "news-resources",
     label: "소식·자료",
     items: [
+      { label: "주보", href: "/worship/bulletin" },
+      { label: "설교", href: "/sermons", description: "주일 오전·오후예배 설교를 공식 유튜브 채널에서 다시 들을 수 있습니다." },
       { label: "공지게시판", href: "/board", description: "교회 공지사항을 확인할 수 있습니다." },
       { label: "자유게시판", href: "/free-board", description: "교회와 이웃이 따뜻한 소식과 이야기를 나누는 공간입니다. 작성한 글은 바로 공개됩니다." },
       { label: "자료실", href: "/resources", description: "개혁교회 설교 자료와 클라리온 잡지를 한국어로 읽을 수 있습니다." },
+      { label: "자유개혁교회 페이스북", href: "https://www.facebook.com/DongSupSong/", external: true, section: "관련사이트" },
+      { label: "자유개혁교회 유튜브 설교", href: "https://www.youtube.com/channel/UCF7kK_6xtj2aFUm3V0P91gA", external: true },
+      { label: "의왕개혁교회 (유튜브)", href: "https://www.youtube.com/channel/UCHO3fXg0Is0SP2VXLncgByA", external: true, section: "이웃교회" },
+      { label: "배광교회", href: "https://xn--hc0bsew07bjvz.kr/", external: true, description: "배광교회.kr" },
     ],
   },
 ];
 
 export function isSiteNavItemCurrent(pathname: string, href: string) {
+  if (/^https?:\/\//.test(href)) return false;
   if (pathname === href) return true;
   if (href === "/worship" || href === "/church") return false;
   return pathname.startsWith(`${href}/`);
