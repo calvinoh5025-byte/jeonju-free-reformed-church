@@ -45,6 +45,8 @@ create table if not exists public.frck_visits (
 );
 
 create index if not exists frck_visits_starts_at_idx on public.frck_visits (starts_at);
+-- 같은 시각에 취소되지 않은 일정이 둘 생기는 것을 DB에서도 막습니다. (앞뒤 1시간 겹침은 서버가 추가로 검사합니다)
+create unique index if not exists frck_visits_no_same_start on public.frck_visits (starts_at) where status <> 'cancelled';
 
 -- 수정 기록: 누가 언제 등록·수정했는지. 일정이 삭제되면 기록도 함께 지워집니다.
 create table if not exists public.frck_visit_edits (
@@ -71,6 +73,7 @@ commit;
 -- 확인용 예시 일정(선택). 필요 없으면 아래 두 줄은 실행하지 마세요. 날짜는 한국 시간입니다.
 -- insert into public.frck_visits (starts_at, kind, pastor) values ('2026-12-03 19:30+09', 'elder', false);
 -- insert into public.frck_visits (starts_at, kind, pastor) values ('2026-12-05 14:00+09', 'deacon', false);
+
 
 
 

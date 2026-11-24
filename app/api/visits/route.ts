@@ -4,6 +4,7 @@ import { getSession, sameOrigin, type VisitUser } from "../../../lib/visit-auth"
 const json = (body: unknown, status = 200) => Response.json(body, { status, headers: { "Cache-Control": "no-store" } });
 const COLUMNS = "id,starts_at,kind,pastor,status,target_ids,memo,created_by";
 const EDIT_LIMIT = 10;
+const VISIT_MINUTES = 60; // 일정 하나를 약 1시간으로 보고, 앞뒤 1시간 안에 다른 일정이 있으면 겹치는 것으로 봅니다.
 
 type Row = { id: number; starts_at: string; kind: "elder" | "deacon" | "special"; pastor: boolean; status: "scheduled" | "done" | "cancelled"; target_ids: number[] | null; memo: string | null; created_by: string | null };
 type Edit = { visit_id: number; editor_name: string; action: string; created_at: string };
@@ -108,6 +109,18 @@ function describeChange(fields: Record<string, unknown>, before: Row) {
   return "수정";
 }
 
+// 겹치는 일정이 있는지 확인합니다(취소된 일정은 제외, 수정 중인 자기 자신도 제외).
+async function overlaps(startsAt: string, excludeId?: number) {
+  const start = new Date(startsAt).getTime();
+  const lo = new Date(start - VISIT_MINUTES * 60 * 1000).toISOString();
+  const hi = new Date(start + VISIT_MINUTES * 60 * 1000).toISOString();
+  const exclude = excludeId ? `&id=neq.${excludeId}` : "";
+  const response = await freeBoardServiceRest(`frck_visits?select=id&status=neq.cancelled&starts_at=gt.${encodeURIComponent(lo)}&starts_at=lt.${encodeURIComponent(hi)}${exclude}&limit=1`, { headers: { Accept: "application/json" } });
+  if (!response.ok) throw new Error(`overlap status ${response.status}`);
+  return ((await response.json()) as unknown[]).length > 0;
+}
+const OVERLAP_MESSAGE = "그 시간에는 이미 다른 심방 일정이 있습니다(앞뒤 1시간). 다른 시간을 골라 주세요.";
+
 const validId = (value: unknown): value is number => Number.isSafeInteger(value) && (value as number) > 0;
 
 export async function GET(request: Request) {
@@ -141,10 +154,12 @@ export async function POST(request: Request) {
   if ("error" in parsed) return json({ error: parsed.error }, 400);
   try {
     if (!(await allExist((parsed.fields.target_ids as number[]) ?? []))) return json({ error: "명단에 없는 대상자가 있습니다. 명단에서 다시 골라 주세요." }, 400);
+    if (await overlaps(parsed.fields.starts_at as string)) return json({ error: OVERLAP_MESSAGE }, 409);
     const response = await freeBoardServiceRest(`frck_visits?select=${COLUMNS}`, {
       method: "POST", headers: { "content-type": "application/json", Prefer: "return=representation" },
       body: JSON.stringify({ ...parsed.fields, status: "scheduled", created_by: user.name }),
     });
+    if (response.status === 409) return json({ error: OVERLAP_MESSAGE }, 409);
     if (!response.ok) throw new Error(await response.text());
     const [row] = await response.json() as Row[];
     await logEdit(row.id, user, "등록");
@@ -168,10 +183,14 @@ export async function PATCH(request: Request) {
     const current = await load(data.id);
     if (!current) return json({ error: "일정을 찾을 수 없습니다." }, 404);
     if (parsed.fields.target_ids && !(await allExist(parsed.fields.target_ids as number[]))) return json({ error: "명단에 없는 대상자가 있습니다. 명단에서 다시 골라 주세요." }, 400);
+    const nextStart = (parsed.fields.starts_at as string | undefined) ?? current.starts_at;
+    const nextStatus = (parsed.fields.status as string | undefined) ?? current.status;
+    if ((parsed.fields.starts_at !== undefined || parsed.fields.status !== undefined) && nextStatus !== "cancelled" && (await overlaps(nextStart, data.id))) return json({ error: OVERLAP_MESSAGE }, 409);
     const response = await freeBoardServiceRest(`frck_visits?id=eq.${data.id}&select=${COLUMNS}`, {
       method: "PATCH", headers: { "content-type": "application/json", Prefer: "return=representation" },
       body: JSON.stringify({ ...parsed.fields, updated_at: new Date().toISOString() }),
     });
+    if (response.status === 409) return json({ error: OVERLAP_MESSAGE }, 409);
     if (!response.ok) throw new Error(await response.text());
     const [row] = await response.json() as Row[];
     await logEdit(row.id, user, describeChange(parsed.fields, current));
@@ -201,6 +220,8 @@ export async function DELETE(request: Request) {
     return json({ error: "일정을 삭제하지 못했습니다. 잠시 후 다시 시도해 주세요." }, 503);
   }
 }
+
+
 
 
 
