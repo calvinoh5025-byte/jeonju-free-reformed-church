@@ -45,6 +45,7 @@ export function PushNotify() {
   const [search, setSearch] = useState("");
   const [msg, setMsg] = useState("");
   const [busy, setBusy] = useState(false);
+  const [step, setStep] = useState("");
 
   useEffect(() => {
     let alive = true;
@@ -103,21 +104,28 @@ export function PushNotify() {
 
   async function enable() {
     if (mode === "family" && !picked.length) { setMsg("내 이름을 한 명 이상 골라 주세요."); return; }
-    setBusy(true); setMsg("");
+    setBusy(true); setStep("1/4 허용 확인 중…"); setMsg("");
     try {
-      const permission = await Notification.requestPermission();
+      const permission = await limit(
+        Notification.requestPermission(),
+        30000,
+        "알림 허용 창이 뜨지 않았습니다. 브라우저 주소창 왼쪽 자물쇠에서 알림을 허용해 주세요. 카카오톡 등 앱 안에서 열었다면 크롬이나 사파리로 열어 주세요."
+      );
       if (permission !== "granted") { setState(permission === "denied" ? "denied" : "off"); setMsg(permission === "denied" ? "" : "알림을 허용하지 않으셨습니다."); return; }
+      setStep("2/4 준비 중…");
       const reg = await limit(navigator.serviceWorker.ready, 10000, "앱 준비가 끝나지 않았습니다. 페이지를 새로 고친 뒤 다시 눌러 주세요.");
       const keyResponse = await limit(fetch("/api/visit-push/key"), 10000, "알림 설정을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.");
       const { publicKey } = await keyResponse.json() as { publicKey?: string };
       if (!keyResponse.ok || !publicKey) throw new Error("알림 설정을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.");
+      setStep("3/4 알림 연결 중…");
       const sub = (await reg.pushManager.getSubscription()) ?? (await limit(reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: toKey(publicKey) as unknown as BufferSource }), 20000, "이 기기가 알림 서비스에 연결하지 못했습니다. 와이파이·데이터 연결과 VPN·절전 모드를 확인하고 다시 눌러 주세요. 삼성 인터넷이면 크롬으로도 시도해 보세요."));
+      setStep("4/4 저장 중…");
       try { await post("/api/visit-push/subscribe", { subscription: sub.toJSON(), kinds, target_ids: ids }); }
       catch (e) { await sub.unsubscribe().catch(() => null); throw e; }
       savedNow(kinds, ids);
       setState("on"); setMsg("알림을 켰습니다. 아래 '시험 알림 보내기'를 눌러 잘 오는지 확인해 보세요.");
     } catch (e) { setMsg(e instanceof Error ? e.message : "알림을 켜지 못했습니다."); }
-    finally { setBusy(false); }
+    finally { setBusy(false); setStep(""); }
   }
 
   async function disable() {
@@ -190,7 +198,7 @@ export function PushNotify() {
               )}
             </fieldset>
           )}
-          {state === "off" && <button type="button" className={styles.primary} onClick={enable} disabled={busy}>{busy ? "처리 중…" : "알림 받기"}</button>}
+          {state === "off" && <button type="button" className={styles.primary} onClick={enable} disabled={busy}>{busy ? (step || "처리 중…") : "알림 받기"}</button>}
           {state === "on" && (
             <div className={styles.row}>
               <button type="button" onClick={sendTest} disabled={busy}>시험 알림 보내기</button>
