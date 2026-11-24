@@ -8,9 +8,9 @@ export type PushKind = "elder" | "deacon" | "special";
 export const ALL_KINDS: PushKind[] = ["elder", "deacon", "special"];
 export const kindLabel: Record<PushKind, string> = { elder: "장로 심방", deacon: "집사 심방", special: "특별 심방" };
 
-export type PushSub = { id: number; endpoint: string; p256dh: string; auth: string; kinds: string[] | null; failures: number };
+export type PushSub = { id: number; endpoint: string; p256dh: string; auth: string; kinds: string[] | null; target_ids?: number[] | null; failures: number };
 export type PushPayload = { title: string; body: string; url: string; tag: string };
-export type VisitLite = { id: number; starts_at: string; kind: PushKind; pastor: boolean; status: string };
+export type VisitLite = { id: number; starts_at: string; kind: PushKind; pastor: boolean; status: string; target_ids?: number[] | null };
 
 const SITE_URL = "https://freerck.com";
 
@@ -145,19 +145,25 @@ export async function claimDeliveries(rows: Array<{ subscription_id: number; vis
 
 export async function listSubscriptions(ids?: number[]) {
   const filter = ids ? `&id=in.(${ids.join(",")})` : "";
-  const response = await freeBoardServiceRest(`frck_visit_push_subscriptions?select=id,endpoint,p256dh,auth,kinds,failures${filter}&limit=5000`, { headers: { Accept: "application/json" } });
+  const response = await freeBoardServiceRest(`frck_visit_push_subscriptions?select=id,endpoint,p256dh,auth,kinds,target_ids,failures${filter}&limit=5000`, { headers: { Accept: "application/json" } });
   if (!response.ok) throw new Error(`subs status ${response.status}`);
   return await response.json() as PushSub[];
 }
 
-const wants = (sub: PushSub, kind: string) => (sub.kinds && sub.kinds.length ? sub.kinds : ALL_KINDS).includes(kind);
+const isPersonal = (sub: PushSub) => Array.isArray(sub.target_ids) && sub.target_ids.length > 0;
+// '내 가정 알림'을 고른 기기는 그 가정의 심방만, 아니면 고른 심방 종류 전체를 받습니다.
+const wants = (sub: PushSub, v: VisitLite) => isPersonal(sub)
+  ? (v.target_ids ?? []).some(id => sub.target_ids!.includes(id))
+  : (sub.kinds && sub.kinds.length ? sub.kinds : ALL_KINDS).includes(v.kind);
+const labelFor = (sub: PushSub, v: { starts_at: string; kind: PushKind; pastor?: boolean }) =>
+  isPersonal(sub) ? visitLabel(v).replace(kindLabel[v.kind], `내 ${kindLabel[v.kind]}`) : visitLabel(v);
 
 // 하루치 심방 알림(전날 저녁 'eve' / 당일 아침 'morning')을 구독한 기기별로 한 번씩 보냅니다.
 export async function sendDayReminders(reminder: "eve" | "morning", visits: VisitLite[], day: string) {
   const subs = await listSubscriptions();
   const planned: Array<{ sub: PushSub; list: VisitLite[] }> = [];
   for (const sub of subs) {
-    const list = visits.filter(v => wants(sub, v.kind));
+    const list = visits.filter(v => wants(sub, v));
     if (list.length) planned.push({ sub, list });
   }
   const claimed = await claimDeliveries(planned.flatMap(({ sub, list }) => list.map(v => ({ subscription_id: sub.id, visit_id: v.id, reminder, starts_at_sent: v.starts_at }))));
@@ -168,7 +174,7 @@ export async function sendDayReminders(reminder: "eve" | "morning", visits: Visi
     const ids = mine.get(sub.id);
     const fresh = ids ? list.filter(v => ids.has(v.id)) : [];
     if (!fresh.length) continue;
-    const shown = fresh.slice(0, 3).map(visitLabel).join(" / ");
+    const shown = fresh.slice(0, 3).map(v => labelFor(sub, v)).join(" / ");
     items.push({ sub, payload: { title: reminder === "eve" ? "내일 심방 일정" : "오늘 심방 일정", body: shown + (fresh.length > 3 ? ` 외 ${fresh.length - 3}건` : ""), url: "/visits", tag: `visit-${reminder}-${day}` } });
   }
   const result = await sendAll(items);
@@ -189,6 +195,6 @@ export async function notifyVisitChange(before: VisitLite, after: { starts_at: s
   const claimed = await claimDeliveries(ids.map(subscription_id => ({ subscription_id, visit_id: before.id, reminder, starts_at_sent: before.starts_at })));
   if (!claimed.length) return { sent: 0, failed: 0 };
   const subs = await listSubscriptions(claimed.map(c => c.subscription_id));
-  const body = cancelled ? `${visitLabel(before)} 일정이 취소되었습니다.` : `${visitLabel(before)} → ${visitLabel({ ...before, starts_at: after!.starts_at })}`;
-  return await sendAll(subs.map(sub => ({ sub, payload: { title: cancelled ? "심방 일정 취소" : "심방 일정 변경", body, url: "/visits", tag: `visit-change-${before.id}` } })));
+  const bodyFor = (sub: PushSub) => cancelled ? `${labelFor(sub, before)} 일정이 취소되었습니다.` : `${labelFor(sub, before)} → ${labelFor(sub, { ...before, starts_at: after!.starts_at })}`;
+  return await sendAll(subs.map(sub => ({ sub, payload: { title: cancelled ? "심방 일정 취소" : "심방 일정 변경", body: bodyFor(sub), url: "/visits", tag: `visit-change-${before.id}` } })));
 }

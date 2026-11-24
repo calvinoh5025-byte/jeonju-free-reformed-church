@@ -242,7 +242,7 @@ export async function PATCH(request: Request) {
     const [row] = await response.json() as Row[];
     await logEdit(row.id, user, describeChange(parsed.fields, current));
     // 이미 알림을 받은 기기에는 취소·시간 변경을 바로 알려 줍니다. (알림이 실패해도 일정 저장은 그대로 성공)
-    try { await notifyVisitChange({ id: current.id, starts_at: current.starts_at, kind: current.kind, pastor: current.pastor, status: current.status }, { starts_at: row.starts_at, status: row.status }); }
+    try { await notifyVisitChange({ id: current.id, starts_at: current.starts_at, kind: current.kind, pastor: current.pastor, status: current.status, target_ids: current.target_ids }, { starts_at: row.starts_at, status: row.status }); }
     catch (error) { console.error("[visits] change notify failed", error instanceof Error ? error.message : error); }
     return json({ ok: true, visit: present(row, await loadEdits([row.id]).catch(() => [])) });
   } catch (error) {
@@ -262,7 +262,7 @@ export async function DELETE(request: Request) {
     // 삭제하면 보낸 알림 기록도 함께 지워지므로, 지우기 전에 이미 알림을 받은 기기에 취소를 알립니다.
     try {
       const current = await load(data.id);
-      if (current) await notifyVisitChange({ id: current.id, starts_at: current.starts_at, kind: current.kind, pastor: current.pastor, status: current.status }, null);
+      if (current) await notifyVisitChange({ id: current.id, starts_at: current.starts_at, kind: current.kind, pastor: current.pastor, status: current.status, target_ids: current.target_ids }, null);
     } catch (error) { console.error("[visits] delete notify failed", error instanceof Error ? error.message : error); }
     const response = await freeBoardServiceRest(`frck_visits?id=eq.${data.id}`, { method: "DELETE", headers: { Prefer: "return=representation" } });
     if (!response.ok) throw new Error(await response.text());

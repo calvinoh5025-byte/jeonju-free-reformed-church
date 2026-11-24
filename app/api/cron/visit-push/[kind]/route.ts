@@ -18,7 +18,7 @@ export async function GET(request: Request, context: { params: Promise<{ kind: s
   try {
     const today = kstDateKey(new Date());
     const day = kind === "eve" ? addDays(today, 1) : today;
-    const response = await freeBoardServiceRest(`frck_visits?select=id,starts_at,kind,pastor,status&status=eq.scheduled&starts_at=gte.${encodeURIComponent(dayStartIso(day))}&starts_at=lte.${encodeURIComponent(dayEndIso(day))}&order=starts_at.asc&limit=200`, { headers: { Accept: "application/json" } });
+    const response = await freeBoardServiceRest(`frck_visits?select=id,starts_at,kind,pastor,status,target_ids&status=eq.scheduled&starts_at=gte.${encodeURIComponent(dayStartIso(day))}&starts_at=lte.${encodeURIComponent(dayEndIso(day))}&order=starts_at.asc&limit=200`, { headers: { Accept: "application/json" } });
     if (!response.ok) throw new Error(`visits status ${response.status}`);
     const visits = await response.json() as VisitLite[];
     const result = visits.length ? await sendDayReminders(kind, visits, day) : { subscribers: 0, sent: 0, failed: 0 };

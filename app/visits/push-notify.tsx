@@ -5,8 +5,12 @@ import styles from "./push-notify.module.css";
 
 type Kind = "elder" | "deacon" | "special";
 type State = "loading" | "unsupported" | "ios-install" | "denied" | "off" | "on";
+type Mode = "kinds" | "family";
+type Family = { id: number; name: string };
 const KINDS: Array<[Kind, string]> = [["elder", "장로 심방"], ["deacon", "집사 심방"], ["special", "특별 심방"]];
 const SAVED = "frck-visit-push-kinds";
+const SAVED_FAMILY = "frck-visit-push-families";
+const MAX_FAMILIES = 10;
 
 function toKey(base64: string) {
   const padded = (base64 + "=".repeat((4 - (base64.length % 4)) % 4)).replace(/-/g, "+").replace(/_/g, "/");
@@ -27,6 +31,10 @@ async function post(url: string, body: unknown) {
 export function PushNotify() {
   const [state, setState] = useState<State>("loading");
   const [kinds, setKinds] = useState<Kind[]>(["elder", "deacon", "special"]);
+  const [mode, setMode] = useState<Mode>("kinds");
+  const [families, setFamilies] = useState<Family[]>([]);
+  const [picked, setPicked] = useState<number[]>([]);
+  const [search, setSearch] = useState("");
   const [msg, setMsg] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -34,6 +42,8 @@ export function PushNotify() {
     let alive = true;
     (async () => {
       try { const saved = JSON.parse(localStorage.getItem(SAVED) ?? "null") as Kind[] | null; if (Array.isArray(saved) && saved.length) setKinds(saved); } catch { /* 무시 */ }
+      try { const saved = JSON.parse(localStorage.getItem(SAVED_FAMILY) ?? "null") as number[] | null; if (Array.isArray(saved) && saved.length) { setPicked(saved); setMode("family"); } } catch { /* 무시 */ }
+      fetch("/api/visit-push/families").then(r => r.json()).then((d: { families?: Family[] }) => { if (alive && Array.isArray(d.families)) setFamilies(d.families); }).catch(() => undefined);
       const ios = /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
       const standalone = window.matchMedia("(display-mode: standalone)").matches || Boolean((navigator as Navigator & { standalone?: boolean }).standalone);
       const supported = "serviceWorker" in navigator && "PushManager" in window && "Notification" in window;
@@ -48,9 +58,43 @@ export function PushNotify() {
     return () => { alive = false; };
   }, []);
 
-  const toggleKind = (kind: Kind) => setKinds(prev => { const next = prev.includes(kind) ? prev.filter(k => k !== kind) : [...prev, kind]; return next.length ? next : prev; });
+  const ids = mode === "family" ? picked : [];
+  const savedNow = (k: Kind[], f: number[]) => { try { localStorage.setItem(SAVED, JSON.stringify(k)); localStorage.setItem(SAVED_FAMILY, JSON.stringify(f)); } catch { /* 무시 */ } };
+
+  // 이미 알림을 켠 기기는 고르는 즉시 서버에 저장합니다.
+  async function saveNow(nextKinds: Kind[], nextIds: number[]) {
+    setBusy(true); setMsg("");
+    try {
+      const reg = await navigator.serviceWorker.ready;
+      const sub = await reg.pushManager.getSubscription();
+      if (!sub) { setState("off"); return; }
+      await post("/api/visit-push/subscribe", { subscription: sub.toJSON(), kinds: nextKinds, target_ids: nextIds });
+      savedNow(nextKinds, nextIds);
+      setMsg("저장했습니다.");
+    } catch (e) { setMsg(e instanceof Error ? e.message : "저장하지 못했습니다."); }
+    finally { setBusy(false); }
+  }
+
+  const toggleKind = (kind: Kind) => {
+    const next = kinds.includes(kind) ? kinds.filter(k => k !== kind) : [...kinds, kind];
+    if (!next.length) return;
+    setKinds(next);
+    if (state === "on") void saveNow(next, ids);
+  };
+  const toggleFamily = (id: number) => {
+    const has = picked.includes(id);
+    if (!has && picked.length >= MAX_FAMILIES) { setMsg(`이름은 ${MAX_FAMILIES}명까지 고를 수 있습니다.`); return; }
+    const next = has ? picked.filter(x => x !== id) : [...picked, id];
+    setPicked(next);
+    if (state === "on") void saveNow(kinds, next.length ? next : []);
+  };
+  const changeMode = (next: Mode) => {
+    setMode(next);
+    if (state === "on") void saveNow(kinds, next === "family" ? picked : []);
+  };
 
   async function enable() {
+    if (mode === "family" && !picked.length) { setMsg("내 이름을 한 명 이상 골라 주세요."); return; }
     setBusy(true); setMsg("");
     try {
       const permission = await Notification.requestPermission();
@@ -60,24 +104,11 @@ export function PushNotify() {
       const { publicKey } = await keyResponse.json() as { publicKey?: string };
       if (!keyResponse.ok || !publicKey) throw new Error("알림 설정을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.");
       const sub = (await reg.pushManager.getSubscription()) ?? (await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: toKey(publicKey) as unknown as BufferSource }));
-      try { await post("/api/visit-push/subscribe", { subscription: sub.toJSON(), kinds }); }
+      try { await post("/api/visit-push/subscribe", { subscription: sub.toJSON(), kinds, target_ids: ids }); }
       catch (e) { await sub.unsubscribe().catch(() => null); throw e; }
-      try { localStorage.setItem(SAVED, JSON.stringify(kinds)); } catch { /* 무시 */ }
+      savedNow(kinds, ids);
       setState("on"); setMsg("알림을 켰습니다. 아래 '시험 알림 보내기'를 눌러 잘 오는지 확인해 보세요.");
     } catch (e) { setMsg(e instanceof Error ? e.message : "알림을 켜지 못했습니다."); }
-    finally { setBusy(false); }
-  }
-
-  async function saveKinds() {
-    setBusy(true); setMsg("");
-    try {
-      const reg = await navigator.serviceWorker.ready;
-      const sub = await reg.pushManager.getSubscription();
-      if (!sub) { setState("off"); return; }
-      await post("/api/visit-push/subscribe", { subscription: sub.toJSON(), kinds });
-      try { localStorage.setItem(SAVED, JSON.stringify(kinds)); } catch { /* 무시 */ }
-      setMsg("받을 심방 종류를 저장했습니다.");
-    } catch (e) { setMsg(e instanceof Error ? e.message : "저장하지 못했습니다."); }
     finally { setBusy(false); }
   }
 
@@ -104,33 +135,64 @@ export function PushNotify() {
     finally { setBusy(false); }
   }
 
+  const query = search.trim();
+  const shown = families.filter(f => !query || f.name.includes(query));
+  const summary = mode === "family"
+    ? `내 심방: ${picked.map(id => families.find(f => f.id === id)?.name).filter(Boolean).join(", ") || "선택한 이름"}`
+    : kinds.map(k => KINDS.find(([key]) => key === k)?.[1]).join(", ");
+
   return (
     <section className={styles.box} aria-label="심방 일정 알림">
       <h2>심방 일정 알림</h2>
-      <p className={styles.lead}>전날 저녁 6시와 당일 아침 7시에 그날의 심방 일정을 폰으로 알려 드립니다. 일정이 취소되거나 시간이 바뀌면 바로 알려 드립니다.</p>
+      <p className={styles.lead}>전날 저녁 6시와 당일 아침 7시에 심방 일정을 폰으로 알려 드립니다. 일정이 취소되거나 시간이 바뀌면 바로 알려 드립니다.</p>
       {state === "loading" && <p className={styles.help}>확인하는 중입니다…</p>}
       {state === "unsupported" && <p className={styles.help}>이 브라우저에서는 알림을 지원하지 않습니다. 안드로이드는 크롬이나 삼성 인터넷, 컴퓨터는 크롬·엣지·사파리를 이용해 주세요. 카카오톡 안에서 열었다면 "다른 브라우저로 열기"를 눌러 주세요.</p>}
       {state === "ios-install" && <p className={styles.help}><b>아이폰은 먼저 앱처럼 설치해야 알림을 받을 수 있습니다.</b> 사파리 아래의 공유 버튼(□↑)을 누르고 <b>"홈 화면에 추가"</b>를 누른 뒤, 홈 화면에 생긴 자유개혁교회 아이콘으로 열어서 이 페이지에 다시 오세요. (아이폰 iOS 16.4 이상)</p>}
       {state === "denied" && <p className={styles.help}>이 사이트의 알림이 꺼져 있습니다. 브라우저 설정에서 <b>자유개혁교회(freerck.com) 알림을 "허용"</b>으로 바꾼 뒤 이 페이지를 새로 고쳐 주세요.</p>}
+      {state === "on" && (
+        <div className={styles.status} role="status">
+          <strong>✓ 알림 수신 중</strong>
+          <span>{summary}</span>
+        </div>
+      )}
       {(state === "off" || state === "on") && (
         <>
           <fieldset className={styles.kinds}>
-            <legend>받고 싶은 심방</legend>
-            {KINDS.map(([key, label]) => <label key={key}><input type="checkbox" checked={kinds.includes(key)} onChange={() => toggleKind(key)} /> {label}</label>)}
+            <legend>어떤 알림을 받을까요?</legend>
+            <label><input type="radio" name="push-mode" checked={mode === "kinds"} onChange={() => changeMode("kinds")} /> 심방 종류별로 받기</label>
+            <label><input type="radio" name="push-mode" checked={mode === "family"} onChange={() => changeMode("family")} /> 내 심방만 받기</label>
           </fieldset>
+          {mode === "kinds" && (
+            <fieldset className={styles.kinds}>
+              <legend>받고 싶은 심방</legend>
+              {KINDS.map(([key, label]) => <label key={key}><input type="checkbox" checked={kinds.includes(key)} onChange={() => toggleKind(key)} /> {label}</label>)}
+            </fieldset>
+          )}
+          {mode === "family" && (
+            <fieldset className={styles.kinds}>
+              <legend>내 이름을 골라 주세요 (최대 {MAX_FAMILIES})</legend>
+              {families.length === 0 ? <p className={styles.help}>아직 선택할 수 있는 성찬 심방 대상자가 없습니다. 교회에서 이번 성찬 심방 명단을 만들면 여기에 나타납니다.</p> : (
+                <>
+                  <input className={styles.search} type="search" placeholder="이름이나 성으로 찾기" value={search} onChange={e => setSearch(e.target.value)} aria-label="이름 찾기" />
+                  <div className={styles.list}>
+                    {shown.map(f => <label key={f.id}><input type="checkbox" checked={picked.includes(f.id)} onChange={() => toggleFamily(f.id)} /> {f.name}</label>)}
+                    {!shown.length && <p className={styles.help}>찾는 이름이 없습니다.</p>}
+                  </div>
+                </>
+              )}
+            </fieldset>
+          )}
           {state === "off" && <button type="button" className={styles.primary} onClick={enable} disabled={busy}>{busy ? "처리 중…" : "알림 받기"}</button>}
           {state === "on" && (
             <div className={styles.row}>
-              <button type="button" onClick={saveKinds} disabled={busy}>받을 종류 저장</button>
               <button type="button" onClick={sendTest} disabled={busy}>시험 알림 보내기</button>
               <button type="button" onClick={disable} disabled={busy}>알림 끄기</button>
             </div>
           )}
-          {state === "on" && <p className={styles.ok}>이 기기는 알림을 받고 있습니다.</p>}
         </>
       )}
       {msg && <p className={styles.help} role="status">{msg}</p>}
-      <p className={styles.small}>이 기기의 알림 주소만 저장하며 이름·이메일·전화번호는 받지 않습니다. 알림에는 날짜·시간·심방 종류만 나오고, 가정 이름은 나오지 않습니다.</p>
+      <p className={styles.small}>이 기기의 알림 주소만 저장하며 이름·이메일·전화번호는 받지 않습니다. 알림에는 날짜·시간·심방 종류만 나오고, 이름은 나오지 않습니다.</p>
     </section>
   );
 }
