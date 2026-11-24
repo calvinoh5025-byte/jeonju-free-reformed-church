@@ -144,3 +144,15 @@
 .sub h3{margin:0;font-size:19px}
 .sub label{display:flex;flex-direction:column;gap:6px;font-weight:700}
 .sub label.check{flex-direction:row}
+
+.sublabel{display:flex;flex-direction:column;gap:6px;font-weight:700}
+
+
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+.wrap .filters button{flex:1 1 calc(50% - 8px);min-height:50px;border:2px solid #b9ae98;border-radius:10px;background:#fffdf7;color:#243b35;font-size:17px;padding:0 8px}
+.wrap .filters button.tabOn{background:#243b35;color:#fff;border-color:#243b35}
+/* 탭이 많아도 잘리지 않게 줄바꿈, 누르기 쉬운 큰 버튼 모양 */
+.wrap .tabs{flex-wrap:wrap;overflow:visible;border-bottom:0;gap:8px;margin-bottom:18px}
+.wrap .tabs button{flex:1 1 calc(50% - 8px);min-width:120px;border:2px solid #b9ae98;border-radius:10px;background:#fffdf7;color:#243b35;min-height:54px;padding:0 10px}
+.wrap .tabs button.tabOn{background:#243b35;color:#fff;border-color:#243b35}
+
