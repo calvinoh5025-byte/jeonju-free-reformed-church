@@ -502,6 +502,10 @@ function RosterTab({ roster, reload, api, label, targetNames, onMakeTarget }: { 
     setError(""); setNotice("");
     try { await call(api, "PATCH", { id: t.id, ...fields }); setNotice(message); await reload(); } catch (e) { setError(errText(e, "수정하지 못했습니다.")); }
   }
+  async function remove(t: Target) {
+    setError(""); setNotice("");
+    try { await call(api, "DELETE", { id: t.id }); setNotice(`${t.name}을(를) 삭제했습니다.`); await reload(); } catch (e) { setError(errText(e, "삭제하지 못했습니다.")); }
+  }
 
   return (
     <>
@@ -537,6 +541,7 @@ function RosterTab({ roster, reload, api, label, targetNames, onMakeTarget }: { 
                   <button onClick={() => { const note = prompt("메모를 입력하세요 (비우면 삭제)", t.note ?? ""); if (note !== null) patch(t, { note }, "메모를 저장했습니다."); }}>메모</button>
                   {onMakeTarget && !targetNames?.has(t.name) && t.active && <button className={styles.primary} onClick={() => onMakeTarget(t)}>심방 대상자로 넣기</button>}
                   <button onClick={() => patch(t, { active: !t.active }, t.active ? "사용 안 함으로 보관했습니다." : "다시 사용합니다.")}>{t.active ? "사용 안 함" : "다시 사용"}</button>
+                  <button onClick={() => { if (confirm(`${t.name}을(를) 완전히 삭제할까요?\n\n되돌릴 수 없습니다.${api === "/api/visit-targets" ? " 이미 일정에 넣은 곳에서도 이 분이 빠지고, 심방 시기 명단에서도 사라집니다." : " (이미 심방 대상자로 불러온 분은 심방 대상자 명단에 남습니다.)"}\n\n잘못 넣은 이름이 아니라면 \"사용 안 함\"으로 숨기는 것이 안전합니다.`)) remove(t); }}>삭제</button>
                 </div>
               </div>
             ))}
@@ -608,6 +613,7 @@ function PasswordAdmin() {
     </div>
   );
 }
+
 
 
 
