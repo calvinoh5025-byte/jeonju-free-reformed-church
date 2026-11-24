@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { NavLink } from "../components/nav-link";
 import { SiteFooter, SiteHeader, SubHero } from "../components/site-shell";
 import { siteNav } from "../site-nav";
 import styles from "../site-menu.module.css";
@@ -18,7 +18,8 @@ export default function MenuPage() {
             <ul>
               {group.items.map(item => (
                 <li key={item.href}>
-                  <Link href={item.href}>{item.label}</Link>
+                  {item.section && <h3 className={styles.subheading}>{item.section}</h3>}
+                  <NavLink item={item} />
                   {item.description && <p>{item.description}</p>}
                 </li>
               ))}

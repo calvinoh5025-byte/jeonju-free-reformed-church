@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { isSiteNavGroupCurrent, isSiteNavItemCurrent, siteNav } from "../site-nav";
+import { NavLink } from "./nav-link";
 import styles from "./mobile-menu.module.css";
 
 export function MobileMenu() {
@@ -70,7 +70,10 @@ export function MobileMenu() {
                 {group.label}<span aria-hidden="true">{expanded ? "−" : "+"}</span>
               </button>
               <ul id={panelId} className={styles.items} hidden={!expanded}>
-                {group.items.map(item => <li key={item.href}><Link href={item.href} aria-current={isSiteNavItemCurrent(pathname, item.href) ? "page" : undefined} onClick={() => { setOpen(false); setOpenGroup(null); }}>{item.label}</Link></li>)}
+                {group.items.map(item => <li key={item.href}>
+                  {item.section && <p className={styles.subheading}>{item.section}</p>}
+                  <NavLink item={item} current={isSiteNavItemCurrent(pathname, item.href)} onClick={() => { setOpen(false); setOpenGroup(null); }} />
+                </li>)}
               </ul>
             </section>;
           })}
