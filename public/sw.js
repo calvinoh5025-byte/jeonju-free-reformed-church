@@ -1,4 +1,4 @@
-﻿const CACHE = "frck-shell-v8";
+const CACHE = "frck-shell-v8";
 const SHELL = [
   "/",
   "/manifest.webmanifest",
