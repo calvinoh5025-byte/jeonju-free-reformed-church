@@ -1,3 +1,4 @@
+﻿import { freeBoardServiceRest } from "../../../lib/free-board-moderation";
 import { getSession, getStaffHash, recentLogins, sameOrigin, setStaffPassword } from "../../../lib/visit-auth";
 
 const json = (body: unknown, status = 200) => Response.json(body, { status, headers: { "Cache-Control": "no-store" } });
@@ -10,7 +11,14 @@ export async function GET(request: Request) {
   try {
     const configured = !!(await getStaffHash());
     const logins = await recentLogins(15).catch(() => []);
-    return json({ configured, logins: logins.map(row => ({ name: row.name, role: row.role, at: row.created_at })) });
+    // 푸시 알림을 신청한 기기 수
+    let pushDevices: number | null = null;
+    try {
+      const count = await freeBoardServiceRest("frck_visit_push_subscriptions?select=id&limit=1", { headers: { Accept: "application/json", Prefer: "count=exact", Range: "0-0" } });
+      const total = Number((count.headers.get("content-range") ?? "").split("/")[1]);
+      pushDevices = Number.isFinite(total) ? total : null;
+    } catch { pushDevices = null; }
+    return json({ configured, pushDevices, logins: logins.map(row => ({ name: row.name, role: row.role, at: row.created_at })) });
   } catch { return json({ error: "설정을 불러오지 못했습니다." }, 503); }
 }
 
@@ -30,3 +38,4 @@ export async function PUT(request: Request) {
     return json({ error: "비밀번호를 저장하지 못했습니다. 잠시 후 다시 시도해 주세요." }, 503);
   }
 }
+

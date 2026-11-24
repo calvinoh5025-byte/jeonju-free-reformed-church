@@ -1,4 +1,4 @@
-const CACHE = "frck-shell-v7";
+﻿const CACHE = "frck-shell-v8";
 const SHELL = [
   "/",
   "/manifest.webmanifest",
@@ -48,5 +48,37 @@ self.addEventListener("fetch", (event) => {
       }
       return response;
     }))
+  );
+});
+
+// ---- 심방 일정 푸시 알림 ----
+// 서버가 보낸 알림(날짜·시간·심방 종류만 들어 있음)을 화면에 띄우고, 누르면 심방 일정 페이지로 이동합니다.
+self.addEventListener("push", (event) => {
+  let data = {};
+  try { data = event.data ? event.data.json() : {}; } catch (error) { data = { body: event.data ? event.data.text() : "" }; }
+  const title = data.title || "자유개혁교회 심방 일정";
+  event.waitUntil(self.registration.showNotification(title, {
+    body: data.body || "",
+    icon: "/icons/icon-192.png",
+    badge: "/icons/icon-192.png",
+    tag: data.tag || "visit",
+    lang: "ko-KR",
+    data: { url: data.url || "/visits" }
+  }));
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const target = new URL((event.notification.data && event.notification.data.url) || "/visits", self.location.origin).href;
+  event.waitUntil(
+    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((list) => {
+      for (const client of list) {
+        if (client.url.startsWith(self.location.origin) && "focus" in client) {
+          if ("navigate" in client) client.navigate(target).catch(() => undefined);
+          return client.focus();
+        }
+      }
+      return self.clients.openWindow(target);
+    })
   );
 });

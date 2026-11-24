@@ -1,5 +1,6 @@
 ﻿import { freeBoardServiceRest } from "../../../lib/free-board-moderation";
 import { getSession, sameOrigin, type VisitUser } from "../../../lib/visit-auth";
+import { notifyVisitChange } from "../../../lib/visit-push";
 
 const json = (body: unknown, status = 200) => Response.json(body, { status, headers: { "Cache-Control": "no-store" } });
 const COLUMNS = "id,starts_at,kind,pastor,status,target_ids,memo,created_by";
@@ -240,6 +241,9 @@ export async function PATCH(request: Request) {
     if (!response.ok) throw new Error(await response.text());
     const [row] = await response.json() as Row[];
     await logEdit(row.id, user, describeChange(parsed.fields, current));
+    // 이미 알림을 받은 기기에는 취소·시간 변경을 바로 알려 줍니다. (알림이 실패해도 일정 저장은 그대로 성공)
+    try { await notifyVisitChange({ id: current.id, starts_at: current.starts_at, kind: current.kind, pastor: current.pastor, status: current.status }, { starts_at: row.starts_at, status: row.status }); }
+    catch (error) { console.error("[visits] change notify failed", error instanceof Error ? error.message : error); }
     return json({ ok: true, visit: present(row, await loadEdits([row.id]).catch(() => [])) });
   } catch (error) {
     console.error("[visits] update failed", error instanceof Error ? error.message : error);
@@ -255,6 +259,11 @@ export async function DELETE(request: Request) {
   try { data = await request.json(); } catch { return json({ error: "요청 내용을 확인해 주세요." }, 400); }
   if (!validId(data?.id)) return json({ error: "일정을 확인해 주세요." }, 400);
   try {
+    // 삭제하면 보낸 알림 기록도 함께 지워지므로, 지우기 전에 이미 알림을 받은 기기에 취소를 알립니다.
+    try {
+      const current = await load(data.id);
+      if (current) await notifyVisitChange({ id: current.id, starts_at: current.starts_at, kind: current.kind, pastor: current.pastor, status: current.status }, null);
+    } catch (error) { console.error("[visits] delete notify failed", error instanceof Error ? error.message : error); }
     const response = await freeBoardServiceRest(`frck_visits?id=eq.${data.id}`, { method: "DELETE", headers: { Prefer: "return=representation" } });
     if (!response.ok) throw new Error(await response.text());
     const deleted = await response.json() as unknown[];
@@ -266,4 +275,5 @@ export async function DELETE(request: Request) {
     return json({ error: "일정을 삭제하지 못했습니다. 잠시 후 다시 시도해 주세요." }, 503);
   }
 }
+
 

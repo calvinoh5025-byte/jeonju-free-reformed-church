@@ -677,9 +677,10 @@ function ImportFromMembers({ members, onDone }: { members: Target[]; onDone: () 
 function PasswordAdmin() {
   const [configured, setConfigured] = useState<boolean | null>(null);
   const [logins, setLogins] = useState<Array<{ name: string; role: string; at: string }>>([]);
+  const [pushDevices, setPushDevices] = useState<number | null>(null);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
-  useEffect(() => { call("/api/visit-settings", "GET").then(data => { setConfigured(data.configured === true); setLogins((data.logins as typeof logins) ?? []); }).catch(e => setError(errText(e, "설정을 불러오지 못했습니다."))); }, []);
+  useEffect(() => { call("/api/visit-settings", "GET").then(data => { setConfigured(data.configured === true); setLogins((data.logins as typeof logins) ?? []); setPushDevices(typeof data.pushDevices === "number" ? data.pushDevices : null); }).catch(e => setError(errText(e, "설정을 불러오지 못했습니다."))); }, []);
   async function save(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formElement = event.currentTarget;
@@ -701,27 +702,11 @@ function PasswordAdmin() {
       </form>
       {error && <p className={styles.error} role="alert">{error}</p>}
       {notice && <p className={styles.ok} role="status">{notice}</p>}
+      <h2>푸시 알림 <small>(성도·직분자 누구나 신청)</small></h2>
+      <p className={styles.help}>{pushDevices === null ? "신청한 기기 수를 불러오지 못했습니다." : `알림을 신청한 기기: ${pushDevices}대. 전날 저녁 6시와 당일 아침 7시에 그날의 심방 일정을 알려 드립니다.`}</p>
       <h2>최근 로그인 <small>(낯선 이름이 있으면 비밀번호를 바꾸세요)</small></h2>
       {logins.length === 0 ? <p className={styles.help}>아직 로그인 기록이 없습니다.</p> : <ul className={styles.list}>{logins.map((row, index) => <li key={index} className={styles.item}><span>{kstShort.format(new Date(row.at))} · <b>{row.name}</b>{row.role === "admin" ? " (관리자)" : ""}</span></li>)}</ul>}
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
