@@ -58,6 +58,7 @@ export const siteNav: SiteNavGroup[] = [
       { label: "공지게시판", href: "/board", description: "교회 공지사항을 확인할 수 있습니다." },
       { label: "자유게시판", href: "/free-board", description: "교회와 이웃이 따뜻한 소식과 이야기를 나누는 공간입니다. 작성한 글은 바로 공개됩니다." },
       { label: "자료실", href: "/resources", description: "개혁교회 설교 자료와 클라리온 잡지를 한국어로 읽을 수 있습니다." },
+      { label: "심방 일정", href: "/visits", description: "장로 심방 일정을 확인합니다." },
       { label: "자유개혁교회 페이스북", href: "https://www.facebook.com/DongSupSong/", external: true, section: "관련사이트" },
       { label: "자유개혁교회 유튜브 설교", href: "https://www.youtube.com/channel/UCF7kK_6xtj2aFUm3V0P91gA", external: true },
       { label: "의왕개혁교회 (유튜브)", href: "https://www.youtube.com/channel/UCHO3fXg0Is0SP2VXLncgByA", external: true, section: "이웃교회" },
