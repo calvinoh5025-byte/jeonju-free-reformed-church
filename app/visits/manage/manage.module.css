@@ -17,11 +17,47 @@
 .ok{color:#27500a;background:#eaf3de;border-radius:8px;padding:10px 12px;margin:0 0 14px}
 .listHead{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:8px 0 12px}
 .list{list-style:none;margin:0 0 24px;padding:0;display:flex;flex-direction:column;gap:10px}
-.item{background:#fffdf7;border:1px solid #d7cebd;border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.item{position:relative;background:#fffdf7;border:1px solid #d7cebd;border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
 .dim{opacity:.6}
 .detail{display:flex;flex-direction:column;gap:2px;font-size:15px}
 .chip{display:inline-block;margin-left:6px;padding:2px 8px;border-radius:999px;background:#f0eadf;font-size:13px}
 .elder{display:inline-block;margin-left:6px;padding:2px 8px;border-radius:999px;background:#e6eef8;color:#1f4e86;font-size:13px;font-weight:700}
 .deacon{display:inline-block;margin-left:6px;padding:2px 8px;border-radius:999px;background:#e3f1e6;color:#236b3d;font-size:13px;font-weight:700}
+.field{display:flex;flex-direction:column;gap:8px}
+.fieldLabel{font-size:16px;font-weight:700}
+.fieldLabel small{font-weight:400;color:#6a706b;font-size:13px}
+.field input{min-height:48px;padding:10px 12px;border:1px solid #bfb6a5;border-radius:8px;background:#fff;font:inherit;color:#243b35}
+.grow{flex:1;min-width:0}
+.chips{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.chips li{display:inline-flex;align-items:center;gap:6px;padding:4px 6px 4px 12px;border-radius:999px;background:#e8eee8;font-size:15px}
+.chips button{min-height:30px!important;min-width:30px;padding:0!important;border-radius:999px!important;font-size:18px!important;line-height:1}
+.hist{display:inline-block}
+.pop{display:none;position:absolute;left:8px;right:8px;top:calc(100% + 4px);z-index:20;padding:12px 14px;border:1px solid #bfb6a5;border-radius:10px;background:#fffdf7;box-shadow:0 6px 20px rgba(0,0,0,.15);font-size:14px;line-height:1.6}
+.pop strong{display:block;margin-bottom:6px}
+.pop ol{margin:0;padding-left:20px}
+.pop em{color:#6a706b;font-style:normal}
+.hist:hover .pop,.hist:focus-within .pop{display:block}
+.tabs{display:flex;gap:6px;margin:0 0 16px;border-bottom:2px solid #d7cebd;overflow-x:auto}
+.wrap .tabs button{min-height:46px;border:0;border-bottom:3px solid transparent;border-radius:0;background:transparent;font-size:16px;font-weight:700;color:#6a706b;white-space:nowrap;padding:0 14px}
+.wrap .tabs button.tabOn{color:#243b35;border-bottom-color:#243b35}
+.suggest{display:flex;flex-wrap:wrap;gap:8px}
+.suggest small{color:#6a706b}
+.sum{margin:0;font-size:18px}
+.sum small{color:#6a706b;font-size:14px}
+.bar2{height:12px;border-radius:999px;background:#ece5d6;overflow:hidden}
+.bar2 span{display:block;height:100%;background:#2e8b4f}
+.card h3{margin:6px 0 0;font-size:16px}
+.gTodo{color:#a63d39}
+.gPlan{color:#1f4e86}
+.gDone{color:#236b3d}
+.names{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.names li{padding:6px 12px;border-radius:999px;background:#f0eadf;font-size:15px}
+.names small{color:#6a706b}
+.search{display:flex;gap:8px;flex-wrap:wrap}
+.search select{min-height:46px;padding:0 10px;border:1px solid #bfb6a5;border-radius:8px;background:#fff;font:inherit;margin-bottom:12px}
+.search input{flex:1;min-width:0;width:100%;min-height:46px;padding:10px 12px;border:1px solid #bfb6a5;border-radius:8px;background:#fff;font:inherit;margin-bottom:12px;box-sizing:border-box}
+.admin0{margin-top:4px}
+.admin0 h2{margin:0 0 12px;font:500 22px "Noto Serif KR",serif}
+.admin0 h2 small{font-weight:400;color:#6a706b;font-size:13px}
 .admin{margin-top:36px;padding-top:24px;border-top:2px solid #d7cebd}
 .admin h2{margin-bottom:14px}

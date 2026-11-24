@@ -1,14 +1,15 @@
 import { createHmac, randomBytes, scryptSync, timingSafeEqual } from "crypto";
 import { freeBoardServiceRest } from "./free-board-moderation";
 
-// 심방 일정 로그인. 회원가입은 없고, 관리자가 등록한 계정만 로그인할 수 있습니다.
-// - 관리자: 환경변수 VISIT_ADMIN_EMAIL / VISIT_ADMIN_PASSWORD 로 로그인 (설정하지 않으면 관리자 기능은 꺼져 있음)
-// - 장로(elder, 목사 포함) / 집사(deacon): frck_visit_staff 테이블의 계정
-export type VisitRole = "admin" | "elder" | "deacon";
-export type VisitUser = { email: string; name: string; role: VisitRole };
+// 심방 일정 로그인.
+// - 직분자(staff): 이름을 적고 "직분자 공용 비밀번호"를 입력합니다. 개인 계정·이메일은 없습니다.
+//   공용 비밀번호는 관리자가 관리 화면에서 바꿉니다(바꾸면 기존 로그인은 모두 풀립니다).
+// - 관리자(admin): 환경변수 VISIT_ADMIN_PASSWORD 로 로그인하고, 공용 비밀번호를 바꿀 수 있습니다.
+export type VisitRole = "admin" | "staff";
+export type VisitUser = { name: string; role: VisitRole };
 
 export const SESSION_COOKIE = "frck_visit_session";
-const SESSION_SECONDS = 14 * 24 * 60 * 60;
+const SESSION_SECONDS = 90 * 24 * 60 * 60;
 
 function secret() {
   const value = process.env.VISIT_SESSION_SECRET || process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -16,7 +17,9 @@ function secret() {
   return value;
 }
 
-const sign = (payload: string) => createHmac("sha256", secret()).update(`frck-visit-session:${payload}`).digest("base64url");
+const mac = (text: string) => createHmac("sha256", secret()).update(text).digest("base64url");
+const sign = (payload: string) => mac(`frck-visit-session:${payload}`);
+const fingerprint = (text: string) => mac(`frck-visit-fingerprint:${text}`).slice(0, 16);
 
 function safeEqual(a: string, b: string) {
   const left = createHmac("sha256", "cmp").update(a).digest();
@@ -31,7 +34,7 @@ export function hashPassword(password: string) {
 }
 
 export function verifyPassword(password: string, stored: string | null | undefined) {
-  // 계정이 없을 때도 같은 시간이 걸리도록 항상 계산합니다.
+  // 저장된 값이 없을 때도 같은 시간이 걸리도록 항상 계산합니다.
   const parts = (stored ?? "").split("$");
   const valid = parts.length === 3 && parts[0] === "s1" && /^[a-f0-9]+$/.test(parts[1]) && /^[a-f0-9]+$/.test(parts[2]);
   const salt = Buffer.from(valid ? parts[1] : "00".repeat(16), "hex");
@@ -40,21 +43,38 @@ export function verifyPassword(password: string, stored: string | null | undefin
   return valid && actual.length === expected.length && timingSafeEqual(actual, expected);
 }
 
-export function adminConfig() {
-  const email = process.env.VISIT_ADMIN_EMAIL?.trim().toLowerCase();
+export function adminPassword() {
   const password = process.env.VISIT_ADMIN_PASSWORD;
-  if (!email || !password || password.length < 10) return null;
-  return { email, password };
+  return password && password.length >= 10 ? password : null;
 }
 
-export function normalizeEmail(value: unknown) {
+export function cleanName(value: unknown) {
   if (typeof value !== "string") return null;
-  const email = value.trim().toLowerCase();
-  return /^[^\s@]{1,100}@[^\s@]{1,100}\.[^\s@]{2,50}$/.test(email) && email.length <= 200 ? email : null;
+  const name = value.replace(/[\u0000-\u001f\u007f]/g, "").replace(/\s+/g, " ").trim();
+  return name.length >= 1 && name.length <= 50 ? name : null;
 }
 
-export function createSessionCookie(user: VisitUser) {
-  const payload = Buffer.from(JSON.stringify({ e: user.email, n: user.name, r: user.role, x: Math.floor(Date.now() / 1000) + SESSION_SECONDS })).toString("base64url");
+const SETTING_KEY = "staff_password_hash";
+
+export async function getStaffHash(): Promise<string | null> {
+  const response = await freeBoardServiceRest(`frck_visit_settings?select=value&key=eq.${SETTING_KEY}&limit=1`, { headers: { Accept: "application/json" } });
+  if (!response.ok) throw new Error(`settings lookup failed: ${response.status}`);
+  const rows = await response.json() as Array<{ value: string }>;
+  return rows[0]?.value ?? null;
+}
+
+export async function setStaffPassword(password: string) {
+  const response = await freeBoardServiceRest("frck_visit_settings?on_conflict=key", {
+    method: "POST",
+    headers: { "content-type": "application/json", Prefer: "resolution=merge-duplicates,return=minimal" },
+    body: JSON.stringify({ key: SETTING_KEY, value: hashPassword(password), updated_at: new Date().toISOString() }),
+  });
+  if (!response.ok) throw new Error(`settings save failed: ${response.status}`);
+}
+
+// 로그인 쿠키에는 "그때의 비밀번호 지문"이 들어갑니다. 공용 비밀번호를 바꾸면 지문이 달라져 이전 로그인이 모두 무효가 됩니다.
+export function createSessionCookie(user: VisitUser, secretValue: string) {
+  const payload = Buffer.from(JSON.stringify({ n: user.name, r: user.role, v: fingerprint(`${user.role}:${secretValue}`), x: Math.floor(Date.now() / 1000) + SESSION_SECONDS })).toString("base64url");
   const secure = process.env.NODE_ENV === "production" ? "; Secure" : "";
   return `${SESSION_COOKIE}=${payload}.${sign(payload)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${SESSION_SECONDS}${secure}`;
 }
@@ -73,33 +93,24 @@ function readCookie(request: Request, name: string) {
   return null;
 }
 
-type StaffRow = { id: number; email: string; name: string; role: "elder" | "deacon"; active: boolean; password_hash: string };
-
-export async function findStaff(email: string): Promise<StaffRow | null> {
-  const response = await freeBoardServiceRest(`frck_visit_staff?select=id,email,name,role,active,password_hash&email=eq.${encodeURIComponent(email)}&limit=1`, { headers: { Accept: "application/json" } });
-  if (!response.ok) throw new Error(`staff lookup failed: ${response.status}`);
-  const rows = await response.json() as StaffRow[];
-  return rows[0] ?? null;
-}
-
-// 요청마다 쿠키 서명과 만료를 확인하고, 일반 계정은 DB에서 아직 활성 상태인지 다시 확인합니다.
-// (퇴임·비활성화한 계정은 로그인 상태가 남아 있어도 바로 막힙니다.)
+// 요청마다 쿠키 서명·만료·비밀번호 지문을 확인합니다.
 export async function getSession(request: Request): Promise<VisitUser | null> {
   try {
     const raw = readCookie(request, SESSION_COOKIE);
     if (!raw) return null;
     const [payload, signature] = raw.split(".");
     if (!payload || !signature || !safeEqual(signature, sign(payload))) return null;
-    const data = JSON.parse(Buffer.from(payload, "base64url").toString("utf8")) as { e: string; n: string; r: VisitRole; x: number };
-    if (!data || typeof data.e !== "string" || typeof data.x !== "number" || data.x < Date.now() / 1000) return null;
+    const data = JSON.parse(Buffer.from(payload, "base64url").toString("utf8")) as { n: string; r: VisitRole; v: string; x: number };
+    if (!data || typeof data.x !== "number" || data.x < Date.now() / 1000) return null;
+    const name = cleanName(data.n);
+    if (!name || typeof data.v !== "string") return null;
     if (data.r === "admin") {
-      const admin = adminConfig();
-      return admin && admin.email === data.e ? { email: data.e, name: data.n || "관리자", role: "admin" } : null;
+      const admin = adminPassword();
+      return admin && safeEqual(data.v, fingerprint(`admin:${admin}`)) ? { name, role: "admin" } : null;
     }
-    if (data.r !== "elder" && data.r !== "deacon") return null;
-    const staff = await findStaff(data.e);
-    if (!staff || !staff.active || staff.role !== data.r) return null;
-    return { email: staff.email, name: staff.name, role: staff.role };
+    if (data.r !== "staff") return null;
+    const hash = await getStaffHash();
+    return hash && safeEqual(data.v, fingerprint(`staff:${hash}`)) ? { name, role: "staff" } : null;
   } catch {
     return null;
   }
@@ -116,7 +127,7 @@ export function sameOrigin(request: Request) {
 }
 
 const attempts = new Map<string, number[]>();
-export function takeLoginAttempt(key: string, max = 8, windowMs = 10 * 60 * 1000) {
+export function takeLoginAttempt(key: string, max = 10, windowMs = 10 * 60 * 1000) {
   const now = Date.now();
   for (const [k, list] of attempts) {
     const active = list.filter(time => now - time < windowMs);
@@ -130,7 +141,26 @@ export function takeLoginAttempt(key: string, max = 8, windowMs = 10 * 60 * 1000
   return true;
 }
 
-export const canSeeDetails = (user: VisitUser, createdBy: string | null) => user.role !== "deacon" || createdBy === user.email;
-export const canEditVisit = canSeeDetails;
-export const clientIp = (request: Request) => request.headers.get("x-real-ip")?.trim() || "unknown";
-export { safeEqual };
+// 틀린 비밀번호가 사이트 전체에서 1시간에 50번을 넘으면, 누군가 비밀번호를 알아내려는 것으로 보고 잠시 로그인을 막습니다.
+const failures: number[] = [];
+const FAIL_LIMIT = 50;
+const FAIL_WINDOW = 60 * 60 * 1000;
+function pruneFailures() { const cutoff = Date.now() - FAIL_WINDOW; while (failures.length && failures[0] < cutoff) failures.shift(); }
+export function loginLocked() { pruneFailures(); return failures.length >= FAIL_LIMIT; }
+export function noteLoginFailure() { pruneFailures(); failures.push(Date.now()); }
+
+export async function logLogin(user: VisitUser) {
+  try {
+    const response = await freeBoardServiceRest("frck_visit_logins", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ name: user.name, role: user.role }) });
+    if (!response.ok) throw new Error(`status ${response.status}`);
+  } catch (error) { console.error("[visit-auth] login log failed", error instanceof Error ? error.message : error); }
+}
+
+export async function recentLogins(limit = 15) {
+  const response = await freeBoardServiceRest(`frck_visit_logins?select=name,role,created_at&order=created_at.desc&limit=${limit}`, { headers: { Accept: "application/json" } });
+  if (!response.ok) throw new Error(`status ${response.status}`);
+  return await response.json() as Array<{ name: string; role: VisitRole; created_at: string }>;
+}
+
+export const clientIp =(request: Request) => request.headers.get("x-real-ip")?.trim() || "unknown";
+export { safeEqual, fingerprint };

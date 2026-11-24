@@ -1,36 +1,56 @@
-import { freeBoardServiceRest } from "../../../lib/free-board-moderation";
-import { canEditVisit, canSeeDetails, getSession, sameOrigin, type VisitUser } from "../../../lib/visit-auth";
+﻿import { freeBoardServiceRest } from "../../../lib/free-board-moderation";
+import { getSession, sameOrigin, type VisitUser } from "../../../lib/visit-auth";
 
 const json = (body: unknown, status = 200) => Response.json(body, { status, headers: { "Cache-Control": "no-store" } });
-const COLUMNS = "id,starts_at,kind,pastor,status,household,elder_name,memo,created_by";
+const COLUMNS = "id,starts_at,kind,pastor,status,target_ids,memo,created_by";
+const EDIT_LIMIT = 10;
 
-type Row = { id: number; starts_at: string; kind: "elder" | "deacon"; pastor: boolean; status: "scheduled" | "done" | "cancelled"; household: string | null; elder_name: string | null; memo: string | null; created_by: string | null };
+type Row = { id: number; starts_at: string; kind: "elder" | "deacon"; pastor: boolean; status: "scheduled" | "done" | "cancelled"; target_ids: number[] | null; memo: string | null; created_by: string | null };
+type Edit = { visit_id: number; editor_name: string; action: string; created_at: string };
 
-// 집사는 자기가 넣은 일정의 가정 정보만 볼 수 있습니다. 다른 일정은 날짜·시간·종류·목사 동행·상태만 보입니다.
-function present(row: Row, user: VisitUser) {
-  const mine = canSeeDetails(user, row.created_by);
+// 로그인한 직분자는 모두 같은 권한입니다(모든 일정을 보고 고칠 수 있음). 누가 고쳤는지는 수정 기록에 남습니다.
+function present(row: Row, edits: Edit[]) {
   return {
     id: row.id, starts_at: row.starts_at, kind: row.kind, pastor: row.pastor, status: row.status,
-    mine, household: mine ? row.household : null, elder_name: mine ? row.elder_name : null, memo: mine ? row.memo : null,
+    target_ids: row.target_ids ?? [], memo: row.memo,
+    edits: edits.filter(edit => edit.visit_id === row.id).slice(0, EDIT_LIMIT).map(edit => ({ name: edit.editor_name, action: edit.action, at: edit.created_at })),
   };
 }
 
-function cleanText(value: unknown, max: number) {
+function cleanTargetIds(value: unknown) {
+  if (value === null || value === undefined) return [] as number[];
+  if (!Array.isArray(value) || value.length > 20) return undefined;
+  const out: number[] = [];
+  for (const item of value) {
+    if (!Number.isSafeInteger(item) || (item as number) <= 0) return undefined;
+    if (!out.includes(item as number)) out.push(item as number);
+  }
+  return out;
+}
+
+// 명단에 실제로 있는 대상자만 일정에 넣을 수 있습니다.
+async function allExist(ids: number[]) {
+  if (!ids.length) return true;
+  const response = await freeBoardServiceRest(`frck_visit_targets?select=id&id=in.(${ids.join(",")})`, { headers: { Accept: "application/json" } });
+  if (!response.ok) throw new Error(`targets status ${response.status}`);
+  return ((await response.json()) as unknown[]).length === ids.length;
+}
+
+function cleanMemo(value: unknown) {
   if (value === null || value === undefined || value === "") return null;
   if (typeof value !== "string") return undefined;
   const text = value.trim();
-  return text.length <= max ? (text || null) : undefined;
+  return text.length <= 2000 ? (text || null) : undefined;
 }
 
-function parseFields(data: Record<string, unknown>, user: VisitUser, partial: boolean) {
+function parseFields(data: Record<string, unknown>, partial: boolean) {
   const out: Record<string, unknown> = {};
   if (!partial || data.starts_at !== undefined) {
     const time = typeof data.starts_at === "string" ? new Date(data.starts_at) : null;
     if (!time || Number.isNaN(time.getTime()) || time.getFullYear() < 2020 || time.getFullYear() > 2100) return { error: "날짜와 시간을 확인해 주세요." };
     out.starts_at = time.toISOString();
   }
-  if (user.role === "deacon") out.kind = "deacon";
-  else if (!partial || data.kind !== undefined) {
+  if (!partial || data.kind !== undefined) {
     if (data.kind !== "elder" && data.kind !== "deacon") return { error: "심방 종류를 확인해 주세요." };
     out.kind = data.kind;
   }
@@ -39,12 +59,15 @@ function parseFields(data: Record<string, unknown>, user: VisitUser, partial: bo
     if (data.status !== "scheduled" && data.status !== "done" && data.status !== "cancelled") return { error: "상태를 확인해 주세요." };
     out.status = data.status;
   }
-  for (const [key, max] of [["household", 100], ["elder_name", 100], ["memo", 2000]] as const) {
-    if (!partial || data[key] !== undefined) {
-      const text = cleanText(data[key], max);
-      if (text === undefined) return { error: "입력한 글자 수를 확인해 주세요." };
-      out[key] = text;
-    }
+  if (!partial || data.target_ids !== undefined) {
+    const ids = cleanTargetIds(data.target_ids);
+    if (ids === undefined) return { error: "심방 대상자는 명단에서 20명까지 고를 수 있습니다." };
+    out.target_ids = ids;
+  }
+  if (!partial || data.memo !== undefined) {
+    const memo = cleanMemo(data.memo);
+    if (memo === undefined) return { error: "메모는 2000자까지 입력할 수 있습니다." };
+    out.memo = memo;
   }
   return { fields: out };
 }
@@ -55,17 +78,53 @@ async function load(id: number) {
   return ((await response.json()) as Row[])[0] ?? null;
 }
 
+async function loadEdits(ids: number[]) {
+  if (!ids.length) return [] as Edit[];
+  const response = await freeBoardServiceRest(`frck_visit_edits?select=visit_id,editor_name,action,created_at&visit_id=in.(${ids.join(",")})&order=created_at.desc&limit=5000`, { headers: { Accept: "application/json" } });
+  if (!response.ok) throw new Error(`edits status ${response.status}`);
+  return await response.json() as Edit[];
+}
+
+// 수정 기록은 보조 정보이므로, 기록에 실패해도 일정 저장 자체는 성공으로 처리합니다.
+async function logEdit(visitId: number, user: VisitUser, action: string) {
+  try {
+    const response = await freeBoardServiceRest("frck_visit_edits", {
+      method: "POST", headers: { "content-type": "application/json" },
+      body: JSON.stringify({ visit_id: visitId, editor_name: user.name.slice(0, 50), action }),
+    });
+    if (!response.ok) throw new Error(`status ${response.status}`);
+  } catch (error) {
+    console.error("[visits] edit log failed", error instanceof Error ? error.message : error);
+  }
+}
+
+function describeChange(fields: Record<string, unknown>, before: Row) {
+  const keys = Object.keys(fields);
+  if (keys.length === 1 && keys[0] === "status") {
+    if (fields.status === "done") return "완료";
+    if (fields.status === "cancelled") return "취소";
+    return before.status === "done" ? "완료 취소" : "취소 해제";
+  }
+  return "수정";
+}
+
 const validId = (value: unknown): value is number => Number.isSafeInteger(value) && (value as number) > 0;
 
 export async function GET(request: Request) {
   const user = await getSession(request);
   if (!user) return json({ error: "로그인이 필요합니다." }, 401);
   try {
-    const from = new Date(Date.now() - 93 * 24 * 60 * 60 * 1000).toISOString();
-    const response = await freeBoardServiceRest(`frck_visits?select=${COLUMNS}&starts_at=gte.${encodeURIComponent(from)}&order=starts_at.asc&limit=1000`, { headers: { Accept: "application/json" } });
+    const url = new URL(request.url);
+    const parse = (value: string | null) => { const time = value ? new Date(value) : null; return time && !Number.isNaN(time.getTime()) ? time : null; };
+    const fromParam = parse(url.searchParams.get("from")), toParam = parse(url.searchParams.get("to"));
+    const from = (fromParam ?? new Date(Date.now() - 93 * 24 * 60 * 60 * 1000)).toISOString();
+    const upper = toParam && toParam.getTime() - new Date(from).getTime() <= 400 * 24 * 60 * 60 * 1000 ? `&starts_at=lte.${encodeURIComponent(toParam.toISOString())}` : "";
+    const response = await freeBoardServiceRest(`frck_visits?select=${COLUMNS}&starts_at=gte.${encodeURIComponent(from)}${upper}&order=starts_at.asc&limit=2000`, { headers: { Accept: "application/json" } });
     if (!response.ok) throw new Error(`status ${response.status}`);
     const rows = await response.json() as Row[];
-    return json({ visits: rows.map(row => present(row, user)) });
+    let edits: Edit[] = [];
+    try { edits = await loadEdits(rows.map(row => row.id)); } catch (error) { console.error("[visits] edits load failed", error instanceof Error ? error.message : error); }
+    return json({ visits: rows.map(row => present(row, edits)) });
   } catch (error) {
     console.error("[visits] list failed", error instanceof Error ? error.message : error);
     return json({ visits: [], error: "일정을 불러오지 못했습니다." }, 503);
@@ -78,16 +137,18 @@ export async function POST(request: Request) {
   if (!user) return json({ error: "로그인이 필요합니다." }, 401);
   let data: Record<string, unknown>;
   try { data = await request.json(); } catch { return json({ error: "요청 내용을 확인해 주세요." }, 400); }
-  const parsed = parseFields(data ?? {}, user, false);
+  const parsed = parseFields(data ?? {}, false);
   if ("error" in parsed) return json({ error: parsed.error }, 400);
   try {
+    if (!(await allExist((parsed.fields.target_ids as number[]) ?? []))) return json({ error: "명단에 없는 대상자가 있습니다. 명단에서 다시 골라 주세요." }, 400);
     const response = await freeBoardServiceRest(`frck_visits?select=${COLUMNS}`, {
       method: "POST", headers: { "content-type": "application/json", Prefer: "return=representation" },
-      body: JSON.stringify({ ...parsed.fields, status: "scheduled", created_by: user.email }),
+      body: JSON.stringify({ ...parsed.fields, status: "scheduled", created_by: user.name }),
     });
     if (!response.ok) throw new Error(await response.text());
     const [row] = await response.json() as Row[];
-    return json({ ok: true, visit: present(row, user) }, 201);
+    await logEdit(row.id, user, "등록");
+    return json({ ok: true, visit: present(row, await loadEdits([row.id]).catch(() => [])) }, 201);
   } catch (error) {
     console.error("[visits] create failed", error instanceof Error ? error.message : error);
     return json({ error: "일정을 저장하지 못했습니다. 잠시 후 다시 시도해 주세요." }, 503);
@@ -101,19 +162,20 @@ export async function PATCH(request: Request) {
   let data: Record<string, unknown>;
   try { data = await request.json(); } catch { return json({ error: "요청 내용을 확인해 주세요." }, 400); }
   if (!validId(data?.id)) return json({ error: "일정을 확인해 주세요." }, 400);
-  const parsed = parseFields(data, user, true);
+  const parsed = parseFields(data, true);
   if ("error" in parsed) return json({ error: parsed.error }, 400);
   try {
     const current = await load(data.id);
     if (!current) return json({ error: "일정을 찾을 수 없습니다." }, 404);
-    if (!canEditVisit(user, current.created_by)) return json({ error: "이 일정을 수정할 권한이 없습니다." }, 403);
+    if (parsed.fields.target_ids && !(await allExist(parsed.fields.target_ids as number[]))) return json({ error: "명단에 없는 대상자가 있습니다. 명단에서 다시 골라 주세요." }, 400);
     const response = await freeBoardServiceRest(`frck_visits?id=eq.${data.id}&select=${COLUMNS}`, {
       method: "PATCH", headers: { "content-type": "application/json", Prefer: "return=representation" },
       body: JSON.stringify({ ...parsed.fields, updated_at: new Date().toISOString() }),
     });
     if (!response.ok) throw new Error(await response.text());
     const [row] = await response.json() as Row[];
-    return json({ ok: true, visit: present(row, user) });
+    await logEdit(row.id, user, describeChange(parsed.fields, current));
+    return json({ ok: true, visit: present(row, await loadEdits([row.id]).catch(() => [])) });
   } catch (error) {
     console.error("[visits] update failed", error instanceof Error ? error.message : error);
     return json({ error: "일정을 수정하지 못했습니다. 잠시 후 다시 시도해 주세요." }, 503);
@@ -128,14 +190,16 @@ export async function DELETE(request: Request) {
   try { data = await request.json(); } catch { return json({ error: "요청 내용을 확인해 주세요." }, 400); }
   if (!validId(data?.id)) return json({ error: "일정을 확인해 주세요." }, 400);
   try {
-    const current = await load(data.id);
-    if (!current) return json({ error: "이미 삭제되었거나 일정을 찾을 수 없습니다." }, 404);
-    if (!canEditVisit(user, current.created_by)) return json({ error: "이 일정을 삭제할 권한이 없습니다." }, 403);
-    const response = await freeBoardServiceRest(`frck_visits?id=eq.${data.id}`, { method: "DELETE" });
+    const response = await freeBoardServiceRest(`frck_visits?id=eq.${data.id}`, { method: "DELETE", headers: { Prefer: "return=representation" } });
     if (!response.ok) throw new Error(await response.text());
+    const deleted = await response.json() as unknown[];
+    if (!deleted.length) return json({ error: "이미 삭제되었거나 일정을 찾을 수 없습니다." }, 404);
+    console.log(`[visits] deleted id=${data.id} by ${user.name}`);
     return json({ ok: true });
   } catch (error) {
     console.error("[visits] delete failed", error instanceof Error ? error.message : error);
     return json({ error: "일정을 삭제하지 못했습니다. 잠시 후 다시 시도해 주세요." }, 503);
   }
 }
+
+
