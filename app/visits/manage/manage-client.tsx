@@ -98,6 +98,11 @@ function Panel({ user, onLogout }: { user: User; onLogout: () => void }) {
     try { const d = await call("/api/visit-targets", "POST", { from_member_ids: [m.id] }); await loadRoster(); return ((d.ids as number[]) ?? [])[0] ?? null; }
     catch (e) { setError(errText(e, "교우명단에서 불러오지 못했습니다.")); return null; }
   }, [loadRoster]);
+  // 교우명단 전체(사용 중인 분)를 심방 대상자로 불러오고, 그 대상자 번호들을 돌려줍니다.
+  const importAllMembers = useCallback(async () => {
+    try { const d = await call("/api/visit-targets", "POST", { from_members: { all: true } }); await loadRoster(); return (d.ids as number[]) ?? []; }
+    catch (e) { setError(errText(e, "교우명단에서 불러오지 못했습니다.")); return [] as number[]; }
+  }, [loadRoster]);
   const loadRounds = useCallback(async () => { try { const d = await call("/api/visit-rounds", "GET"); setRounds(d.rounds as Round[]); } catch (e) { setError(errText(e, "심방 시기를 불러오지 못했습니다.")); } }, []);
   useEffect(() => { loadRoster(); loadMembers(); loadRounds(); }, [loadRoster, loadMembers, loadRounds]);
 
@@ -109,8 +114,8 @@ function Panel({ user, onLogout }: { user: User; onLogout: () => void }) {
       <div className={styles.bar}><span>{user.name}{user.role === "admin" ? " · 관리자" : ""}</span><span><Link href="/visits">달력 보기</Link> <button onClick={onLogout}>로그아웃</button></span></div>
       <div className={styles.tabs} role="tablist">{tabs.map(([key, label]) => <button key={key} role="tab" aria-selected={tab === key} className={tab === key ? styles.tabOn : ""} onClick={() => setTab(key)}>{label}</button>)}</div>
       {error && <p className={styles.error} role="alert">{error}</p>}
-      {tab === "visits" && <VisitsTab roster={roster} members={members} importMember={importMember} />}
-      {tab === "progress" && <ProgressTab roster={roster} members={members} importMember={importMember} rounds={rounds} reloadRounds={loadRounds} />}
+      {tab === "visits" && <VisitsTab roster={roster} members={members} importMember={importMember} importAll={importAllMembers} />}
+      {tab === "progress" && <ProgressTab roster={roster} members={members} importMember={importMember} importAll={importAllMembers} rounds={rounds} reloadRounds={loadRounds} />}
       {tab === "roster" && <><ImportFromMembers members={members} onDone={loadRoster} /><RosterTab roster={roster} reload={loadRoster} api="/api/visit-targets" label="심방 대상자 명단" /></>}
       {tab === "members" && <RosterTab roster={members} reload={loadMembers} api="/api/visit-members" label="전체 교우명단" targetNames={new Set(roster.map(t => t.name))} onMakeTarget={async m => { const id = await importMember(m); if (id) await loadMembers(); }} />}
       {tab === "admin" && user.role === "admin" && <PasswordAdmin />}
@@ -118,8 +123,9 @@ function Panel({ user, onLogout }: { user: User; onLogout: () => void }) {
   );
 }
 
-function TargetPicker({ roster, members, importMember, value, onChange }: { roster: Target[]; members: Target[]; importMember: (m: Target) => Promise<number | null>; value: number[]; onChange: (ids: number[]) => void }) {
+function TargetPicker({ roster, members, importMember, importAll, max = 20, value, onChange }: { roster: Target[]; members: Target[]; importMember: (m: Target) => Promise<number | null>; importAll?: () => Promise<number[]>; max?: number; value: number[]; onChange: (ids: number[]) => void }) {
   const [query, setQuery] = useState("");
+  const [msg, setMsg] = useState("");
   const targetNames = useMemo(() => new Set(roster.map(t => t.name)), [roster]);
   const byId = useMemo(() => new Map(roster.map(t => [t.id, t])), [roster]);
   const q = query.trim();
@@ -129,10 +135,18 @@ function TargetPicker({ roster, members, importMember, value, onChange }: { rost
   return (
     <div className={styles.field}>
       <span className={styles.fieldLabel}>심방 대상자 <small>(비공개 · 여러 명 고르기)</small></span>
-      {value.length > 0 && <ul className={styles.chips}>{value.map(id => { const t = byId.get(id); const mates = t?.family ? roster.filter(x => x.active && x.family === t.family && !value.includes(x.id)) : []; return <li key={id}>{t?.name ?? `#${id}`}{mates.length > 0 && <button type="button" className={styles.fam} onClick={() => onChange([...value, ...mates.map(x => x.id)].slice(0, 20))}>+가족 {mates.length}명</button>}<button type="button" aria-label="빼기" onClick={() => onChange(value.filter(item => item !== id))}>×</button></li>; })}</ul>}
+      {value.length > 0 && (() => {
+        const chips = <ul className={styles.chips}>{value.map(id => { const t = byId.get(id); const mates = t?.family ? roster.filter(x => x.active && x.family === t.family && !value.includes(x.id)) : []; return <li key={id}>{t?.name ?? `#${id}`}{mates.length > 0 && <button type="button" className={styles.fam} onClick={() => onChange([...value, ...mates.map(x => x.id)].slice(0, max))}>+가족 {mates.length}명</button>}<button type="button" aria-label={`${t?.name ?? "이 분"} 빼기`} onClick={() => onChange(value.filter(item => item !== id))}>×</button></li>; })}</ul>;
+        return value.length > 12 ? <details className={styles.grp} open><summary>고른 분 <small>{value.length}명 · ×를 누르면 뺍니다</small></summary><div className={styles.inner}>{chips}</div></details> : chips;
+      })()}
+      {(importAll || value.length > 0) && <div className={styles.row}>
+        {importAll && <button type="button" onClick={async () => { setMsg(""); const ids = await importAll(); if (!ids.length) { setMsg("교우명단에 불러올 분이 없습니다."); return; } onChange(ids.slice(0, max)); setMsg(ids.length > max ? `교우 ${ids.length}명 중 앞의 ${max}명만 불러왔습니다(한 번에 ${max}명까지).` : `교우명단 ${ids.length}명을 모두 불러왔습니다. 해당되지 않는 분은 ×를 눌러 빼세요.`); }}>교우명단 전체 불러오기</button>}
+        {value.length > 0 && <button type="button" onClick={() => { onChange([]); setMsg(""); }}>모두 지우기</button>}
+      </div>}
+      {msg && <p className={styles.help} role="status">{msg}</p>}
       <input value={query} onChange={e => setQuery(e.target.value)} placeholder="이름 일부를 쓰면 명단에서 찾아 줍니다" aria-label="심방 대상자 찾기" />
-      {suggestions.length > 0 && <div className={styles.suggest}>{suggestions.map(t => <button type="button" key={t.id} onClick={() => { if (value.length < 20) onChange([...value, t.id]); setQuery(""); }}>{t.name}{t.family ? <small> {t.family}</small> : null}</button>)}</div>}
-      {fromMembers.length > 0 && <><p className={styles.help}>교우명단에서 불러오기 <small>(누르면 심방 대상자로 넣고 고릅니다)</small></p><div className={styles.suggest}>{fromMembers.map(m => <button type="button" key={m.id} onClick={async () => { const id = await importMember(m); if (id && value.length < 20) onChange([...value, id]); setQuery(""); }}>{m.name}{m.family ? <small> {m.family}</small> : null}</button>)}</div></>}
+      {suggestions.length > 0 && <div className={styles.suggest}>{suggestions.map(t => <button type="button" key={t.id} onClick={() => { if (value.length < max) onChange([...value, t.id]); setQuery(""); }}>{t.name}{t.family ? <small> {t.family}</small> : null}</button>)}</div>}
+      {fromMembers.length > 0 && <><p className={styles.help}>교우명단에서 불러오기 <small>(누르면 심방 대상자로 넣고 고릅니다)</small></p><div className={styles.suggest}>{fromMembers.map(m => <button type="button" key={m.id} onClick={async () => { const id = await importMember(m); if (id && value.length < max) onChange([...value, id]); setQuery(""); }}>{m.name}{m.family ? <small> {m.family}</small> : null}</button>)}</div></>}
       {q && suggestions.length === 0 && fromMembers.length === 0 && <p className={styles.help}>심방 대상자 명단에도 교우명단에도 없습니다. 이미 골랐거나, <b>교우명단</b> 탭에서 먼저 추가해 주세요.</p>}
     </div>
   );
@@ -142,7 +156,7 @@ const kstDow = new Intl.DateTimeFormat("ko-KR", { timeZone: "Asia/Seoul", month:
 const kstHM = new Intl.DateTimeFormat("ko-KR", { timeZone: "Asia/Seoul", hour: "2-digit", minute: "2-digit", hour12: false });
 const kindClass = (kind: Visit["kind"]) => (kind === "deacon" ? styles.deacon : kind === "special" ? styles.special : styles.elder);
 
-function VisitsTab({ roster, members, importMember }: { roster: Target[]; members: Target[]; importMember: (m: Target) => Promise<number | null> }) {
+function VisitsTab({ roster, members, importMember, importAll }: { roster: Target[]; members: Target[]; importMember: (m: Target) => Promise<number | null>; importAll: () => Promise<number[]> }) {
   const [visits, setVisits] = useState<Visit[]>([]);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
@@ -206,7 +220,7 @@ function VisitsTab({ roster, members, importMember }: { roster: Target[]; member
           <label>시간<TimeSelect value={formTime} onChange={setFormTime} blocked={blockedTimes} /></label>
           {blockedTimes.length > 0 && <p className={styles.help}>같은 종류의 심방(장로+장로, 집사+집사)이 있는 시간, 목사 동행이 이미 있는 시간, 고른 대상자가 이미 다른 심방에 들어 있는 시간(앞뒤 1시간)은 고를 수 없습니다. 장로 심방과 집사 심방은 대상자와 목사만 겹치지 않으면 같은 시간에 해도 됩니다.</p>}
           <label>심방 종류<select name="kind" value={formKind} onChange={e => setFormKind(e.target.value as Visit["kind"])}><option value="elder">장로 심방 (성찬 심방)</option><option value="deacon">집사 심방</option><option value="special">특별 심방</option></select></label>
-          <TargetPicker roster={roster} members={members} importMember={importMember} value={picked} onChange={setPicked} />
+          <TargetPicker roster={roster} members={members} importMember={importMember} importAll={importAll} max={20} value={picked} onChange={setPicked} />
           <label className={styles.check}><input name="pastor" type="checkbox" checked={formPastor} onChange={e => setFormPastor(e.target.checked)} /> 목사 동행 <small>(성도 화면에도 표시)</small></label>
           <label>메모 <small>(비공개)</small><textarea name="memo" rows={2} maxLength={2000} defaultValue={editing?.memo ?? ""} /></label>
           <div className={styles.row}><button className={styles.primary} type="submit">{editing ? "수정 저장" : "저장"}</button>{editing && <button type="button" onClick={() => { setEditing(null); setFormOpen(false); }}>취소</button>}</div>
@@ -284,13 +298,13 @@ function calcGroups(round: Round, visits: Visit[], members: Member[], byId: Map<
 }
 const totalOf = (g: Group) => g.done.length + g.planned.length + g.todo.length;
 
-function ProgressTab({ roster, members: churchMembers, importMember, rounds, reloadRounds }: { roster: Target[]; members: Target[]; importMember: (m: Target) => Promise<number | null>; rounds: Round[]; reloadRounds: () => Promise<void> }) {
+function ProgressTab({ roster, members: churchMembers, importMember, importAll, rounds, reloadRounds }: { roster: Target[]; members: Target[]; importMember: (m: Target) => Promise<number | null>; importAll: () => Promise<number[]>; rounds: Round[]; reloadRounds: () => Promise<void> }) {
   const [roundId, setRoundId] = useState<number | null>(null);
   const [visits, setVisits] = useState<Visit[]>([]);
   const [members, setMembers] = useState<Member[]>([]);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
-  const [importFrom, setImportFrom] = useState<"round" | "tag" | "all">("round");
+  const [importFrom, setImportFrom] = useState<"round" | "tag" | "all" | "members">("round");
   const [sourceId, setSourceId] = useState("");
   const [tag, setTag] = useState("");
   const [inclFam, setInclFam] = useState(true);
@@ -330,6 +344,13 @@ function ProgressTab({ roster, members: churchMembers, importMember, rounds, rel
   }
   const doImport = () => act(async () => {
     if (!round) return "";
+    if (importFrom === "members") {
+      const ids = await importAll();
+      if (!ids.length) throw new Error("교우명단에 불러올 분이 없습니다.");
+      let added = 0, skipped = 0;
+      for (let i = 0; i < ids.length; i += 500) { const d = await call("/api/visit-round-members", "POST", { round_id: round.id, target_ids: ids.slice(i, i + 500) }); added += Number(d.added); skipped += Number(d.skipped); }
+      return `교우명단 ${ids.length}명을 이 시기 명단에 넣었습니다(새로 ${added}명${skipped ? `, 이미 있던 ${skipped}명` : ""}). 해당되지 않는 분은 아래 "명단에서 빼기"에서 빼세요.`;
+    }
     const body = importFrom === "round" ? { from: "round", source_round_id: Number(sourceId) } : importFrom === "tag" ? { from: "tag", tag, include_family: inclFam } : { from: "all" };
     if (importFrom === "round" && !sourceId) throw new Error("불러올 지난 시기를 골라 주세요.");
     if (importFrom === "tag" && !tag) throw new Error("분류를 골라 주세요.");
@@ -410,7 +431,7 @@ function ProgressTab({ roster, members: churchMembers, importMember, rounds, rel
           <div className={styles.inner}>
             <div className={styles.sub}>
               <h3>불러오기</h3>
-              <label>어디서 불러올까요?<select value={importFrom} onChange={e => setImportFrom(e.target.value as "round" | "tag" | "all")}><option value="round">지난 시기 명단에서</option><option value="tag">분류로 (예: 성찬 참여)</option><option value="all">대상자 명단 전체</option></select></label>
+              <label>어디서 불러올까요?<select value={importFrom} onChange={e => setImportFrom(e.target.value as "round" | "tag" | "all" | "members")}><option value="round">지난 시기 명단에서</option><option value="members">교우명단 전체에서 (넣은 뒤 빼기)</option><option value="tag">분류로 (예: 성찬 참여)</option><option value="all">대상자 명단 전체</option></select></label>
               {importFrom === "round" && <label>지난 시기<select value={sourceId} onChange={e => setSourceId(e.target.value)}><option value="">고르세요</option>{others.map(r => <option key={r.id} value={r.id}>{r.title}</option>)}</select></label>}
               {importFrom === "tag" && <><label>분류<select value={tag} onChange={e => setTag(e.target.value)}><option value="">고르세요</option>{allTags.map(item => <option key={item} value={item}>{item}</option>)}</select></label><label className={styles.check}><input type="checkbox" checked={inclFam} onChange={e => setInclFam(e.target.checked)} /> 가족도 함께 <small>(성찬 참여가 아닌 가족·자녀까지)</small></label></>}
               <button type="button" className={styles.primary} onClick={doImport}>불러오기</button>
@@ -418,7 +439,7 @@ function ProgressTab({ roster, members: churchMembers, importMember, rounds, rel
             </div>
             <div className={styles.sub}>
               <h3>한 명씩 추가</h3>
-              <TargetPicker roster={roster} members={churchMembers} importMember={importMember} value={picked} onChange={setPicked} />
+              <TargetPicker roster={roster} members={churchMembers} importMember={importMember} importAll={importAll} max={500} value={picked} onChange={setPicked} />
               <button type="button" onClick={doAddPicked}>고른 분 추가</button>
             </div>
             {memberRows.length > 0 && (
@@ -587,6 +608,7 @@ function PasswordAdmin() {
     </div>
   );
 }
+
 
 
 
