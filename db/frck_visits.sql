@@ -23,11 +23,18 @@ create table if not exists public.frck_visit_rounds (
   title text not null check (char_length(btrim(title)) between 1 and 60),
   starts_on date not null,
   ends_on date not null check (ends_on >= starts_on),
-  -- 비어 있으면 명단 전체, 값이 있으면 그 분류의 대상자만 계산합니다.
-  tag text check (tag is null or char_length(tag) between 1 and 20),
-  -- 참이면, 분류에 속한 분의 가족 전체(성찬 참여가 아닌 가족·자녀 포함)도 대상에 넣습니다.
-  include_family boolean not null default false,
   created_at timestamptz not null default now()
+);
+
+-- 심방 시기별 명단: 성찬을 시작할 때 그 차수의 대상자를 따로 정해 둡니다. (지난 차수·분류에서 불러오거나 직접 추가)
+-- manual_done: 일정을 거치지 않고 직접 '완료'로 표시한 경우. 일정에서 완료 처리한 분은 자동으로 완료로 계산됩니다.
+create table if not exists public.frck_visit_round_members (
+  round_id bigint not null references public.frck_visit_rounds (id) on delete cascade,
+  target_id bigint not null references public.frck_visit_targets (id) on delete cascade,
+  manual_done boolean not null default false,
+  manual_done_at timestamptz,
+  created_at timestamptz not null default now(),
+  primary key (round_id, target_id)
 );
 
 create table if not exists public.frck_visits (
@@ -45,8 +52,10 @@ create table if not exists public.frck_visits (
 );
 
 create index if not exists frck_visits_starts_at_idx on public.frck_visits (starts_at);
--- 같은 시각에 취소되지 않은 일정이 둘 생기는 것을 DB에서도 막습니다. (앞뒤 1시간 겹침은 서버가 추가로 검사합니다)
-create unique index if not exists frck_visits_no_same_start on public.frck_visits (starts_at) where status <> 'cancelled';
+-- 같은 종류(장로·집사·특별)의 일정이 같은 시각에 둘 생기는 것을 DB에서도 막습니다. (앞뒤 1시간 겹침과 같은 대상자 겹침은 서버가 검사합니다)
+create unique index if not exists frck_visits_no_same_start on public.frck_visits (kind, starts_at) where status <> 'cancelled';
+-- 목사 동행이 있는 일정도 같은 시각에 둘 생기지 않게 막습니다. (목사님은 한 번에 한 곳)
+create unique index if not exists frck_visits_pastor_no_same_start on public.frck_visits (starts_at) where pastor and status <> 'cancelled';
 
 -- 수정 기록: 누가 언제 등록·수정했는지. 일정이 삭제되면 기록도 함께 지워집니다.
 create table if not exists public.frck_visit_edits (
@@ -59,13 +68,14 @@ create table if not exists public.frck_visit_edits (
 
 create index if not exists frck_visit_edits_visit_idx on public.frck_visit_edits (visit_id, created_at desc);
 
+alter table public.frck_visit_round_members enable row level security;
 alter table public.frck_visit_targets enable row level security;
 alter table public.frck_visit_rounds enable row level security;
 alter table public.frck_visits enable row level security;
 alter table public.frck_visit_edits enable row level security;
 
-revoke all on table public.frck_visit_targets, public.frck_visit_rounds, public.frck_visits, public.frck_visit_edits from public, anon, authenticated;
-grant select, insert, update, delete on table public.frck_visit_targets, public.frck_visit_rounds, public.frck_visits, public.frck_visit_edits to service_role;
+revoke all on table public.frck_visit_round_members, public.frck_visit_targets, public.frck_visit_rounds, public.frck_visits, public.frck_visit_edits from public, anon, authenticated;
+grant select, insert, update, delete on table public.frck_visit_round_members, public.frck_visit_targets, public.frck_visit_rounds, public.frck_visits, public.frck_visit_edits to service_role;
 grant usage, select on sequence public.frck_visit_targets_id_seq, public.frck_visit_rounds_id_seq, public.frck_visits_id_seq, public.frck_visit_edits_id_seq to service_role;
 
 commit;
@@ -73,6 +83,10 @@ commit;
 -- 확인용 예시 일정(선택). 필요 없으면 아래 두 줄은 실행하지 마세요. 날짜는 한국 시간입니다.
 -- insert into public.frck_visits (starts_at, kind, pastor) values ('2026-12-03 19:30+09', 'elder', false);
 -- insert into public.frck_visits (starts_at, kind, pastor) values ('2026-12-05 14:00+09', 'deacon', false);
+
+
+
+
 
 
 

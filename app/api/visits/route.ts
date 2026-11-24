@@ -109,18 +109,57 @@ function describeChange(fields: Record<string, unknown>, before: Row) {
   return "수정";
 }
 
-// 겹치는 일정이 있는지 확인합니다(취소된 일정은 제외, 수정 중인 자기 자신도 제외).
-async function overlaps(startsAt: string, excludeId?: number) {
+// 겹침 규칙 (취소된 일정과 수정 중인 자기 자신은 제외, 일정 하나를 약 1시간으로 봄)
+// 1) 같은 종류끼리(장로+장로, 집사+집사, 특별+특별)는 앞뒤 1시간이 겹치면 안 됩니다.
+// 2) 다른 종류끼리(장로+집사 등)는 시간이 겹쳐도 되지만, 같은 대상자가 두 곳에 들어가면 안 됩니다.
+// 3) 목사 동행이 있는 일정끼리는 종류와 상관없이 겹치면 안 됩니다. (목사님은 한 번에 한 곳만 갈 수 있음)
+const SAME_KIND_MESSAGE = "그 시간에는 같은 종류의 심방 일정이 이미 있습니다(앞뒤 1시간). 장로 심방끼리, 집사 심방끼리는 겹칠 수 없습니다. 다른 시간을 골라 주세요.";
+async function sameKindClash(startsAt: string, kind: string, excludeId?: number) {
   const start = new Date(startsAt).getTime();
   const lo = new Date(start - VISIT_MINUTES * 60 * 1000).toISOString();
   const hi = new Date(start + VISIT_MINUTES * 60 * 1000).toISOString();
   const exclude = excludeId ? `&id=neq.${excludeId}` : "";
-  const response = await freeBoardServiceRest(`frck_visits?select=id&status=neq.cancelled&starts_at=gt.${encodeURIComponent(lo)}&starts_at=lt.${encodeURIComponent(hi)}${exclude}&limit=1`, { headers: { Accept: "application/json" } });
+  const response = await freeBoardServiceRest(`frck_visits?select=id&status=neq.cancelled&kind=eq.${kind}&starts_at=gt.${encodeURIComponent(lo)}&starts_at=lt.${encodeURIComponent(hi)}${exclude}&limit=1`, { headers: { Accept: "application/json" } });
   if (!response.ok) throw new Error(`overlap status ${response.status}`);
   return ((await response.json()) as unknown[]).length > 0;
 }
-const OVERLAP_MESSAGE = "그 시간에는 이미 다른 심방 일정이 있습니다(앞뒤 1시간). 다른 시간을 골라 주세요.";
-
+const PASTOR_MESSAGE = "그 시간(앞뒤 1시간)에는 목사 동행이 이미 잡혀 있습니다. 목사님은 한 번에 한 곳만 동행할 수 있으니 다른 시간을 고르거나 목사 동행을 빼 주세요.";
+const DB_CLASH_MESSAGE = "그 시간에 겹치는 심방 일정이 이미 있습니다. 다른 시간을 골라 주세요.";
+async function pastorClash(startsAt: string, excludeId?: number) {
+  const start = new Date(startsAt).getTime();
+  const lo = new Date(start - VISIT_MINUTES * 60 * 1000).toISOString();
+  const hi = new Date(start + VISIT_MINUTES * 60 * 1000).toISOString();
+  const exclude = excludeId ? `&id=neq.${excludeId}` : "";
+  const response = await freeBoardServiceRest(`frck_visits?select=id&status=neq.cancelled&pastor=eq.true&starts_at=gt.${encodeURIComponent(lo)}&starts_at=lt.${encodeURIComponent(hi)}${exclude}&limit=1`, { headers: { Accept: "application/json" } });
+  if (!response.ok) throw new Error(`overlap status ${response.status}`);
+  return ((await response.json()) as unknown[]).length > 0;
+}
+async function clashError(startsAt: string, kind: string, targetIds: number[], pastor: boolean, excludeId?: number) {
+  if (await sameKindClash(startsAt, kind, excludeId)) return SAME_KIND_MESSAGE;
+  if (pastor && (await pastorClash(startsAt, excludeId))) return PASTOR_MESSAGE;
+  const clash = await clashingTargets(startsAt, targetIds, excludeId);
+  return clash.length ? await clashMessage(clash) : null;
+}
+async function clashingTargets(startsAt: string, targetIds: number[], excludeId?: number) {
+  if (!targetIds.length) return [] as number[];
+  const start = new Date(startsAt).getTime();
+  const lo = new Date(start - VISIT_MINUTES * 60 * 1000).toISOString();
+  const hi = new Date(start + VISIT_MINUTES * 60 * 1000).toISOString();
+  const exclude = excludeId ? `&id=neq.${excludeId}` : "";
+  const response = await freeBoardServiceRest(`frck_visits?select=id,target_ids&status=neq.cancelled&target_ids=ov.{${targetIds.join(",")}}&starts_at=gt.${encodeURIComponent(lo)}&starts_at=lt.${encodeURIComponent(hi)}${exclude}&limit=50`, { headers: { Accept: "application/json" } });
+  if (!response.ok) throw new Error(`overlap status ${response.status}`);
+  const found = (await response.json()) as Array<{ target_ids: number[] | null }>;
+  const taken = new Set(found.flatMap(row => row.target_ids ?? []));
+  return targetIds.filter(id => taken.has(id));
+}
+async function clashMessage(ids: number[]) {
+  let names = ids.map(id => `#${id}`);
+  try {
+    const rowsFound = (await (await freeBoardServiceRest(`frck_visit_targets?select=id,name&id=in.(${ids.join(",")})`, { headers: { Accept: "application/json" } })).json()) as Array<{ id: number; name: string }>;
+    names = ids.map(id => rowsFound.find(row => row.id === id)?.name ?? `#${id}`);
+  } catch { /* 이름을 못 찾아도 안내는 보냅니다 */ }
+  return `${names.slice(0, 3).join(", ")}${names.length > 3 ? ` 외 ${names.length - 3}명` : ""}은(는) 그 시간(앞뒤 1시간)에 이미 다른 심방 일정이 있습니다. 다른 시간을 고르거나 대상자를 바꿔 주세요.`;
+}
 const validId = (value: unknown): value is number => Number.isSafeInteger(value) && (value as number) > 0;
 
 export async function GET(request: Request) {
@@ -154,12 +193,13 @@ export async function POST(request: Request) {
   if ("error" in parsed) return json({ error: parsed.error }, 400);
   try {
     if (!(await allExist((parsed.fields.target_ids as number[]) ?? []))) return json({ error: "명단에 없는 대상자가 있습니다. 명단에서 다시 골라 주세요." }, 400);
-    if (await overlaps(parsed.fields.starts_at as string)) return json({ error: OVERLAP_MESSAGE }, 409);
+    const clashText = await clashError(parsed.fields.starts_at as string, parsed.fields.kind as string, (parsed.fields.target_ids as number[]) ?? [], parsed.fields.pastor === true);
+    if (clashText) return json({ error: clashText }, 409);
     const response = await freeBoardServiceRest(`frck_visits?select=${COLUMNS}`, {
       method: "POST", headers: { "content-type": "application/json", Prefer: "return=representation" },
       body: JSON.stringify({ ...parsed.fields, status: "scheduled", created_by: user.name }),
     });
-    if (response.status === 409) return json({ error: OVERLAP_MESSAGE }, 409);
+    if (response.status === 409) return json({ error: DB_CLASH_MESSAGE }, 409);
     if (!response.ok) throw new Error(await response.text());
     const [row] = await response.json() as Row[];
     await logEdit(row.id, user, "등록");
@@ -185,12 +225,18 @@ export async function PATCH(request: Request) {
     if (parsed.fields.target_ids && !(await allExist(parsed.fields.target_ids as number[]))) return json({ error: "명단에 없는 대상자가 있습니다. 명단에서 다시 골라 주세요." }, 400);
     const nextStart = (parsed.fields.starts_at as string | undefined) ?? current.starts_at;
     const nextStatus = (parsed.fields.status as string | undefined) ?? current.status;
-    if ((parsed.fields.starts_at !== undefined || parsed.fields.status !== undefined) && nextStatus !== "cancelled" && (await overlaps(nextStart, data.id))) return json({ error: OVERLAP_MESSAGE }, 409);
+    const nextTargets = (parsed.fields.target_ids as number[] | undefined) ?? current.target_ids ?? [];
+    const nextKind = (parsed.fields.kind as string | undefined) ?? current.kind;
+    const nextPastor = (parsed.fields.pastor as boolean | undefined) ?? current.pastor;
+    if ((parsed.fields.starts_at !== undefined || parsed.fields.status !== undefined || parsed.fields.target_ids !== undefined || parsed.fields.kind !== undefined || parsed.fields.pastor !== undefined) && nextStatus !== "cancelled") {
+      const clashText = await clashError(nextStart, nextKind, nextTargets, nextPastor === true, data.id);
+      if (clashText) return json({ error: clashText }, 409);
+    }
     const response = await freeBoardServiceRest(`frck_visits?id=eq.${data.id}&select=${COLUMNS}`, {
       method: "PATCH", headers: { "content-type": "application/json", Prefer: "return=representation" },
       body: JSON.stringify({ ...parsed.fields, updated_at: new Date().toISOString() }),
     });
-    if (response.status === 409) return json({ error: OVERLAP_MESSAGE }, 409);
+    if (response.status === 409) return json({ error: DB_CLASH_MESSAGE }, 409);
     if (!response.ok) throw new Error(await response.text());
     const [row] = await response.json() as Row[];
     await logEdit(row.id, user, describeChange(parsed.fields, current));
@@ -220,8 +266,4 @@ export async function DELETE(request: Request) {
     return json({ error: "일정을 삭제하지 못했습니다. 잠시 후 다시 시도해 주세요." }, 503);
   }
 }
-
-
-
-
 
