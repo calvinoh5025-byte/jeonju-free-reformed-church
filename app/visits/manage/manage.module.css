@@ -82,3 +82,54 @@
 
 
 
+.add{border:1px solid #d7cebd;border-radius:12px;background:#fffdf7;margin-bottom:18px}
+.add>summary{cursor:pointer;list-style:none;padding:14px 16px;font-weight:700;font-size:17px}
+.add>summary::-webkit-details-marker{display:none}
+.add>form{display:flex;flex-direction:column;gap:14px;padding:0 16px 16px}
+.add label{display:flex;flex-direction:column;gap:6px;font-size:15px;font-weight:700}
+.add label.check{flex-direction:row;font-weight:700}
+.add small{font-weight:400;color:#6a706b;font-size:13px}
+.add input:not([type=checkbox]),.add select,.add textarea{min-height:46px;padding:9px 12px;border:1px solid #cfc6b4;border-radius:8px;background:#fff;font:inherit;font-weight:400;color:#243b35}
+.vlist{border-top:1px solid #e3dccb;margin-bottom:24px}
+.vi{border-bottom:1px solid #e3dccb}
+.vi>summary{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;padding:14px 4px;cursor:pointer;list-style:none}
+.vi>summary::-webkit-details-marker{display:none}
+.vi .when{font-size:16px;white-space:nowrap}
+.vi .who{flex:1 1 100%;color:#4d5a54;font-size:15px}
+.vi .chip,.vi .elder,.vi .deacon,.vi .special{margin-left:0}
+.vbody{padding:0 4px 14px;display:flex;flex-direction:column;gap:8px;font-size:15px}
+.vbody p{margin:0;line-height:1.6}
+.vbody p b{display:inline-block;min-width:3.2em;color:#6a706b;font-weight:700}
+.vbody .row button{min-height:40px;font-size:14px;padding:0 12px}
+
+/* 어르신도 편하게: 큰 글씨, 큰 버튼, 또렷한 대비 */
+.wrap{font-size:19px;line-height:1.6;max-width:760px}
+.wrap h2{font-size:26px!important}
+.wrap small,.card small,.add small,.help{font-size:16px!important;color:#4d5a54}
+.help{line-height:1.7}
+.wrap button{min-height:54px;font-size:18px;padding:0 20px;border-width:2px}
+.wrap .tabs button{min-height:56px;font-size:19px;padding:0 16px}
+.wrap input:not([type=checkbox]):not([type=radio]),.wrap select,.wrap textarea{min-height:54px;font-size:19px;padding:10px 14px;border:2px solid #b9ae98;border-radius:10px}
+.wrap textarea{min-height:100px}
+.wrap input[type=checkbox]{width:28px;height:28px;flex:none}
+.card label,.add label{font-size:19px!important}
+.add>summary{font-size:21px;padding:18px 18px;min-height:60px;display:flex;align-items:center}
+.vi>summary{padding:18px 6px}
+.vi .when{font-size:21px}
+.vi .who{font-size:19px;color:#243b35}
+.vbody{font-size:18px}
+.vbody .row button{min-height:52px;font-size:17px;padding:0 16px}
+.chip,.elder,.deacon,.special{font-size:16px!important;padding:3px 10px!important}
+.row{gap:10px}
+.error,.ok{font-size:18px;padding:14px 16px}
+.grp>summary{padding:16px 16px;font-size:20px;min-height:60px}
+.names li{font-size:18px;padding:8px 14px}
+.chips li{font-size:18px}
+.suggest button{min-height:50px}
+.sum{font-size:21px}
+.pop{font-size:17px}
+.bar{font-size:18px}
+
+.fieldLabel{font-size:19px!important}
+.fieldLabel small{font-size:16px!important}
+

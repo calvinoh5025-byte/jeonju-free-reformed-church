@@ -22,6 +22,13 @@ const kstMD = new Intl.DateTimeFormat("ko-KR", { timeZone: "Asia/Seoul", month: 
 const toInput = (iso: string) => kstInput.format(new Date(iso)).replace(" ", "T");
 const fromInput = (value: string) => `${value}:00+09:00`;
 const NAME_KEY = "frck-visit-name";
+// 시간은 30분 단위 목록에서 고릅니다(어르신이 쓰기 쉽게). 목록에 없는 시간으로 저장된 일정은 그 시간도 함께 보여 줍니다.
+const timeLabel = (hm: string) => { const [h, m] = hm.split(":").map(Number); return `${h < 12 ? "오전" : "오후"} ${h % 12 === 0 ? 12 : h % 12}:${String(m).padStart(2, "0")}`; };
+const baseTimes = Array.from({ length: 33 }, (_, i) => { const t = 6 * 60 + i * 30; return `${String(Math.floor(t / 60)).padStart(2, "0")}:${String(t % 60).padStart(2, "0")}`; });
+function TimeSelect({ value }: { value?: string }) {
+  const list = value && !baseTimes.includes(value) ? [...baseTimes, value].sort() : baseTimes;
+  return <select name="time" required defaultValue={value ?? ""}><option value="" disabled>시간을 고르세요</option>{list.map(t => <option key={t} value={t}>{timeLabel(t)}</option>)}</select>;
+}
 
 async function call(url: string, method: string, body?: unknown) {
   const response = await fetch(url, { method, headers: body ? { "content-type": "application/json" } : undefined, body: body ? JSON.stringify(body) : undefined, credentials: "same-origin" });
@@ -35,6 +42,7 @@ export function ManageClient() {
   const [user, setUser] = useState<User | null | undefined>(undefined);
   const [error, setError] = useState("");
   const [savedName, setSavedName] = useState("");
+  const [showPw, setShowPw] = useState(false);
 
   useEffect(() => {
     try { setSavedName(localStorage.getItem(NAME_KEY) ?? ""); } catch { /* 저장소를 쓸 수 없어도 괜찮습니다 */ }
@@ -60,7 +68,8 @@ export function ManageClient() {
         <h2>직분자 로그인</h2>
         <p className={styles.help}>이름을 적고 직분자 공용 비밀번호를 입력해 주세요. 아래 "로그인 유지"를 체크하면 이 기기에서는 오래 유지됩니다.</p>
         <label>이름<input name="name" type="text" maxLength={50} autoComplete="name" required defaultValue={savedName} placeholder="예: 홍길동 장로" /></label>
-        <label>비밀번호<input name="password" type="password" autoComplete="current-password" required /></label>
+        <label>비밀번호<input name="password" type={showPw ? "text" : "password"} autoComplete="current-password" required /></label>
+        <label className={styles.check}><input type="checkbox" checked={showPw} onChange={e => setShowPw(e.target.checked)} /> 비밀번호 보이게 하기</label>
         <label className={styles.check}><input name="remember" type="checkbox" defaultChecked /> 로그인 유지 <small>(이 기기에서 90일. 공용 기기라면 체크를 풀어 주세요)</small></label>
         {error && <p className={styles.error} role="alert">{error}</p>}
         <button className={styles.primary} type="submit">로그인</button>
@@ -113,11 +122,16 @@ function TargetPicker({ roster, value, onChange }: { roster: Target[]; value: nu
   );
 }
 
+const kstDow = new Intl.DateTimeFormat("ko-KR", { timeZone: "Asia/Seoul", month: "numeric", day: "numeric", weekday: "short" });
+const kstHM = new Intl.DateTimeFormat("ko-KR", { timeZone: "Asia/Seoul", hour: "2-digit", minute: "2-digit", hour12: false });
+const kindClass = (kind: Visit["kind"]) => (kind === "deacon" ? styles.deacon : kind === "special" ? styles.special : styles.elder);
+
 function VisitsTab({ roster }: { roster: Target[] }) {
   const [visits, setVisits] = useState<Visit[]>([]);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [editing, setEditing] = useState<Visit | null>(null);
+  const [formOpen, setFormOpen] = useState(false);
   const [showPast, setShowPast] = useState(false);
   const [picked, setPicked] = useState<number[]>([]);
   const byId = useMemo(() => new Map(roster.map(t => [t.id, t])), [roster]);
@@ -127,18 +141,18 @@ function VisitsTab({ roster }: { roster: Target[] }) {
     catch (e) { setError(errText(e, "일정을 불러오지 못했습니다.")); }
   }, []);
   useEffect(() => { reload(); }, [reload]);
-  useEffect(() => { setPicked(editing?.target_ids ?? []); }, [editing]);
+  useEffect(() => { setPicked(editing?.target_ids ?? []); if (editing) setFormOpen(true); }, [editing]);
 
   async function save(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formElement = event.currentTarget;
     const form = new FormData(formElement);
-    const body = { starts_at: fromInput(String(form.get("starts_at"))), kind: form.get("kind"), pastor: form.get("pastor") === "on", target_ids: picked, memo: form.get("memo") };
+    const body = { starts_at: `${form.get("date")}T${form.get("time")}:00+09:00`, kind: form.get("kind"), pastor: form.get("pastor") === "on", target_ids: picked, memo: form.get("memo") };
     setError(""); setNotice("");
     try {
       if (editing) await call("/api/visits", "PATCH", { id: editing.id, ...body }); else await call("/api/visits", "POST", body);
       setNotice(editing ? "수정했습니다." : "저장했습니다.");
-      setEditing(null); setPicked([]); formElement.reset(); await reload();
+      setEditing(null); setPicked([]); setFormOpen(false); formElement.reset(); await reload();
     } catch (e) { setError(errText(e, "저장하지 못했습니다.")); }
   }
   async function patch(visit: Visit, fields: Record<string, unknown>, message: string) {
@@ -152,54 +166,66 @@ function VisitsTab({ roster }: { roster: Target[] }) {
     try { await call("/api/visits", "DELETE", { id: visit.id }); setNotice("삭제했습니다."); await reload(); }
     catch (e) { setError(errText(e, "삭제하지 못했습니다.")); }
   }
+  const namesOf = (v: Visit) => v.target_ids.map(id => byId.get(id)?.name ?? "(삭제됨)");
+  const brief = (names: string[]) => (names.length <= 2 ? names.join(", ") : `${names.slice(0, 2).join(", ")} 외 ${names.length - 2}명`);
 
   const cutoff = Date.now() - 24 * 60 * 60 * 1000;
   const shown = visits.filter(v => showPast || new Date(v.starts_at).getTime() >= cutoff);
 
   return (
     <>
-      <form className={styles.card} onSubmit={save} key={editing ? `edit-${editing.id}` : "new"}>
-        <h2>{editing ? "일정 수정" : "일정 추가"}</h2>
-        <label>날짜와 시간<input name="starts_at" type="datetime-local" required defaultValue={editing ? toInput(editing.starts_at) : ""} /></label>
-        <label>심방 종류<select name="kind" defaultValue={editing?.kind ?? "elder"}><option value="elder">장로 심방 (성찬 심방)</option><option value="deacon">집사 심방</option><option value="special">특별 심방</option></select></label>
-        <label className={styles.check}><input name="pastor" type="checkbox" defaultChecked={editing?.pastor ?? false} /> 목사 동행 <small>(성도 화면에도 표시됩니다)</small></label>
-        <TargetPicker roster={roster} value={picked} onChange={setPicked} />
-        <label>메모 <small>(비공개)</small><textarea name="memo" rows={3} maxLength={2000} defaultValue={editing?.memo ?? ""} /></label>
-        <div className={styles.row}><button className={styles.primary} type="submit">{editing ? "수정 저장" : "저장"}</button>{editing && <button type="button" onClick={() => setEditing(null)}>수정 취소</button>}</div>
-        <p className={styles.help}>성도 화면에는 날짜·시간·종류·목사 동행만 나갑니다. 심방 대상자와 메모는 로그인한 직분자께만 보입니다. 심방을 마치면 아래 목록에서 <b>완료</b>를 눌러 주세요. 그러면 대상자가 '심방 현황'에서 완료로 바뀝니다.</p>
-      </form>
+      <details className={styles.add} open={formOpen} onToggle={e => { const open = e.currentTarget.open; setFormOpen(open); if (!open) setEditing(null); }}>
+        <summary>{editing ? "일정 수정" : "＋ 일정 추가"}</summary>
+        <form onSubmit={save} key={editing ? `edit-${editing.id}` : "new"}>
+          <label>날짜<input name="date" type="date" required defaultValue={editing ? toInput(editing.starts_at).slice(0, 10) : ""} /></label>
+          <label>시간<TimeSelect value={editing ? toInput(editing.starts_at).slice(11, 16) : undefined} /></label>
+          <label>심방 종류<select name="kind" defaultValue={editing?.kind ?? "elder"}><option value="elder">장로 심방 (성찬 심방)</option><option value="deacon">집사 심방</option><option value="special">특별 심방</option></select></label>
+          <TargetPicker roster={roster} value={picked} onChange={setPicked} />
+          <label className={styles.check}><input name="pastor" type="checkbox" defaultChecked={editing?.pastor ?? false} /> 목사 동행 <small>(성도 화면에도 표시)</small></label>
+          <label>메모 <small>(비공개)</small><textarea name="memo" rows={2} maxLength={2000} defaultValue={editing?.memo ?? ""} /></label>
+          <div className={styles.row}><button className={styles.primary} type="submit">{editing ? "수정 저장" : "저장"}</button>{editing && <button type="button" onClick={() => { setEditing(null); setFormOpen(false); }}>취소</button>}</div>
+        </form>
+      </details>
       {error && <p className={styles.error} role="alert">{error}</p>}
       {notice && <p className={styles.ok} role="status">{notice}</p>}
-      <div className={styles.listHead}><h2>일정 목록</h2><label className={styles.check}><input type="checkbox" checked={showPast} onChange={e => setShowPast(e.target.checked)} /> 지난 일정도 보기</label></div>
+      <div className={styles.listHead}><h2>일정</h2><label className={styles.check}><input type="checkbox" checked={showPast} onChange={e => setShowPast(e.target.checked)} /> 지난 일정도</label></div>
       {shown.length === 0 && <p className={styles.help}>표시할 일정이 없습니다.</p>}
-      <ul className={styles.list}>
-        {shown.map(v => (
-          <li key={v.id} className={`${styles.item} ${v.status !== "scheduled" ? styles.dim : ""}`}>
-            <div><strong>{kstShow.format(new Date(v.starts_at))}</strong> <span className={v.kind === "deacon" ? styles.deacon : v.kind === "special" ? styles.special : styles.elder}>{kindLabel[v.kind]}</span>{v.pastor && <span className={styles.chip}>목사 동행</span>}<span className={styles.chip}>{statusLabel[v.status]}</span></div>
-            <div className={styles.detail}>
-              {v.target_ids.length > 0 && <span>심방 대상자: {v.target_ids.map(id => byId.get(id)?.name ?? "(삭제된 대상자)").join(", ")}</span>}
-              {v.memo && <span>메모: {v.memo}</span>}
-            </div>
-            <div className={styles.row}>
-              {v.status === "done" ? <button onClick={() => patch(v, { status: "scheduled" }, "예정으로 되돌렸습니다.")}>완료 취소</button> : <button onClick={() => patch(v, { status: "done" }, "완료로 표시했습니다.")}>완료</button>}
-              {v.status === "cancelled" ? <button onClick={() => patch(v, { status: "scheduled" }, "예정으로 되돌렸습니다.")}>취소 해제</button> : <button onClick={() => patch(v, { status: "cancelled" }, "취소 처리했습니다. 성도 화면에서 사라집니다.")}>취소</button>}
-              <button onClick={() => { setEditing(v); window.scrollTo({ top: 0, behavior: "smooth" }); }}>수정</button>
-              <button onClick={() => remove(v)}>삭제</button>
-              <span className={styles.hist}>
-                <button type="button" aria-haspopup="true">최근 수정 {v.edits.length > 0 ? `(${v.edits.length})` : ""}</button>
-                <span className={styles.pop} role="tooltip">
-                  <strong>최근 수정한 분 (최대 10건)</strong>
-                  {v.edits.length === 0 ? <em>기록이 없습니다.</em> : <ol>{v.edits.map((edit, index) => <li key={index}>{kstShort.format(new Date(edit.at))} · <b>{edit.name}</b> {edit.action}</li>)}</ol>}
-                </span>
-              </span>
-            </div>
-          </li>
-        ))}
-      </ul>
+      <div className={styles.vlist}>
+        {shown.map(v => {
+          const names = namesOf(v);
+          return (
+            <details key={v.id} className={`${styles.vi} ${v.status !== "scheduled" ? styles.dim : ""}`}>
+              <summary>
+                <span className={styles.when}><b>{kstDow.format(new Date(v.starts_at))}</b> {kstHM.format(new Date(v.starts_at))}</span>
+                <span className={kindClass(v.kind)}>{kindLabel[v.kind]}</span>
+                <span className={styles.who}>{brief(names)}</span>
+                {v.pastor && <span className={styles.chip}>목사 동행</span>}
+                {v.status !== "scheduled" && <span className={styles.chip}>{statusLabel[v.status]}</span>}
+              </summary>
+              <div className={styles.vbody}>
+                {names.length > 0 && <p><b>대상자</b> {names.join(", ")}</p>}
+                {v.memo && <p><b>메모</b> {v.memo}</p>}
+                <div className={styles.row}>
+                  {v.status === "done" ? <button onClick={() => patch(v, { status: "scheduled" }, "예정으로 되돌렸습니다.")}>완료 취소</button> : <button className={styles.primary} onClick={() => patch(v, { status: "done" }, "완료로 표시했습니다.")}>완료</button>}
+                  <button onClick={() => { setEditing(v); window.scrollTo({ top: 0, behavior: "smooth" }); }}>수정</button>
+                  {v.status === "cancelled" ? <button onClick={() => patch(v, { status: "scheduled" }, "예정으로 되돌렸습니다.")}>취소 해제</button> : <button onClick={() => patch(v, { status: "cancelled" }, "취소 처리했습니다. 성도 화면에서 사라집니다.")}>일정 취소</button>}
+                  <button onClick={() => remove(v)}>삭제</button>
+                  <span className={styles.hist}>
+                    <button type="button" aria-haspopup="true">수정 기록{v.edits.length > 0 ? ` ${v.edits.length}` : ""}</button>
+                    <span className={styles.pop} role="tooltip">
+                      <strong>최근 수정한 분 (최대 10건)</strong>
+                      {v.edits.length === 0 ? <em>기록이 없습니다.</em> : <ol>{v.edits.map((edit, index) => <li key={index}>{kstShort.format(new Date(edit.at))} · <b>{edit.name}</b> {edit.action}</li>)}</ol>}
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </details>
+          );
+        })}
+      </div>
     </>
   );
 }
-
 type Group = { done: Array<{ t: Target; at: string }>; planned: Array<{ t: Target; at: string }>; todo: Target[] };
 
 // 한 심방 시기에서 대상자별로 완료/예정/아직을 계산합니다. (취소된 일정은 계산하지 않음)
@@ -444,6 +470,8 @@ function PasswordAdmin() {
     </div>
   );
 }
+
+
 
 
 
