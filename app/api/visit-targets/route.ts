@@ -167,5 +167,31 @@ export async function PATCH(request: Request) {
   }
 }
 
-
+// 잘못 넣은 심방 대상자를 완전히 지웁니다. 심방 시기 명단에서는 자동으로 빠지고, 이미 일정에 넣은 곳에서도 이 분만 빼 줍니다.
+export async function DELETE(request: Request) {
+  const a = await auth(request, true);
+  if ("response" in a) return a.response;
+  let data: Record<string, unknown>;
+  try { data = await request.json(); } catch { return json({ error: "요청 내용을 확인해 주세요." }, 400); }
+  if (!validId(data?.id)) return json({ error: "대상자를 확인해 주세요." }, 400);
+  const id = data.id;
+  try {
+    const found = await freeBoardServiceRest(`frck_visits?select=id,target_ids&target_ids=ov.{${id}}&limit=2000`, { headers: { Accept: "application/json" } });
+    if (!found.ok) throw new Error(`visits status ${found.status}`);
+    const visits = await found.json() as Array<{ id: number; target_ids: number[] | null }>;
+    for (const visit of visits) {
+      const next = (visit.target_ids ?? []).filter(item => item !== id);
+      const patched = await freeBoardServiceRest(`frck_visits?id=eq.${visit.id}`, { method: "PATCH", headers: { "content-type": "application/json" }, body: JSON.stringify({ target_ids: next, updated_at: new Date().toISOString() }) });
+      if (!patched.ok) throw new Error(`visit update failed ${patched.status}`);
+    }
+    const response = await freeBoardServiceRest(`frck_visit_targets?id=eq.${id}`, { method: "DELETE", headers: { Prefer: "return=representation" } });
+    if (!response.ok) throw new Error(await response.text());
+    const deleted = await response.json() as unknown[];
+    if (!deleted.length) return json({ error: "이미 삭제되었거나 찾을 수 없습니다." }, 404);
+    return json({ ok: true, removedFromVisits: visits.length });
+  } catch (error) {
+    console.error("[visit-targets] delete failed", error instanceof Error ? error.message : error);
+    return json({ error: "삭제하지 못했습니다. 잠시 후 다시 시도해 주세요." }, 503);
+  }
+}
 
