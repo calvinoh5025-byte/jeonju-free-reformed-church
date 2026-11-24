@@ -29,11 +29,11 @@ export const siteNav: SiteNavGroup[] = [
     label: "예배",
     items: [
       { label: "예배순서", href: "/worship/order" },
+      { label: "성경", href: "/worship/bible", description: "개역한글판 성경을 책과 장을 골라 읽을 수 있습니다." },
       { label: "시편", href: "/worship/psalms" },
       { label: "찬송", href: "/worship/hymns" },
       { label: "기도문", href: "/worship/prayers" },
       { label: "예전예식서", href: "/worship/liturgy" },
-      { label: "성경읽기", href: "/worship/bible", description: "개역한글판 성경을 책과 장을 골라 읽을 수 있습니다." },
     ],
   },
   {

@@ -49,7 +49,7 @@ export default function Home() {
           </div>
         </div>
         <div className="pillars" id="confession">
-          <article><span>01</span><h3><Link href="/worship/bible" aria-label="오직 성경 — 성경읽기 보기">오직 성경</Link></h3><p>성경을 신앙과 삶의 유일하고 충분한 규범으로 고백합니다.</p></article>
+          <article><span>01</span><h3><Link href="/worship/bible" aria-label="오직 성경 — 성경 보기">오직 성경</Link></h3><p>성경을 신앙과 삶의 유일하고 충분한 규범으로 고백합니다.</p></article>
           <article><span>02</span><h3><a href="/church" aria-label="세 일치 신조 — 개혁교회 신앙고백서 보기">세 일치 신조</a></h3><p>벨직 신앙고백, 하이델베르크 교리문답, 돌트 신경을 받아 고백합니다.</p></article>
           <article><span>03</span><h3><a href="/worship" aria-label="언약 공동체 — 예배 보기">언약 공동체</a></h3><p>가정과 학교와 교회가 함께 다음 세대에 믿음을 전수하며 자라갑니다.</p></article>
         </div>
