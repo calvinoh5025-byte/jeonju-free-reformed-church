@@ -43,6 +43,17 @@ async function render(number) {
 $('pdf-prev').onclick = () => render(Math.max(1,current-1));
 $('pdf-next').onclick = () => render(Math.min(pdf.numPages,current+1));
 $('pdf-page').onchange = () => { const n=Number($('pdf-page').value); if (Number.isInteger(n)&&n>=1&&n<=pdf.numPages) render(n); else $('pdf-page').value=current; };
+// 2026-11-20 변경: 클라리온 출판사의 서면 허락 전까지 이 사이트에서 PDF를 대신 불러오지 않는다.
+// 예전 주소로 들어온 사람도 원문(clarionmagazine.ca)으로 바로 이동시킨다.
+// 허락을 받으면 아래 [원래 코드]를 되살린다. (render 등 위의 함수들은 그대로 남겨 둠)
+try {
+  const url = new URL(source || '');
+  if (url.protocol !== 'https:' || url.hostname !== 'clarionmagazine.ca' || url.username || url.password || url.port || !url.pathname.toLowerCase().endsWith('.pdf')) throw new Error('Invalid PDF');
+  $('pdf-original').href = url.href;
+  $('pdf-status').textContent = '클라리온 원문 PDF로 이동합니다. 저작권은 출판사에 있습니다.';
+  location.replace(url.href);
+} catch { $('pdf-status').textContent = '올바른 클라리온 PDF 주소가 아닙니다. 자료실 목록에서 다시 선택해 주세요.'; }
+/* [원래 코드] 허락 확인 후 복원용
 try {
   const url = new URL(source || '');
   if (url.protocol !== 'https:' || url.hostname !== 'clarionmagazine.ca' || url.username || url.password || url.port || !url.pathname.toLowerCase().endsWith('.pdf')) throw new Error('Invalid PDF');
@@ -52,3 +63,4 @@ try {
   $('pdf-page').max = pdf.numPages; $('pdf-page').disabled = false;
   await render(1);
 } catch { $('pdf-status').textContent = 'PDF 본문을 불러오지 못했습니다. 아래 원문 PDF와 Google 문서 번역을 이용해 주세요.'; }
+*/
