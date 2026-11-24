@@ -20,8 +20,16 @@ function toKey(base64: string) {
   return out;
 }
 
+// 어느 단계에서 멈추더라도 '처리 중…'에 갇히지 않도록 시간 제한을 둡니다.
+function limit<T>(work: Promise<T>, ms: number, message: string): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error(message)), ms);
+    work.then(v => { clearTimeout(timer); resolve(v); }, e => { clearTimeout(timer); reject(e); });
+  });
+}
+
 async function post(url: string, body: unknown) {
-  const response = await fetch(url, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body), credentials: "same-origin" });
+  const response = await limit(fetch(url, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body), credentials: "same-origin" }), 15000, "서버 응답이 없습니다. 인터넷 연결을 확인하고 다시 눌러 주세요.");
   const data = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error((data as { error?: string }).error || "처리하지 못했습니다.");
   return data as Record<string, unknown>;
@@ -99,11 +107,11 @@ export function PushNotify() {
     try {
       const permission = await Notification.requestPermission();
       if (permission !== "granted") { setState(permission === "denied" ? "denied" : "off"); setMsg(permission === "denied" ? "" : "알림을 허용하지 않으셨습니다."); return; }
-      const reg = await navigator.serviceWorker.ready;
-      const keyResponse = await fetch("/api/visit-push/key");
+      const reg = await limit(navigator.serviceWorker.ready, 10000, "앱 준비가 끝나지 않았습니다. 페이지를 새로 고친 뒤 다시 눌러 주세요.");
+      const keyResponse = await limit(fetch("/api/visit-push/key"), 10000, "알림 설정을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.");
       const { publicKey } = await keyResponse.json() as { publicKey?: string };
       if (!keyResponse.ok || !publicKey) throw new Error("알림 설정을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.");
-      const sub = (await reg.pushManager.getSubscription()) ?? (await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: toKey(publicKey) as unknown as BufferSource }));
+      const sub = (await reg.pushManager.getSubscription()) ?? (await limit(reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: toKey(publicKey) as unknown as BufferSource }), 20000, "이 기기가 알림 서비스에 연결하지 못했습니다. 와이파이·데이터 연결과 VPN·절전 모드를 확인하고 다시 눌러 주세요. 삼성 인터넷이면 크롬으로도 시도해 보세요."));
       try { await post("/api/visit-push/subscribe", { subscription: sub.toJSON(), kinds, target_ids: ids }); }
       catch (e) { await sub.unsubscribe().catch(() => null); throw e; }
       savedNow(kinds, ids);
