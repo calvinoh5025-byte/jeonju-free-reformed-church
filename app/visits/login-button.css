@@ -1,0 +1,5 @@
+/* 심방 일정 페이지의 "직분자 로그인" 버튼: 눈에 잘 띄고 누르기 쉽게 */
+.visit-login-button{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:60px;padding:0 32px;border-radius:12px;background:#243b35;color:#fff;font-size:20px;font-weight:700;text-decoration:none;border:2px solid #243b35;line-height:1.2}
+.visit-login-button:hover,.visit-login-button:focus-visible{background:#1a2b26;border-color:#1a2b26;color:#fff}
+.visit-login-button:focus-visible{outline:3px solid #d9a441;outline-offset:3px}
+@media (max-width:620px){.visit-login-button{display:flex;width:100%;max-width:420px;margin:0 auto}}
