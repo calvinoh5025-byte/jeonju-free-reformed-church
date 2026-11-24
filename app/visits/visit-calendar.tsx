@@ -3,19 +3,28 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import styles from "./visit-calendar.module.css";
 
-type Slot = { id: string; starts_at: string; kind: "elder" | "deacon"; pastor?: boolean };
-const sampleSlots: Slot[] = [
-  { id: "sample-1", starts_at: "2026-11-26T10:00:00+09:00", kind: "elder", pastor: true },
-  { id: "sample-2", starts_at: "2026-11-29T14:00:00+09:00", kind: "deacon" },
-  { id: "sample-3", starts_at: "2026-12-03T11:00:00+09:00", kind: "elder" },
-];
+type Slot = { id: string; starts_at: string; kind: "elder" | "deacon"; pastor: boolean; done: boolean };
 const week = ["일", "월", "화", "수", "목", "금", "토"];
-const dateKey = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+const kstDate = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul", year: "numeric", month: "2-digit", day: "2-digit" });
+const kstTime = new Intl.DateTimeFormat("ko-KR", { timeZone: "Asia/Seoul", hour: "2-digit", minute: "2-digit", hour12: false });
+const slotKey = (iso: string) => kstDate.format(new Date(iso));
+const dayKey = (year: number, month: number, day: number) => `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
 
 export function VisitCalendar() {
-  const [month, setMonth] = useState(() => new Date(2026, 10, 1));
+  const [month, setMonth] = useState(() => { const now = new Date(); return new Date(now.getFullYear(), now.getMonth(), 1); });
   const [full, setFull] = useState(false);
-  const slots = sampleSlots;
+  const [slots, setSlots] = useState<Slot[]>([]);
+  const [state, setState] = useState<"loading" | "ready" | "error">("loading");
+
+  useEffect(() => {
+    let alive = true;
+    fetch("/api/visit-slots")
+      .then(response => { if (!response.ok) throw new Error(String(response.status)); return response.json() as Promise<{ slots: Slot[] }>; })
+      .then(data => { if (alive) { setSlots(data.slots); setState("ready"); } })
+      .catch(() => { if (alive) setState("error"); });
+    return () => { alive = false; };
+  }, []);
+
   const days = useMemo(() => {
     const first = new Date(month.getFullYear(), month.getMonth(), 1).getDay();
     const count = new Date(month.getFullYear(), month.getMonth() + 1, 0).getDate();
@@ -32,15 +41,19 @@ export function VisitCalendar() {
     document.body.style.overflow = "hidden";
     return () => { document.removeEventListener("keydown", onKey); window.removeEventListener("popstate", onPop); document.body.style.overflow = ""; };
   }, [full, close]);
-  const entries = (day: number) => slots.filter(s => dateKey(new Date(s.starts_at)) === dateKey(new Date(month.getFullYear(), month.getMonth(), day)));
+
+  const entries = (day: number) => slots.filter(s => slotKey(s.starts_at) === dayKey(month.getFullYear(), month.getMonth(), day));
+  const monthHasSlots = slots.some(s => slotKey(s.starts_at).startsWith(`${month.getFullYear()}-${String(month.getMonth() + 1).padStart(2, "0")}`));
   const calendar = <>
     <div className={styles.toolbar}><button onClick={() => setMonth(new Date(month.getFullYear(), month.getMonth() - 1, 1))} aria-label="이전 달">‹</button><h2>{month.getFullYear()}년 {month.getMonth() + 1}월</h2><button onClick={() => setMonth(new Date(month.getFullYear(), month.getMonth() + 1, 1))} aria-label="다음 달">›</button></div>
     <div className={styles.grid} role="grid" aria-label={`${month.getFullYear()}년 ${month.getMonth() + 1}월 심방 일정`}>
       {week.map((d, i) => <div className={`${styles.weekday} ${i === 0 ? styles.sunday : ""}`} key={d}>{d}</div>)}
-      {days.map((day, i) => <div className={`${styles.day} ${day ? "" : styles.empty}`} key={`${day ?? "blank"}-${i}`} role="gridcell">{day && <><span className={styles.dayNumber}>{day}</span>{entries(day).map(s => <div className={`${styles.event} ${s.kind === "deacon" ? styles.deacon : styles.elder}`} key={s.id}><strong>{s.kind === "deacon" ? "집사 심방" : "장로 심방"}</strong><time>{new Intl.DateTimeFormat("ko-KR", { hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date(s.starts_at))}</time>{s.pastor && <span className={styles.pastor}>목사 동행</span>}</div>)}</>}</div>)}
+      {days.map((day, i) => <div className={`${styles.day} ${day ? "" : styles.empty}`} key={`${day ?? "blank"}-${i}`} role="gridcell">{day && <><span className={styles.dayNumber}>{day}</span>{entries(day).map(s => <div className={`${styles.event} ${s.kind === "deacon" ? styles.deacon : styles.elder} ${s.done ? styles.done : ""}`} key={s.id}><strong>{s.kind === "deacon" ? "집사 심방" : "장로 심방"}</strong><time>{kstTime.format(new Date(s.starts_at))}</time>{s.pastor && <span className={styles.pastor}>목사 동행</span>}</div>)}</>}</div>)}
     </div>
     <div className={styles.legend} aria-label="심방 종류 범례"><span><i className={styles.elderDot} />장로 심방</span><span><i className={styles.deaconDot} />집사 심방</span></div>
-    <p className={styles.note}>※ 현재는 화면 확인을 위한 예시 일정입니다.</p>
+    {state === "loading" && <p className={styles.note}>일정을 불러오는 중입니다…</p>}
+    {state === "error" && <p className={styles.note}>일정을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.</p>}
+    {state === "ready" && !monthHasSlots && <p className={styles.note}>이 달에 등록된 심방 일정이 없습니다.</p>}
   </>;
   return <section className={full ? styles.fullscreen : styles.wrap} aria-label="심방 일정 달력">{full && <div className={styles.fullHeader}><strong>심방 일정</strong><button onClick={close}>닫기 ×</button></div>}{!full && <button className={styles.fullButton} onClick={() => setFull(true)}>전체 화면</button>}{calendar}</section>;
 }
